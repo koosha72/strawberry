@@ -3,12 +3,12 @@
     /// <summary>
     /// Base class of all components in strawberry.
     /// </summary>
-    public class BaseComponent : ReferenceObject
+    public abstract class BaseComponent : ReferenceObject
     {
         /// <summary>
         /// The owner of the component
         /// </summary>
-        public Entity Owner
+        public Entity? Owner
         {
             get;
             set;
@@ -17,12 +17,12 @@
         /// <summary>
         /// The scene in which the entity is living
         /// </summary>
-        public Scene Scene { get { return this.Owner.Scene; } }
+        public Scene? Scene { get { return Owner?.Scene; } }
 
         /// <summary>
         ///  The current game context
         /// </summary>
-        public IGameContext GameContext { get { return this.Owner.Scene.GameContext; } }
+        public IGameContext? GameContext { get { return Owner?.Scene?.GameContext; } }
 
         /// <summary>
         /// This method happens when the component is intialized. You can override it in your own components.
@@ -32,11 +32,43 @@
         {
         }
 
+        public virtual void OnFinished()
+        {
+
+        }
+
+        public virtual void OnBeginUpdate()
+        {
+
+        }
+
+        public virtual void OnUpdate()
+        {
+
+        }
+
+        public virtual void OnEndUpdate()
+        {
+
+        }
+
+        public virtual void OnFixedUpdate()
+        {
+
+        }
+
+        public virtual void OnRender()
+        {
+
+        }
+
+
         /// <summary>
         /// This method happens when the component is removed. You can override it in your own components.
         /// </summary>
         public virtual void Removed()
         {
+            Owner = null;
         }
     }
 }

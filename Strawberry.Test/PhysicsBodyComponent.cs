@@ -30,7 +30,7 @@ namespace Strawberry.Test
             body.SleepingAllowed = false;
         }
 
-        public void FixedUpdate()
+        public override void OnFixedUpdate()
         {
             Transform.Position = body.Position * MyGameContext.ppm;
             Transform.Angle = -(float)MathHelper.RadToDeg(body.Rotation);

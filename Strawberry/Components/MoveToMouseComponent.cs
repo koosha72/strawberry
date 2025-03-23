@@ -17,7 +17,7 @@ namespace Strawberry.Components
         {
         }
 
-        public void Update()
+        public override void OnUpdate()
         {
             if (Transform != null)
             {

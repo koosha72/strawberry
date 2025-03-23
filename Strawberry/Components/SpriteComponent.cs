@@ -133,7 +133,7 @@ namespace Strawberry.Components
             }
         }
 
-        void Render()
+        public override void OnRender()
         {
             if (Sprite != null && Visible)
             {

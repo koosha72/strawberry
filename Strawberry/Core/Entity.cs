@@ -5,8 +5,6 @@ namespace Strawberry.Core
 {
     public class Entity : ReferenceObject
     {
-        Dictionary<BaseComponent, ComponentMethods> componentMethods = new Dictionary<BaseComponent, ComponentMethods>();
-
         protected ComponentCollection Components;
 
         public List<BaseComponent> AllComponents
@@ -186,10 +184,8 @@ namespace Strawberry.Core
         public T AddComponent<T>(T component) where T : BaseComponent
         {
             Components.Add(component);
-            componentMethods.Add(component, new ComponentMethods());
             component.Owner = this;
             component.Initialize(this);
-            FindMethods(component);
             RegisterEventsForComponent(component);
             InvokeEvent(component, "Begin");
             InvokeEvent(component, "Enabled");
@@ -259,7 +255,6 @@ namespace Strawberry.Core
             InvokeEvent(c, "Finished");
             UnRegisterEventsForComponent(c);
             Components.Remove(c);
-            componentMethods.Remove(c);
             c.Destroy();
         }
 
@@ -272,7 +267,6 @@ namespace Strawberry.Core
             InvokeEvent(c, "Finished");
             UnRegisterEventsForComponent(c);
             Components.Remove(c);
-            componentMethods.Remove(c);
             c.Destroy();
         }
 
@@ -287,7 +281,6 @@ namespace Strawberry.Core
                 c.Destroy();
             }
             Components.Clear();
-            componentMethods.Clear();
         }
 
         public override void Destroy()
@@ -400,11 +393,7 @@ namespace Strawberry.Core
 
             for (int i = 0; i < Components.Count; i++)
             {
-                if (componentMethods.ContainsKey(Components[i]))
-                {
-                    if (componentMethods[Components[i]].Finish != null)
-                        componentMethods[Components[i]].Finish.Invoke();
-                }
+                Components[i].OnFinished();
             }
             foreach (BaseComponent c in Components)
             {
@@ -421,17 +410,13 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (componentMethods.ContainsKey(Components[i]))
+                    try
                     {
-                        try
-                        {
-                            if (componentMethods[Components[i]].BeginUpdate != null)
-                                componentMethods[Components[i]].BeginUpdate.Invoke();
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHelper.Throw(this, e);
-                        }
+                        Components[i].OnBeginUpdate();
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHelper.Throw(this, e);
                     }
                 }
                 UpdateBegan = true;
@@ -453,17 +438,13 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (componentMethods.ContainsKey(Components[i]))
+                    try
                     {
-                        try
-                        {
-                            if (componentMethods[Components[i]].EndUpdate != null)
-                                componentMethods[Components[i]].EndUpdate.Invoke();
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHelper.Throw(this, e);
-                        }
+                        Components[i].OnEndUpdate();
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHelper.Throw(this, e);
                     }
                 }
                 UpdateEnded = true;
@@ -485,10 +466,13 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (componentMethods.ContainsKey(Components[i]))
+                    try
                     {
-                        if (componentMethods[Components[i]].Update != null)
-                            componentMethods[Components[i]].Update.Invoke();
+                        Components[i].OnUpdate();
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHelper.Throw(this, e);
                     }
                 }
                 Updated = true;
@@ -510,17 +494,13 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (componentMethods.ContainsKey(Components[i]))
+                    try
                     {
-                        try
-                        {
-                            if (componentMethods[Components[i]].FixedUpdate != null)
-                                componentMethods[Components[i]].FixedUpdate.Invoke();
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHelper.Throw(this, e);
-                        }
+                        Components[i].OnFixedUpdate();
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHelper.Throw(this, e);
                     }
                 }
                 foreach (Entity child in Children.Values)
@@ -534,17 +514,13 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (componentMethods.ContainsKey(Components[i]))
+                    try
                     {
-                        try
-                        {
-                            if (componentMethods[Components[i]].Render != null)
-                                componentMethods[Components[i]].Render.Invoke();
-                        }
-                        catch (Exception e)
-                        {
-                            ExceptionHelper.Throw(this, e);
-                        }
+                        Components[i].OnRender();
+                    }
+                    catch (Exception e)
+                    {
+                        ExceptionHelper.Throw(this, e);
                     }
                 }
                 foreach (Entity child in Children.Values)
@@ -590,93 +566,6 @@ namespace Strawberry.Core
         void UnRegisterEventsForComponent(BaseComponent component)
         {
             componentEvents.Remove(component);
-        }
-
-        void FindMethods(BaseComponent component)
-        {
-            Type t = component.GetType();
-            MethodInfo[] update = GetMethodInfo(t, "Update");
-            for (int i = 0; i < update.Length; i++)
-            {
-                Action del = (Action)Delegate.CreateDelegate(typeof(Action), component, update[i], false);
-                if (del != null)
-                {
-                    componentMethods[component].Update = del;
-                    break;
-                }
-            }
-
-            t = component.GetType();
-            MethodInfo[] fupdate = GetMethodInfo(t, "FixedUpdate");
-            for (int i = 0; i < fupdate.Length; i++)
-            {
-                Action del = (Action)Delegate.CreateDelegate(typeof(Action), component, fupdate[i], false);
-                if (del != null)
-                {
-                    componentMethods[component].FixedUpdate = del;
-                    break;
-                }
-            }
-
-            t = component.GetType();
-            MethodInfo[] beginUpdate = GetMethodInfo(t, "BeginUpdate");
-            for (int i = 0; i < beginUpdate.Length; i++)
-            {
-                Action del = (Action)Delegate.CreateDelegate(typeof(Action), component, beginUpdate[i], false);
-                if (del != null)
-                {
-                    componentMethods[component].BeginUpdate = del;
-                    break;
-                }
-            }
-
-            t = component.GetType();
-            MethodInfo[] endUpdate = GetMethodInfo(t, "EndUpdate");
-            for (int i = 0; i < endUpdate.Length; i++)
-            {
-                Action del = (Action)Delegate.CreateDelegate(typeof(Action), component, endUpdate[i], false);
-                if (del != null)
-                {
-                    componentMethods[component].EndUpdate = del;
-                    break;
-                }
-            }
-
-            MethodInfo[] finish = GetMethodInfo(t, "Finish");
-            for (int i = 0; i < finish.Length; i++)
-            {
-                Action del = (Action)Delegate.CreateDelegate(typeof(Action), component, finish[i], false);
-                if (del != null)
-                {
-                    componentMethods[component].Finish = del;
-                    break;
-                }
-            }
-
-            MethodInfo[] render = GetMethodInfo(t, "Render");
-            for (int i = 0; i < render.Length; i++)
-            {
-                Action del = (Action)Delegate.CreateDelegate
-                    (typeof(Action), component, render[i], false);
-                if (del != null)
-                {
-                    componentMethods[component].Render = del;
-                    break;
-                }
-            }
-
-
-            /*MethodInfo[] guiRender = GetMethodInfo(t, "GuiRender");
-            for (int i = 0; i < guiRender.Length; i++)
-            {
-                Action<StrawBerry.Graphics.SpriteRenderer> del = (Action<StrawBerry.Graphics.SpriteRenderer>)Delegate.CreateDelegate
-                    (typeof(Action<StrawBerry.Graphics.SpriteRenderer>), component, guiRender[i], false);
-                if (del != null)
-                {
-                    componentMethods[component].GuiRender = del;
-                    break;
-                }
-            }*/
         }
 
         MethodInfo[] GetMethodInfo(Type t, string methodName)

@@ -28,7 +28,7 @@ namespace Strawberry.Test
             f.Friction = 0.5f;
         }
 
-        public void FixedUpdate()
+        public override void OnFixedUpdate()
         {
             body.Position = Transform.Position / MyGameContext.ppm;
         }
