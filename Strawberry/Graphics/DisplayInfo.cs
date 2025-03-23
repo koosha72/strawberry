@@ -6,7 +6,7 @@
 
         public abstract int Height { get; }
 
-        public static DisplayInfo GetDisplayInfo()
+        public static DisplayInfo? GetDisplayInfo()
         {
             return null;
         }
