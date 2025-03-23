@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Strawberry
+﻿namespace Strawberry
 {
     /// <summary>
     /// The Base Class for any object containing unmanged references.

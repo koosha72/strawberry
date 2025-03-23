@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Strawberry
+﻿namespace Strawberry
 {
     /// <summary>
     /// Base class of all refernce objects. All entities or components are derrived from this class. It is used for serilization and deserialization.

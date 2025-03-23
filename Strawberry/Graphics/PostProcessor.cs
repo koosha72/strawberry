@@ -1,7 +1,4 @@
 ﻿using Strawberry.Collection;
-using Strawberry.Core;
-using System;
-using tainicom.Aether.Physics2D.Collision.Shapes;
 
 namespace Strawberry.Graphics
 {

@@ -1,8 +1,6 @@
 ﻿using OpenTK.Audio.OpenAL;
 using Strawberry.Math;
 using Strawberry.Sound;
-using System.Runtime.InteropServices;
-using System.Threading.Channels;
 
 namespace Strawberry.OpenGL.Sound
 {

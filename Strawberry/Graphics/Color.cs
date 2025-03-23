@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Strawberry.Graphics
+﻿namespace Strawberry.Graphics
 {
     /// <summary>
     /// Represents a Color

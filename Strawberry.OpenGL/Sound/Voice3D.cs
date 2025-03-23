@@ -1,12 +1,6 @@
 ﻿using OpenTK.Audio.OpenAL;
 using Strawberry.Math;
 using Strawberry.Sound;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using tainicom.Aether.Physics2D;
 
 namespace Strawberry.OpenGL.Sound
 {

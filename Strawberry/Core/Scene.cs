@@ -2,7 +2,6 @@
 using Strawberry.Graphics.Layers;
 using Strawberry.Math;
 using Strawberry.Misc;
-using System.Diagnostics;
 using tainicom.Aether.Physics2D.Dynamics;
 
 namespace Strawberry.Core

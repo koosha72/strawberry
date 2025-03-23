@@ -2,11 +2,6 @@
 using Strawberry.Graphics.Layers;
 using Strawberry.Graphics;
 using Strawberry.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Strawberry.Math;
 
 namespace Strawberry.Components
