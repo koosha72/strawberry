@@ -10,7 +10,7 @@ namespace Strawberry.Test
         {
             MyGameContext stdGameContext = new MyGameContext();
             Game game = new Game();
-            game.Run(stdGameContext, new Strawberry.OpenGL.GameLauncher());
+            game.Run(stdGameContext, new OpenGL.GameLauncher());
         }
     }
 }

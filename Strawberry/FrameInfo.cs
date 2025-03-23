@@ -48,6 +48,16 @@ namespace Strawberry
         float FixedDeltaTime { get; }
 
         TimeSpan ElapsedTime { get; }
+
+        bool ShouldFixedUpdate { get; }
+
+        void Initialize();
+
+        void BeginUpdate();
+
+        void FixedUpdate();
+
+        void EndUpdate();
     }
 
     public static class FrameInfo
