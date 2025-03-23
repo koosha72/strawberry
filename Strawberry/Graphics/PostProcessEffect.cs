@@ -12,10 +12,13 @@ namespace Strawberry.Graphics
         public IGraphicsContext GraphicsContext { get; set; }
         public IShader Shader { get; set; }
 
-        public PostProcessEffect(IShader shader)
+        public string TextureParameterName { get; private set; }
+
+        public PostProcessEffect(IShader shader, string textureParameterName)
         {
             GraphicsContext = shader.GraphicsContext;
             RenderTarget = GraphicsContext.CreateRenderTarget(GraphicsContext.ActiveViewport.ScreenSize);
+            TextureParameterName = textureParameterName;
         }
 
         public void Activate()

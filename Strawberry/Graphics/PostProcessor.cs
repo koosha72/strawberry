@@ -39,7 +39,7 @@ namespace Strawberry.Graphics
 
         public void Activate()
         {
-            if(effects.Count == 0)
+            if (effects.Count == 0)
             {
                 GraphicsContext.ActivateRenderTarget(null);
                 return;
@@ -57,12 +57,12 @@ namespace Strawberry.Graphics
             {
                 effects[i].Activate();
                 effects[i - 1].Shader.Activate();
-                effects[i - 1].RenderTarget.Texture.Activate(effects[i - 1].Shader, "tex0");
+                effects[i - 1].RenderTarget.Texture.Activate(effects[i - 1].Shader, effects[i - 1].TextureParameterName);
             }
-            
+
             GraphicsContext.ActivateRenderTarget(null);
             effects[i - 1].Shader.Activate();
-            effects[i - 1].RenderTarget.Texture.Activate(effects[i - 1].Shader, "tex0");
+            effects[i - 1].RenderTarget.Texture.Activate(effects[i - 1].Shader, effects[i - 1].TextureParameterName);
             geometry.Render();
         }
 
