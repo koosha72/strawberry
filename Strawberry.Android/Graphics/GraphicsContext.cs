@@ -107,7 +107,6 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public void BeginRender()
     {
-        wnd.MakeCurrent();
     }
 
     public void Clear(float r, float g, float b, float a)
@@ -123,7 +122,6 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public IGeometry<T> CreateGeometry<T>(T[] vertices, uint[] indices, GeometryType vbType, GeometryType ibType) where T : struct
     {
-        wnd.MakeCurrent();
         IGeometry<T> geo = new Geometry<T>(this, vertices, indices, vbType, ibType);
 
         return geo;
@@ -131,7 +129,6 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public IRenderTarget CreateRenderTarget(int width, int height)
     {
-        wnd.MakeCurrent();
         return new RenderTarget(this, width, height);
     }
 
@@ -142,7 +139,6 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public IShader CreateShader(string vsCode, string psCode, string vsEntryPoint, string psEntryPoint, VertexElementContainer elements)
     {
-        wnd.MakeCurrent();
         Shader shader = new Shader(this, vsCode, psCode, elements);
 
         return shader;
@@ -150,13 +146,11 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public ITexture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8)
     {
-        wnd.MakeCurrent();
         return new Texture(this, width, height, data, format);
     }
 
     public ITexture CreateTexture(int width, int height, byte[] data, TextureFormat format = TextureFormat.R8G8B8A8)
     {
-        wnd.MakeCurrent();
         return new Texture(this, width, height, data, format);
     }
 
@@ -178,7 +172,6 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public void SetViewport(Viewport viewport)
     {
-        wnd.MakeCurrent();
         if (wnd != null)
         {
             GLES30.GlViewport((int)viewport.ScreenPos.X, -(int)viewport.ScreenPos.Y,

@@ -50,10 +50,7 @@ public class GameLauncher : Activity, IGameLauncher
         eglHelper = new EGLHelper();
         eglHelper.Init(holder.Surface);
 
-        GraphicsContext = new GraphicsContext();
-        GraphicsContext.Initialize(eglHelper, w, h, true);
-
-        Initialized?.Invoke();
+        gameLoop.Start();
     }
 
     private void surfaceView_SurfaceDestroyed(ISurfaceHolder holder)
@@ -72,6 +69,11 @@ public class GameLauncher : Activity, IGameLauncher
 
     private void GameLoopThread(object? obj)
     {
+        eglHelper.MakeCurrent();
+        GraphicsContext = new GraphicsContext();
+        GraphicsContext.Initialize(eglHelper, w, h, true);
+        Initialized?.Invoke();
+
         while (running)
         {
             if (GraphicsContext != null)
@@ -81,6 +83,6 @@ public class GameLauncher : Activity, IGameLauncher
 
     public void Run()
     {
-        gameLoop.Start();
+        //gameLoop.Start();
     }
 }
