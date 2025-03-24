@@ -55,6 +55,7 @@ namespace Strawberry.OpenGL.Graphics
 
         public void BeginRender()
         {
+            
         }
 
         public void Clear(float r, float g, float b, float a)

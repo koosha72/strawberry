@@ -15,6 +15,8 @@ namespace Strawberry
 
         IFrameInfoProvider frameInfoProvider;
 
+        bool initialized = false;
+
 
         //public static Game CurrentGame { get; private set; }
 
@@ -54,6 +56,7 @@ namespace Strawberry
             frameInfoProvider.Initialize();
             launcher.InputManager?.Initialize();
             GameContext.OnInitialize(launcher);
+            initialized = true;
         }
 
         void FixedUpdate()
@@ -89,6 +92,8 @@ namespace Strawberry
         /// </summary>
         void Update()
         {
+            if (!initialized)
+                return;
             frameInfoProvider.BeginUpdate();
             FixedUpdate();
             VariableUpdate();

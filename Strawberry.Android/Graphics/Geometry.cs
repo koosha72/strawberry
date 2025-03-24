@@ -32,8 +32,7 @@ internal class Geometry<T> : Base, IGeometry<T> where T : struct
         GLES30.GlBindBuffer(GLES30.GlArrayBuffer, vbo);
         GLES30.GlBindBuffer(GLES30.GlElementArrayBuffer, ibo);
 
-        byte[] verticesBytes = new byte[vertices.Length * size];
-        System.Buffer.BlockCopy(vertices, 0, verticesBytes, 0, verticesBytes.Length);
+        byte[] verticesBytes = MemoryMarshal.AsBytes<T>(vertices).ToArray();
 
         ByteBuffer verticesBuffer = ByteBuffer.Wrap(verticesBytes);
 
@@ -82,8 +81,7 @@ internal class Geometry<T> : Base, IGeometry<T> where T : struct
     public void UpdateVB(T[] vertices)
     {
         GLES30.GlBindBuffer(GLES30.GlArrayBuffer, vbo);
-        byte[] verticesBytes = new byte[vertices.Length * size];
-        System.Buffer.BlockCopy(vertices, 0, verticesBytes, 0, verticesBytes.Length);
+        byte[] verticesBytes = MemoryMarshal.AsBytes<T>(vertices).ToArray();
 
         ByteBuffer verticesBuffer = ByteBuffer.Wrap(verticesBytes);
 

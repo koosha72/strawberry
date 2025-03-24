@@ -108,6 +108,8 @@ namespace Strawberry
 
         public void BeginUpdate()
         {
+            if (timer == null)
+                return;
             if (second == (int)timer.ElapsedMilliseconds / 1000)
             {
             }
@@ -130,6 +132,8 @@ namespace Strawberry
 
         public void FixedUpdate()
         {
+            if (timer == null)
+                return;
             frame++;
             loop++;
             nextTime += msSkip;
@@ -138,6 +142,8 @@ namespace Strawberry
 
         public void EndUpdate()
         {
+            if (timer == null)
+                return;
             totalFrameTime = timer.ElapsedTicks - lastMs;
             lastMs = timer.ElapsedTicks;
             LastTime = totalFrameTime * 0.9f + LastTime * 0.1f;

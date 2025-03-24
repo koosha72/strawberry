@@ -19,7 +19,7 @@ public class Shader : Base, IShader
     {
         program = GLES30.GlCreateProgram();
 
-        int[] cs = new int[1];
+        int[] cs = new int[1] { -1 };
         int status = 0;
         string info = "";
         int vertexShader = GLES30.GlCreateShader(GLES30.GlVertexShader);
@@ -29,7 +29,7 @@ public class Shader : Base, IShader
         GLES30.GlGetShaderiv(vertexShader, GLES30.GlCompileStatus, cs, 0);
         status = cs[0];
 
-        if (status != 1)
+        if (status != GLES30.GlTrue)
         {
             GLES30.GlDeleteShader(vertexShader);
             GLES30.GlDeleteProgram(program);
@@ -48,7 +48,7 @@ public class Shader : Base, IShader
         GLES30.GlGetShaderiv(fragmentShader, GLES30.GlCompileStatus, cs, 0);
         status = cs[0];
 
-        if (status != 1)
+        if (status != GLES30.GlTrue)
         {
             GLES30.GlDeleteShader(fragmentShader);
             GLES30.GlDeleteProgram(program);
