@@ -11,7 +11,6 @@ namespace Strawberry
     {
         public IGameContext GameContext { get; private set; }
 
-        public IGraphicsContext GraphicsContext { get; private set; }
         IGameLauncher launcher;
 
         IFrameInfoProvider frameInfoProvider;

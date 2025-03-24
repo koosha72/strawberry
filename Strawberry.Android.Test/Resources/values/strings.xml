@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Strawberry.Android.Test</string>
+    <string name="app_text">Hello, Android!</string>
+</resources>

@@ -1,4 +1,6 @@
-namespace Strawberry.Test
+﻿using Strawberry.Test;
+
+namespace Strawberry.Desktop.Test
 {
     internal static class Program
     {
