@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Android.Graphics;
 using Android.Opengl;
 using Java.Nio;
@@ -58,17 +59,12 @@ internal class Texture : Base, ITexture
                 internalFormat = GLES30.GlAlpha;
                 break;
         }
-        FloatBuffer buffer = FloatBuffer.Allocate(data.Length * 4);
-        foreach (var c in data)
-        {
-            buffer.Put(c.R);
-            buffer.Put(c.G);
-            buffer.Put(c.B);
-            buffer.Put(c.A);
-        }
+        byte[] colorsBytes = MemoryMarshal.AsBytes<Color>(data).ToArray();
+
+        ByteBuffer colorsBuffer = ByteBuffer.Wrap(colorsBytes);
 
         GLES30.GlTexImage2D(GLES30.GlTexture2d, 0, internalFormat,
-            width, height, 0, pformat, GLES30.GlFloat, buffer);
+            width, height, 0, pformat, GLES30.GlFloat, colorsBuffer);
         this.format = pformat;
         this.Width = width;
         this.Height = height;
