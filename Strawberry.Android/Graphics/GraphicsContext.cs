@@ -7,15 +7,18 @@ namespace Strawberry.Android.Graphics;
 
 public class GraphicsContext : Base, IGraphicsContext
 {
-    public Viewport ActiveViewport => throw new NotImplementedException();
+    public Viewport ActiveViewport { get; private set; }
 
     public IShader ActiveShader { get; internal set; }
 
     public ITexture PixelTexture { get; private set; }
 
-    public IRenderTarget ActiveRenderTarget => throw new NotImplementedException();
+    RenderTarget renderTarget;
 
-    public bool IsDisposed => throw new NotImplementedException();
+    public IRenderTarget ActiveRenderTarget
+    {
+        get { return renderTarget; }
+    }
 
     EGLHelper wnd = null;
 
@@ -48,52 +51,98 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public void ActivateBlendMode(string name)
     {
-        throw new NotImplementedException();
+        BlendState state = blendStates[name];
+
+        GLES30.GlBlendColor(state.Color.R, state.Color.G, state.Color.B, state.Color.A);
+        GLES30.GlBlendFuncSeparate(state.RGBSource, state.RGBDest, state.AlphaSource, state.AlphaDest);
+        GLES30.GlBlendEquationSeparate(state.RGBEquation, state.AlphaEquation);
     }
 
     public void ActivateRenderTarget(IRenderTarget renderTarget)
     {
-        throw new NotImplementedException();
+        this.renderTarget = (RenderTarget)renderTarget;
+        if (this.renderTarget == null)
+        {
+            GLES30.GlBindFramebuffer(GLES30.GlFramebuffer, 0);
+            return;
+        }
+        GLES30.GlBindFramebuffer(GLES30.GlFramebuffer, this.renderTarget.GLFrameBuffer);
     }
 
     public void AddBlendMode(BlendMode mode, string name)
     {
-        throw new NotImplementedException();
+        BlendState state = new BlendState();
+
+        state.Color = mode.Color;
+
+        state.RGBSource = ToGlBlending(mode.RGBSourceFactor);
+
+        state.RGBDest = ToGlBlending(mode.RGBDestFactor);
+
+        state.AlphaSource = ToGlBlending(mode.AlphaSourceFactor);
+
+        state.AlphaDest = ToGlBlending(mode.AlphaDestFactor);
+
+        switch (mode.RGBEquation)
+        {
+            case BlendEquation.Add:
+                state.RGBEquation = GLES30.GlFuncAdd;
+                break;
+            case BlendEquation.Subtract:
+                state.RGBEquation = GLES30.GlFuncSubtract;
+                break;
+        }
+
+        switch (mode.AlphaEquation)
+        {
+            case BlendEquation.Add:
+                state.AlphaEquation = GLES30.GlFuncAdd;
+                break;
+            case BlendEquation.Subtract:
+                state.AlphaEquation = GLES30.GlFuncSubtract;
+                break;
+        }
+
+        blendStates.Add(name, state);
     }
 
     public void BeginRender()
     {
-        throw new NotImplementedException();
     }
 
     public void Clear(float r, float g, float b, float a)
     {
-        throw new NotImplementedException();
+        GLES30.GlClearColor(r, g, b, a);
+        GLES30.GlClear(GLES30.GlColorBufferBit | GLES30.GlDepthBufferBit);
     }
 
     public void Clear(Color color)
     {
-        throw new NotImplementedException();
+        Clear(color.R, color.G, color.B, color.A);
     }
 
     public IGeometry<T> CreateGeometry<T>(T[] vertices, uint[] indices, GeometryType vbType, GeometryType ibType) where T : struct
     {
-        throw new NotImplementedException();
+        IGeometry<T> geo = new Geometry<T>(this, vertices, indices, vbType, ibType);
+
+        return geo;
     }
 
     public IRenderTarget CreateRenderTarget(int width, int height)
     {
-        throw new NotImplementedException();
+        return new RenderTarget(this, width, height);
     }
 
     public IRenderTarget CreateRenderTarget(Vector2 size)
     {
-        throw new NotImplementedException();
+        return CreateRenderTarget((int)size.X, (int)size.Y);
     }
 
     public IShader CreateShader(string vsCode, string psCode, string vsEntryPoint, string psEntryPoint, VertexElementContainer elements)
     {
-        throw new NotImplementedException();
+        Shader shader = new Shader(this, vsCode, psCode, elements);
+
+        return shader;
     }
 
     public ITexture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8)
@@ -108,12 +157,13 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public void EndRender()
     {
-        throw new NotImplementedException();
+        if (wnd != null)
+            wnd.SwapBuffers();
     }
 
     public bool IsApplicationIdle()
     {
-        throw new NotImplementedException();
+        return false;
     }
 
     public void Resize(int width, int height)
@@ -123,6 +173,45 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public void SetViewport(Viewport viewport)
     {
-        throw new NotImplementedException();
+        if (wnd != null)
+        {
+            GLES30.GlViewport((int)viewport.ScreenPos.X, -(int)viewport.ScreenPos.Y,
+                (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
+        }
+        else
+        {
+            GLES30.GlViewport((int)viewport.ScreenPos.X, -(int)viewport.ScreenPos.Y,
+                (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
+        }
+        this.ActiveViewport = viewport;
+    }
+
+    int ToGlBlending(BlendFactor factor)
+    {
+        int result = GLES30.GlOne;
+
+        switch (factor)
+        {
+            case BlendFactor.SrcAlpha:
+                result = GLES30.GlSrcAlpha;
+                break;
+            case BlendFactor.InvSrcAlpha:
+                result = GLES30.GlOneMinusSrcAlpha;
+                break;
+            case BlendFactor.One:
+                result = GLES30.GlOne;
+                break;
+            case BlendFactor.Zero:
+                result = GLES30.GlZero;
+                break;
+            case BlendFactor.SrcColor:
+                result = GLES30.GlSrcColor;
+                break;
+            case BlendFactor.InvSrcColor:
+                result = GLES30.GlOneMinusSrcColor;
+                break;
+        }
+
+        return result;
     }
 }

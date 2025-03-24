@@ -4,14 +4,14 @@ namespace Strawberry.Android.Graphics;
 
 public class BlendState
 {
-    public BlendFactor RGBSource;
-    public BlendFactor RGBDest;
+    public int RGBSource;
+    public int RGBDest;
 
-    public BlendFactor AlphaSource;
-    public BlendFactor AlphaDest;
+    public int AlphaSource;
+    public int AlphaDest;
 
-    public BlendFactor RGBEquation;
-    public BlendFactor AlphaEquation;
+    public int RGBEquation;
+    public int AlphaEquation;
 
     public Color Color;
 }
