@@ -50,10 +50,10 @@ public class GameLauncher : Activity, IGameLauncher
         eglHelper = new EGLHelper();
         eglHelper.Init(holder.Surface);
 
+        Initialized?.Invoke();
+
         GraphicsContext = new GraphicsContext();
         GraphicsContext.Initialize(eglHelper, w, h, true);
-
-        Initialized?.Invoke();
     }
 
     private void surfaceView_SurfaceDestroyed(ISurfaceHolder holder)

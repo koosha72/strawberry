@@ -51,9 +51,9 @@ namespace Strawberry
         /// </summary>
         void Initialize()
         {
+            frameInfoProvider.Initialize();
             launcher.InputManager?.Initialize();
             GameContext.OnInitialize(launcher);
-            frameInfoProvider.Initialize();
         }
 
         void FixedUpdate()
