@@ -301,7 +301,7 @@
 
         public string ToHex()
         {
-            return ((byte)(R*255)).ToString("X2") +
+            return ((byte)(R * 255)).ToString("X2") +
                 ((byte)(G * 255)).ToString("X2") +
                 ((byte)(B * 255)).ToString("X2") +
                 ((byte)(A * 255)).ToString("X2");

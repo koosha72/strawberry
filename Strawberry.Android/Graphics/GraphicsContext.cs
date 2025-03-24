@@ -5,9 +5,11 @@ using Strawberry.Math;
 
 namespace Strawberry.Android.Graphics;
 
-public class GraphicsContext : IGraphicsContext
+public class GraphicsContext : Base, IGraphicsContext
 {
     public Viewport ActiveViewport => throw new NotImplementedException();
+
+    public IShader ActiveShader { get; internal set; }
 
     public ITexture PixelTexture { get; private set; }
 
@@ -96,22 +98,12 @@ public class GraphicsContext : IGraphicsContext
 
     public ITexture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8)
     {
-        throw new NotImplementedException();
+        return new Texture(this, width, height, data, format);
     }
 
     public ITexture CreateTexture(int width, int height, byte[] data, TextureFormat format = TextureFormat.R8G8B8A8)
     {
-        throw new NotImplementedException();
-    }
-
-    public void Dispose(bool disposing)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Dispose()
-    {
-        throw new NotImplementedException();
+        return new Texture(this, width, height, data, format);
     }
 
     public void EndRender()
