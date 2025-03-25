@@ -11,7 +11,7 @@ namespace Strawberry.Test
     {
         public const float ppm = 32f;
 
-        public MyGameContext() : base(800, 600)
+        public MyGameContext() : base(1280, 720)
         {
 
         }
@@ -19,7 +19,7 @@ namespace Strawberry.Test
         public override void OnInitialize(IGameLauncher laucnher)
         {
             base.OnInitialize(laucnher);
-            Viewport viewport = new Viewport("Default", new Vector2(), new Vector2(800, 600), new Vector2(), new Vector2(800, 600));
+            Viewport viewport = new Viewport("Default", new Vector2(), GraphicsContext.GetScreenSize(), new Vector2(), new Vector2(1280, 720));
             SpriteLayer layer = new SpriteLayer();
             //BackgroundLayer bg = new BackgroundLayer();
             layer.Sorter = new IsometricRenderingSorter();
@@ -34,7 +34,7 @@ namespace Strawberry.Test
             bg.TileV = -1;
             bg.Color = Color.Green;*/
 
-            Scene scene = new Scene("Main", 800, 600);
+            Scene scene = new Scene("Main", 1280, 720);
             scene.ClearColor = Color.CornflowerBlue;
             AddScene(scene);
             SetScene("Main");
