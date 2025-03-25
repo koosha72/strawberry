@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Android.Views;
 using Strawberry.Android.Graphics;
 using Strawberry.Android.Helpers;
+using Strawberry.Android.Input;
 using Strawberry.Graphics;
 using Strawberry.Input;
 using Strawberry.Sound;
@@ -72,6 +73,7 @@ public class GameLauncher : Activity, IGameLauncher
         eglHelper.MakeCurrent();
         GraphicsContext = new GraphicsContext();
         GraphicsContext.Initialize(eglHelper, w, h, true);
+        InputManager = new InputManager();
         Initialized?.Invoke();
 
         while (running)
@@ -84,5 +86,12 @@ public class GameLauncher : Activity, IGameLauncher
     public void Run()
     {
         //gameLoop.Start();
+    }
+
+    public override bool OnTouchEvent(MotionEvent? e)
+    {
+        (this.InputManager.PointingDevice as PointingDevice).OnTouch(e);
+
+        return base.OnTouchEvent(e);
     }
 }
