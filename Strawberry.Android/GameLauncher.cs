@@ -7,6 +7,7 @@ using Strawberry.Android.Input;
 using Strawberry.Graphics;
 using Strawberry.Input;
 using Strawberry.Sound;
+using Strawberry.OpenAL;
 using Activity = Android.App.Activity;
 
 namespace Strawberry.Android;
@@ -74,6 +75,7 @@ public class GameLauncher : Activity, IGameLauncher
         GraphicsContext = new GraphicsContext();
         GraphicsContext.Initialize(eglHelper, w, h, true);
         InputManager = new InputManager();
+        SoundManager = new SoundManager();
         Initialized?.Invoke();
 
         while (running)
