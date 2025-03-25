@@ -100,14 +100,8 @@ namespace Strawberry.OpenGL.Input
 
         public void Update()
         {
-            if (pressedOnce)
-                PressedButtons[0] = PointerButtons.None;
-            if (PressedButtons[0] != PointerButtons.None)
-                pressedOnce = true;
-            if (releasedOnce)
-                ReleasedButtons[0] = PointerButtons.None;
-            if (ReleasedButtons[0] != PointerButtons.None)
-                releasedOnce = true;
+            PressedButtons[0] = PointerButtons.None;
+            ReleasedButtons[0] = PointerButtons.None;
         }
     }
 }

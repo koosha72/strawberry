@@ -63,7 +63,6 @@ namespace Strawberry
         {
             while (frameInfoProvider.ShouldFixedUpdate)
             {
-                launcher.InputManager?.Update();
                 GameContext.OnFixedUpdate();
                 frameInfoProvider.FixedUpdate();
             }
@@ -75,6 +74,7 @@ namespace Strawberry
             {
                 GameContext.OnUpdate();
                 GameContext.OnEndUpdate();
+                launcher.InputManager?.Update();
             }
         }
 

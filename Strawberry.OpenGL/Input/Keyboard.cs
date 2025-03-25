@@ -46,7 +46,6 @@ namespace Strawberry.OpenGL.Input
         {
             if (!obj.IsRepeat)
             {
-                pressedOnce = false;
                 pressedKeys.Add((Keys)obj.Key);
                 downKeys.Add((Keys)obj.Key);
             }
@@ -54,7 +53,6 @@ namespace Strawberry.OpenGL.Input
 
         internal void KeyReleased(OpenTK.Windowing.Common.KeyboardKeyEventArgs obj)
         {
-            releasedOnce = false;
             releasedKeys.Add((Keys)obj.Key);
             if (downKeys.Contains((Keys)obj.Key))
                 downKeys.Remove((Keys)obj.Key);
@@ -62,14 +60,8 @@ namespace Strawberry.OpenGL.Input
 
         public void Update()
         {
-            if (pressedOnce)
-                pressedKeys.Clear();
-            if (pressedKeys.Count() > 0)
-                pressedOnce = true;
-            if (releasedOnce)
-                releasedKeys.Clear();
-            if (releasedKeys.Count() > 0)
-                releasedOnce = true;
+            pressedKeys.Clear();
+            releasedKeys.Clear();
         }
     }
 }
