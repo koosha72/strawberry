@@ -5,6 +5,7 @@ using Strawberry.OpenGL.Graphics;
 using Strawberry.OpenGL.Input;
 using Strawberry.Sound;
 using Strawberry.OpenAL;
+using Strawberry.Misc;
 
 
 namespace Strawberry.OpenGL
@@ -19,6 +20,8 @@ namespace Strawberry.OpenGL
         public IInputManager InputManager { get; private set; }
 
         public ISoundManager SoundManager { get; private set; }
+
+        public IStorage Storage { get; private set; }
 
         public event Action Initialized;
         public event Action GameLoop;
@@ -45,6 +48,7 @@ namespace Strawberry.OpenGL
 
             InputManager = new Input.InputManager();
             SoundManager = new SoundManager();
+            Storage = new StorageManager();
         }
 
         private void Wnd_Load1()

@@ -1,5 +1,6 @@
 ﻿using Strawberry.Graphics;
 using Strawberry.Input;
+using Strawberry.Misc;
 using Strawberry.Sound;
 
 namespace Strawberry
@@ -18,6 +19,8 @@ namespace Strawberry
         IInputManager InputManager { get; }
 
         ISoundManager SoundManager { get; }
+
+        IStorage Storage { get; }
 
         /// <summary>
         /// Happens when the platform independent initializations (opening window, etc.) is finished.

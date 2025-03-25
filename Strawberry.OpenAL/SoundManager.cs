@@ -45,7 +45,7 @@ namespace Strawberry.OpenAL
 
         public ISoundBuffer CreateSoundBuffer(string fileName)
         {
-            var bytes = File.ReadAllBytes(fileName);
+            var bytes = Game.Storage.ReadAllBytes(fileName);
 
             return CreateSoundBuffer(bytes);
         }
