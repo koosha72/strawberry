@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Strawberry\Strawberry.csproj" />
+    <ProjectReference Include="..\Strawberry.OpenAL\Strawberry.OpenAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

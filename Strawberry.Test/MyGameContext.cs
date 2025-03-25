@@ -67,6 +67,9 @@ namespace Strawberry.Test
             entity3.GetComponent<TransformComponent>().Position = new Vector2(144f, -64f);
             entity3.GetComponent<TransformComponent>().Angle = 356f;
             entity3.AddComponent<PhysicsBodyComponent>();
+
+            var buffer = SoundManager.CreateSoundBuffer("timeup.wav");
+            buffer.Play();
         }
     }
 }

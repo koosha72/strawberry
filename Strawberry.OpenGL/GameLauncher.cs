@@ -4,6 +4,7 @@ using Strawberry.Input;
 using Strawberry.OpenGL.Graphics;
 using Strawberry.OpenGL.Input;
 using Strawberry.Sound;
+using Strawberry.OpenAL;
 
 
 namespace Strawberry.OpenGL
@@ -43,7 +44,7 @@ namespace Strawberry.OpenGL
             GraphicsContext.Initialize(wnd, width, height, true);
 
             InputManager = new Input.InputManager();
-            SoundManager = new Sound.SoundManager();
+            SoundManager = new SoundManager();
         }
 
         private void Wnd_Load1()
