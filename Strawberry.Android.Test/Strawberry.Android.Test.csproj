@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Strawberry.Android\Strawberry.Android.csproj" />
     <ProjectReference Include="..\Strawberry.Test\Strawberry.Test.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
 </Project>
