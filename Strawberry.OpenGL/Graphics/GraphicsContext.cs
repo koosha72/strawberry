@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using OpenTK.Windowing.Desktop;
 using Strawberry.Graphics;
 using Strawberry.Math;
 
@@ -55,7 +56,7 @@ namespace Strawberry.OpenGL.Graphics
 
         public void BeginRender()
         {
-            
+
         }
 
         public void Clear(float r, float g, float b, float a)
@@ -175,6 +176,12 @@ namespace Strawberry.OpenGL.Graphics
         protected override void CleanUnmanaged()
         {
             //DisplayDevice.Default.RestoreResolution();
+        }
+
+        public Vector2 GetScreenSize()
+        {
+            var monitor = Monitors.GetPrimaryMonitor();
+            return new Vector2(monitor.ClientArea.Size.X, monitor.ClientArea.Size.Y);
         }
 
         #region private methods

@@ -165,6 +165,17 @@ public class GraphicsContext : Base, IGraphicsContext
         return false;
     }
 
+    public Vector2 GetScreenSize()
+    {
+        if (wnd != null)
+        {
+            return wnd.GetScreenSize();
+        }
+
+        return Vector2.Zero;
+    }
+
+
     public void Resize(int width, int height)
     {
         throw new NotImplementedException();

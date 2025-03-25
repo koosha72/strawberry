@@ -1,5 +1,6 @@
 using Android.Opengl;
 using Android.Views;
+using Strawberry.Math;
 
 namespace Strawberry.Android.Helpers;
 
@@ -55,5 +56,15 @@ public class EGLHelper
         EGL14.EglDestroySurface(eglDisplay, eglSurface);
         EGL14.EglDestroyContext(eglDisplay, eglContext);
         EGL14.EglTerminate(eglDisplay);
+    }
+
+    public Vector2 GetScreenSize()
+    {
+        int[] w = new int[1];
+        EGL14.EglQuerySurface(eglDisplay, eglSurface, EGL14.EglWidth, w, 0);
+        int[] h = new int[1];
+        EGL14.EglQuerySurface(eglDisplay, eglSurface, EGL14.EglWidth, h, 0);
+
+        return new Vector2(w[0], h[0]);
     }
 }

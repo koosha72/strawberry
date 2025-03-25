@@ -141,5 +141,7 @@ namespace Strawberry.Graphics
         /// <param name="width">New width</param>
         /// <param name="height">New height</param>
         void Resize(int width, int height);
+
+        Vector2 GetScreenSize();
     }
 }
