@@ -14,17 +14,20 @@ namespace Strawberry.OpenGL.Input
         List<Keys> pressedKeys = new List<Keys>();
         List<Keys> releasedKeys = new List<Keys>();
 
-        bool pressedOnce = false;
-        bool releasedOnce = false;
-
         public void FirePressed(Keys key)
         {
-            throw new NotImplementedException();
+            if (!IsKeyDown(key))
+            {
+                pressedKeys.Add(key);
+                downKeys.Add(key);
+            }
         }
 
         public void FireReleased(Keys key)
         {
-            throw new NotImplementedException();
+            releasedKeys.Add(key);
+            if (downKeys.Contains(key))
+                downKeys.Remove(key);
         }
 
         public bool IsKeyDown(Keys key)

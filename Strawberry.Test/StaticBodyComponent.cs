@@ -31,10 +31,25 @@ namespace Strawberry.Test
         public override void OnUpdate()
         {
             base.OnUpdate();
-            if (GameContext.InputManager.PointingDevice.IsButtonDown(0, Input.PointerButtons.Primary))
-                Transform.Position += new Math.Vector2(0, 4 * MyGameContext.ppm) * FrameInfo.Information.DeltaTime;
-            if (GameContext.InputManager.PointingDevice.IsButtonDown(0, Input.PointerButtons.Secondary))
-                Transform.Position -= new Math.Vector2(0, 4 * MyGameContext.ppm) * FrameInfo.Information.DeltaTime;
+            if (GameContext.InputManager.PointingDevice.IsButtonPressed(0, Input.PointerButtons.Primary))
+            {
+                var pos = GameContext.InputManager.PointingDevice.GetPosition(0);
+                if (pos.X > 320)
+                    GameContext.InputManager.Keyboard.FirePressed(Input.Keys.Space);
+            }
+
+            if (GameContext.InputManager.PointingDevice.IsButtonReleased(0, Input.PointerButtons.Primary))
+            {
+                if (GameContext.InputManager.Keyboard.IsKeyDown(Input.Keys.Space))
+                {
+                    GameContext.InputManager.Keyboard.FireReleased(Input.Keys.Space);
+                }
+            }
+
+            if (GameContext.InputManager.Keyboard.IsKeyDown(Input.Keys.Space))
+            {
+                Transform.Position += new Math.Vector2(0f, 1f * MyGameContext.ppm) * FrameInfo.Information.DeltaTime;
+            }
         }
     }
 }

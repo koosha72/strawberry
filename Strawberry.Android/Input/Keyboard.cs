@@ -1,38 +1,53 @@
-using System;
 using Strawberry.Input;
 
 namespace Strawberry.Android.Input;
 
 public class Keyboard : IKeyboard
 {
-    public IEnumerable<Keys> DownKeys => throw new NotImplementedException();
+    public IEnumerable<Keys> DownKeys => downKeys;
 
-    public IEnumerable<Keys> PressedKeys => throw new NotImplementedException();
+    public IEnumerable<Keys> PressedKeys => pressedKeys;
 
-    public IEnumerable<Keys> RelasedKeys => throw new NotImplementedException();
+    public IEnumerable<Keys> RelasedKeys => releasedKeys;
+
+    List<Keys> downKeys = new List<Keys>();
+    List<Keys> pressedKeys = new List<Keys>();
+    List<Keys> releasedKeys = new List<Keys>();
 
     public void FirePressed(Keys key)
     {
-        throw new NotImplementedException();
+        if (!IsKeyDown(key))
+        {
+            pressedKeys.Add(key);
+            downKeys.Add(key);
+        }
     }
 
     public void FireReleased(Keys key)
     {
-        throw new NotImplementedException();
+        releasedKeys.Add(key);
+        if (downKeys.Contains(key))
+            downKeys.Remove(key);
     }
 
     public bool IsKeyDown(Keys key)
     {
-        throw new NotImplementedException();
+        return downKeys.Contains(key);
     }
 
     public bool IsKeyPressed(Keys key)
     {
-        throw new NotImplementedException();
+        return pressedKeys.Contains(key);
     }
 
     public bool IsKeyReleased(Keys key)
     {
-        throw new NotImplementedException();
+        return releasedKeys.Contains(key);
+    }
+
+    public void Update()
+    {
+        pressedKeys.Clear();
+        releasedKeys.Clear();
     }
 }
