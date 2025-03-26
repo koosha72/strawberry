@@ -32,7 +32,7 @@ namespace Strawberry.OpenGL
             NativeWindowSettings s = new NativeWindowSettings();
             s.Size = new OpenTK.Mathematics.Vector2i(width, height);
             s.Title = "Strawberry";
-            s.APIVersion = Version.Parse("4.6.0");
+            s.APIVersion = Version.Parse("4.1.0");
             GameWindowSettings g = new GameWindowSettings();
             g.UpdateFrequency = 500;
 
