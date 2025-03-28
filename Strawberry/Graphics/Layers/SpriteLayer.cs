@@ -26,8 +26,6 @@ namespace Strawberry.Graphics.Layers
 
         public IGraphicsContext GraphicsContext { get { return Scene.GameContext.GraphicsContext; } }
 
-        public float HalfTexel = 0.5f;
-
         Sprite pixelSprite;
 
         public int DrawCalls { get; set; }
@@ -103,10 +101,6 @@ namespace Strawberry.Graphics.Layers
             y += halfPixel.Y;
             w -= halfPixel.X * 2;
             h -= halfPixel.Y * 2;
-
-            float rx = (GraphicsContext.ActiveViewport.SceneSize.X / GraphicsContext.ActiveViewport.ScreenSize.X) + 0.0f;
-
-            float ry = (GraphicsContext.ActiveViewport.SceneSize.Y / GraphicsContext.ActiveViewport.ScreenSize.Y) + 0.0f;
 
             Vector2 pos1 = new Vector2(x, y);
             Vector2 pos2 = new Vector2(x + w, y);
