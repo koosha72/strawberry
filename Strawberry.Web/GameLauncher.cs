@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using Strawberry.Web.Helpers;
-using Silk.NET.OpenGLES;
 
 namespace Strawberry.Web;
 
@@ -64,10 +63,8 @@ public class GameLauncher
         if (!EGL.MakeCurrent(display, surface, surface, context))
             throw new Exception("MakeCurrent() failed");
 
-        TrampolineFuncs.ApplyWorkaroundFixingInvocations();
-
-        gl = GL.GetApi(EGL.GetProcAddress);
-        gl.Viewport(0, 0, 1280, 720);
+        //gl = GL.GetApi(EGL.GetProcAddress);
+        GL.glViewport(0, 0, 1280, 720);
 
 
         unsafe
@@ -78,8 +75,7 @@ public class GameLauncher
 
     public void GameLoop()
     {
-        Console.WriteLine("Clearing");
-        gl.ClearColor(0.392f, 0.584f, 0.929f, 1.0f);
-        gl.Clear(ClearBufferMask.ColorBufferBit);
+        GL.glClearColor(0.392f, 0.584f, 0.929f, 1.0f);
+        GL.glClear(16384);
     }
 }

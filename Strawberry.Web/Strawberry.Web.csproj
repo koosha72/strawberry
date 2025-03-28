@@ -14,8 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Strawberry.OpenAL\Strawberry.OpenAL.csproj" />
     <ProjectReference Include="..\Strawberry\Strawberry.csproj" />
-
-    <PackageReference Include="Silk.NET.OpenGLES" Version="2.17.1" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <NativeFileReference Include="Native/libEGL.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/libGLESv3.c" ScanForPInvokes="true" />
     <NativeFileReference Include="Native/openal32.c" ScanForPInvokes="true" />
     <NativeFileReference Include="Native/emscripten.c" ScanForPInvokes="true" />
 
