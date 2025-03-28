@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>11</LangVersion>
+    <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
+    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+    <IsAotCompatible>true</IsAotCompatible>
+    <NoWarn>$(NoWarn);RCS1090</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <EmccFlags>-s FULL_ES3=1 -lopenal -lGL -s</EmccFlags>
+    <WasmMainJSPath>main.js</WasmMainJSPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishTrimmed>true</PublishTrimmed>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <WasmBuildNative>true</WasmBuildNative>
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <!-- Disable SIMD support as it's prerelease only on Safari -->
+    <WasmEnableSIMD>false</WasmEnableSIMD>
+    <!-- Normal,JustInterp,Full,FullInterp,Hybrid,LLVMOnly,LLVMOnlyInterp -->
+    <!-- <AOTMode>LLVMOnly</AOTMode> -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Strawberry.Web\Strawberry.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <NativeFileReference Include="Native/libEGL.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/openal32.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/emscripten.c" ScanForPInvokes="true" />
+
+    <WasmExtraFilesToDeploy Include="index.html" />
+    <WasmExtraFilesToDeploy Include="main.js" />
+  </ItemGroup>
+
+</Project>
