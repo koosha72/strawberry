@@ -1,23 +1,30 @@
 import { dotnet } from './_framework/dotnet.js'
 
-const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
-    .withDiagnosticTracing(false)
-    .withApplicationArgumentsFromQuery()
-    .create();
+globalThis.document.getElementById("start").addEventListener('click', function () {
+    play();
+    globalThis.document.getElementById("start").remove();
+}, false);
 
-const config = getConfig();
-console.log(config);
+async function play() {
+    const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
+        .withDiagnosticTracing(false)
+        .withApplicationArgumentsFromQuery()
+        .create();
 
-const exports = await getAssemblyExports(config.mainAssemblyName);
+    const config = getConfig();
+    console.log(config);
 
-var canvas = globalThis.document.getElementById("canvas");
-dotnet.instance.Module["canvas"] = canvas;
+    const exports = await getAssemblyExports(config.mainAssemblyName);
 
-setModuleImports("main.js", {
-    initialize: () => {
-        console.log('initialize');
-    }
-});
+    var canvas = globalThis.document.getElementById("canvas");
+    dotnet.instance.Module["canvas"] = canvas;
+
+    setModuleImports("main.js", {
+        initialize: () => {
+            console.log('initialize');
+        }
+    });
 
 
-await dotnet.run();
+    await dotnet.run();
+}
