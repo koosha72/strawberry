@@ -25,6 +25,8 @@ public class GameLauncher : IGameLauncher
     public event Action Initialized;
     public event Action GameLoop;
 
+    string rootUrl = null;
+
     [UnmanagedCallersOnly]
     public static int JSGameLoop(double time, nint userData)
     {
@@ -32,10 +34,10 @@ public class GameLauncher : IGameLauncher
             instance.GameLoop?.Invoke();
         return 1;
     }
-
     public GameLauncher()
     {
         instance = this;
+        Storage = new StorageManager();
     }
 
     public void Initialize(int width, int height)
@@ -86,10 +88,26 @@ public class GameLauncher : IGameLauncher
         GraphicsContext = new GraphicsContext();
         GraphicsContext.Initialize(new EGLDisplayHolder(display, surface), width, height, true);
 
-        //SoundManager = new SoundManager();
+        SoundManager = new SoundManager();
         InputManager = new InputManager();
 
         Initialized?.Invoke();
+    }
+
+    public void SetRootUrl(string rootUrl)
+    {
+        if (Storage != null)
+            ((StorageManager)Storage).RootUrl = rootUrl;
+
+        this.rootUrl = rootUrl;
+    }
+
+    public async Task AOTDownload(string path)
+    {
+        if (rootUrl == null)
+            return;
+
+        await ((StorageManager)Storage).AOTDownload(path);
     }
 
     public void Run()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using System.Threading.Tasks;
 using Strawberry;
 using Strawberry.Test;
 using Strawberry.Web;
@@ -9,10 +10,13 @@ using Strawberry.Web;
 
 public static class Program
 {
-	public static void Main(string[] args)
+	public static async Task Main(string[] args)
 	{
 		MyGameContext stdGameContext = new MyGameContext();
 		Game game = new Game();
-		game.Run(stdGameContext, new Strawberry.Web.GameLauncher());
+		var l = new Strawberry.Web.GameLauncher();
+		l.SetRootUrl("https://localhost:7011/");
+		await l.AOTDownload("timeup.wav");
+		game.Run(stdGameContext, l);
 	}
 }
