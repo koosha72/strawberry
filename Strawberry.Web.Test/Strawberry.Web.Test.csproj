@@ -9,7 +9,7 @@
     <IsAotCompatible>true</IsAotCompatible>
     <NoWarn>$(NoWarn);RCS1090</NoWarn>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <EmccFlags>-s FULL_ES3=1 -lopenal -lGL -s</EmccFlags>
+    <EmccFlags>-s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -lopenal -lGL -s</EmccFlags>
     <WasmMainJSPath>main.js</WasmMainJSPath>
   </PropertyGroup>
 
@@ -25,6 +25,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Strawberry.Test\Strawberry.Test.csproj" />
     <ProjectReference Include="..\Strawberry.Web\Strawberry.Web.csproj" />
   </ItemGroup>
 

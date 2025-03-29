@@ -1,25 +1,45 @@
-using System;
 using System.Runtime.InteropServices;
+using Strawberry.Graphics;
+using Strawberry.Input;
+using Strawberry.Misc;
+using Strawberry.OpenAL;
+using Strawberry.Sound;
+using Strawberry.Web.Graphics;
 using Strawberry.Web.Helpers;
+using Strawberry.Web.Input;
 
 namespace Strawberry.Web;
 
-public class GameLauncher
+public class GameLauncher : IGameLauncher
 {
     static GameLauncher instance = null;
-    GL gl;
+
+    public IGraphicsContext GraphicsContext { get; private set; }
+
+    public IInputManager InputManager { get; private set; }
+
+    public ISoundManager SoundManager { get; private set; }
+
+    public IStorage Storage { get; private set; }
+
+    public event Action Initialized;
+    public event Action GameLoop;
 
     [UnmanagedCallersOnly]
-    public static int GameLoop(double time, nint userData)
+    public static int JSGameLoop(double time, nint userData)
     {
-        instance.GameLoop();
+        if (instance.GraphicsContext != null)
+            instance.GameLoop?.Invoke();
         return 1;
     }
 
     public GameLauncher()
     {
         instance = this;
+    }
 
+    public void Initialize(int width, int height)
+    {
         var display = EGL.GetDisplay(IntPtr.Zero);
         if (display == IntPtr.Zero)
             throw new Exception("Display was null");
@@ -63,19 +83,20 @@ public class GameLauncher
         if (!EGL.MakeCurrent(display, surface, surface, context))
             throw new Exception("MakeCurrent() failed");
 
-        //gl = GL.GetApi(EGL.GetProcAddress);
-        GL.glViewport(0, 0, 1280, 720);
+        GraphicsContext = new GraphicsContext();
+        GraphicsContext.Initialize(new EGLDisplayHolder(display, surface), width, height, true);
 
+        //SoundManager = new SoundManager();
+        InputManager = new InputManager();
 
-        unsafe
-        {
-            Emscripten.RequestAnimationFrameLoop((delegate* unmanaged<double, nint, int>)&GameLoop, nint.Zero);
-        }
+        Initialized?.Invoke();
     }
 
-    public void GameLoop()
+    public void Run()
     {
-        GL.glClearColor(0.392f, 0.584f, 0.929f, 1.0f);
-        GL.glClear(16384);
+        unsafe
+        {
+            Emscripten.RequestAnimationFrameLoop((delegate* unmanaged<double, nint, int>)&JSGameLoop, nint.Zero);
+        }
     }
 }

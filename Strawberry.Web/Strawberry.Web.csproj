@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Graphics\" />
-    <Folder Include="Input\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Strawberry.OpenAL\Strawberry.OpenAL.csproj" />
     <ProjectReference Include="..\Strawberry\Strawberry.csproj" />
   </ItemGroup>

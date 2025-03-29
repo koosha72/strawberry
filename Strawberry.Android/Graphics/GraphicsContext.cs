@@ -171,7 +171,6 @@ public class GraphicsContext : Base, IGraphicsContext
         {
             return wnd.GetScreenSize();
         }
-
         return Vector2.Zero;
     }
 

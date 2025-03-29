@@ -1,9 +1,11 @@
-﻿namespace Strawberry.Graphics
+﻿using System.Runtime.InteropServices;
+
+namespace Strawberry.Graphics
 {
     /// <summary>
     /// Represents a Color
     /// </summary>
-    [Serializable]
+    [Serializable, StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Color
     {
         /// <summary>
