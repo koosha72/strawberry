@@ -1,8 +1,8 @@
 import { dotnet } from './_framework/dotnet.js'
 
 globalThis.document.getElementById("start").addEventListener('click', function () {
-    play();
     globalThis.document.getElementById("start").remove();
+    play();
 }, false);
 
 async function play() {
