@@ -16,6 +16,6 @@ public class InputManager : IInputManager
 
     public void Update()
     {
-
+        (Keyboard as Keyboard).Update();
     }
 }

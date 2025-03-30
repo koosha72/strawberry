@@ -112,6 +112,7 @@ public class GameLauncher : IGameLauncher
 
     public void Run()
     {
+        Interop.Initialize();
         unsafe
         {
             Emscripten.RequestAnimationFrameLoop((delegate* unmanaged<double, nint, int>)&JSGameLoop, nint.Zero);

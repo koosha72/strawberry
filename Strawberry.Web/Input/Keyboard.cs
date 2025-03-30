@@ -14,28 +14,62 @@ public class Keyboard : IKeyboard
     List<Keys> pressedKeys = new List<Keys>();
     List<Keys> releasedKeys = new List<Keys>();
 
+    public Keyboard()
+    {
+        Interop.KeyDown += KeyDown;
+        Interop.KeyUp += KeyUp;
+    }
+
     public void FirePressed(Keys key)
     {
-
+        if (!IsKeyDown(key))
+        {
+            pressedKeys.Add(key);
+            downKeys.Add(key);
+        }
     }
 
     public void FireReleased(Keys key)
     {
-
+        releasedKeys.Add(key);
+        if (downKeys.Contains(key))
+            downKeys.Remove(key);
     }
 
     public bool IsKeyDown(Keys key)
     {
-        return false;
+        return downKeys.Contains(key);
     }
 
     public bool IsKeyPressed(Keys key)
     {
-        return false;
+        return pressedKeys.Contains(key);
     }
 
     public bool IsKeyReleased(Keys key)
     {
-        return false;
+        return releasedKeys.Contains(key);
+    }
+
+    void KeyDown(Keys key, bool shift, bool ctrl, bool alt, bool repeat)
+    {
+        if (!repeat)
+        {
+            pressedKeys.Add(key);
+            downKeys.Add(key);
+        }
+    }
+
+    void KeyUp(Keys key, bool shift, bool ctrl, bool alt)
+    {
+        releasedKeys.Add(key);
+        if (downKeys.Contains(key))
+            downKeys.Remove(key);
+    }
+
+    public void Update()
+    {
+        pressedKeys.Clear();
+        releasedKeys.Clear();
     }
 }
