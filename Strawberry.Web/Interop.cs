@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Runtime.InteropServices.JavaScript;
 using Strawberry.Input;
 
@@ -10,6 +11,9 @@ public static partial class Interop
 
     public static event Action<Keys, bool, bool, bool, bool> KeyDown;
     public static event Action<Keys, bool, bool, bool> KeyUp;
+    public static event Action<PointerButtons, int, bool, bool, bool> PointerDown;
+    public static event Action<PointerButtons, int, bool, bool, bool> PointerUp;
+    public static event Action<int, float, float> PointerMove;
 
     [JSExport]
     public static void OnKeyDown(bool shift, bool ctrl, bool alt, bool repeat, int code)
@@ -28,16 +32,45 @@ public static partial class Interop
     [JSExport]
     public static void OnMouseMove(int index, float x, float y)
     {
+        PointerMove?.Invoke(index, x, y);
     }
 
     [JSExport]
     public static void OnMouseDown(int index, bool shift, bool ctrl, bool alt, int button)
     {
+        PointerButtons b = PointerButtons.None;
+        if (button == 0)
+        {
+            b = PointerButtons.Primary;
+        }
+        else if (button == 1)
+        {
+            b = PointerButtons.Alternative;
+        }
+        else if (button == 2)
+        {
+            b = PointerButtons.Secondary;
+        }
+        PointerDown?.Invoke(b, index, shift, ctrl, alt);
     }
 
     [JSExport]
     public static void OnMouseUp(int index, bool shift, bool ctrl, bool alt, int button)
     {
+        PointerButtons b = PointerButtons.None;
+        if (button == 0)
+        {
+            b = PointerButtons.Primary;
+        }
+        else if (button == 1)
+        {
+            b = PointerButtons.Alternative;
+        }
+        else if (button == 2)
+        {
+            b = PointerButtons.Secondary;
+        }
+        PointerUp?.Invoke(b, index, shift, ctrl, alt);
     }
 
     [JSExport]

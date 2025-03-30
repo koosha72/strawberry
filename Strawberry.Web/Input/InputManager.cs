@@ -16,6 +16,7 @@ public class InputManager : IInputManager
 
     public void Update()
     {
+        (PointingDevice as PointingDevice).Update();
         (Keyboard as Keyboard).Update();
     }
 }
