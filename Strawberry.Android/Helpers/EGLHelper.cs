@@ -63,7 +63,7 @@ public class EGLHelper
         int[] w = new int[1];
         EGL14.EglQuerySurface(eglDisplay, eglSurface, EGL14.EglWidth, w, 0);
         int[] h = new int[1];
-        EGL14.EglQuerySurface(eglDisplay, eglSurface, EGL14.EglWidth, h, 0);
+        EGL14.EglQuerySurface(eglDisplay, eglSurface, EGL14.EglHeight, h, 0);
 
         return new Vector2(w[0], h[0]);
     }

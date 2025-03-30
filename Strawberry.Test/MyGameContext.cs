@@ -20,7 +20,8 @@ namespace Strawberry.Test
         public override void OnInitialize(IGameLauncher laucnher)
         {
             base.OnInitialize(laucnher);
-            Viewport viewport = new Viewport("Default", new Vector2(), GraphicsContext.GetScreenSize(), new Vector2(), new Vector2(1280, 720));
+            var size = GraphicsContext.GetScreenSize();
+            Viewport viewport = new Viewport("Default", new Vector2(), size, new Vector2(), new Vector2(1280, 720));
             SpriteLayer layer = new SpriteLayer();
             //BackgroundLayer bg = new BackgroundLayer();
             layer.Sorter = new IsometricRenderingSorter();
@@ -39,6 +40,7 @@ namespace Strawberry.Test
             scene.ClearColor = Color.CornflowerBlue;
             AddScene(scene);
             SetScene("Main");
+            scene.Viewports[0] = viewport;
             scene.EnablePhysics(Vector2.Down() * 9.8f);
             scene.AddLayer("Sprite1", layer);
 
