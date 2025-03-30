@@ -79,7 +79,6 @@ internal class Geometry<T> : Base, IGeometry<T> where T : struct
         ((Shader)graphicsContext.ActiveShader).ActivateLayout();
 
         GL.DrawElements(GL.Triangles, this.IndicesCount, GL.UnsignedInt, IntPtr.Zero);
-        Console.WriteLine(GL.GetError());
 
         GL.BindBuffer(GL.ElementArrayBuffer, 0);
         GL.BindBuffer(GL.ArrayBuffer, 0);
