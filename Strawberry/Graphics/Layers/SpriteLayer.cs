@@ -1,4 +1,5 @@
 ﻿using Strawberry.Core;
+using Strawberry.Graphics.Text;
 using Strawberry.Math;
 using Strawberry.Misc;
 
@@ -21,6 +22,7 @@ namespace Strawberry.Graphics.Layers
         //TextShader TextShader { get; set; }
 
         BasicShader shader;
+        TextShader textShader;
 
         string blendName = "Default";
 
@@ -58,6 +60,8 @@ namespace Strawberry.Graphics.Layers
                 GeometryType.Dynamic, GeometryType.Static);
 
             shader = new BasicShader(Scene.GameContext.GraphicsContext, VertexElementContainer.VertexPositionTexColor);
+            textShader = new TextShader(GraphicsContext, VertexElementContainer.VertexPositionTexColor);
+
             ActiveShader = shader;
             //TextShader = new TextShader(graphicsContext, VertexElementContainer.VertexPositionTexColor);
 
@@ -169,6 +173,33 @@ namespace Strawberry.Graphics.Layers
         public void Push(Sprite sprite, Vector2 position, Vector2 origin, Vector2 scale, Color color, int imageIndex, float angle)
         {
             quadList.Add(GetQuad(sprite, position, origin, scale, color, imageIndex, angle));
+        }
+
+
+        public void Push(ITexture texture, Vector2 position, Vector2 texSize, Vector2 size, Vector2 topLeft, Color color)
+        {
+            float x = (float)System.Math.Round(position.X);
+            float y = (float)System.Math.Round(position.Y);
+            float w = (float)System.Math.Round(size.X);
+            float h = (float)System.Math.Round(size.Y);
+
+            Vector2 pos1 = new Vector2(x, y);
+            Vector2 pos2 = new Vector2(x + w, y);
+            Vector2 pos3 = new Vector2(pos2.X, y + h);
+            Vector2 pos4 = new Vector2(x, pos3.Y);
+
+            Vector2 half = new Vector2(0, 0);
+
+            float u = topLeft.X / texture.Width;
+            Vector2 uv1 = new Vector2(u + half.X, topLeft.Y / texture.Height + half.Y);
+            Vector2 uv2 = new Vector2((texSize.X / texture.Width + uv1.X) - (half.X * 2), uv1.Y);
+            Vector2 uv3 = new Vector2(uv2.X, texSize.Y / texture.Height + uv1.Y - (half.Y * 2));
+            Vector2 uv4 = new Vector2(uv1.X, uv3.Y);
+
+            SpriteQuad spr = new SpriteQuad(texture, new Vector4(pos1, uv1), new Vector4(pos2, uv2),
+                new Vector4(pos3, uv3), new Vector4(pos4, uv4), color, ActiveShader, blendName);
+
+            quadList.Add(spr);
         }
 
         public override void Render()
@@ -296,6 +327,105 @@ namespace Strawberry.Graphics.Layers
         {
             Push(pixelSprite, new Vector2(start.X, start.Y), Vector2.Zero,
                     new Vector2(1, length), color, 0, 0);
+        }
+
+        public Vector2 PushString(string text, Font font, Vector2 position, Color color, TextDirection direction)
+        {
+            if (font.UseSDF)
+                SetShader(textShader);
+            double x = position.X;
+            double y = position.Y;
+            ITexture tex = font.Texture;
+            Character chr;
+            float m = 1f;
+            foreach (char c in text)
+            {
+                ushort code = c;
+                if (c == ' ')
+                {
+                    chr = font.GetCharacterInfo(code);
+                    if (direction == TextDirection.LeftToRight)
+                        x += chr.Adwidth * m;
+                    else
+                        x -= chr.Adwidth * m;
+                    continue;
+                }
+                if (c == '\n')
+                {
+                    y += font.Size;
+                    x = (int)position.X;
+                    continue;
+                }
+                chr = font.GetCharacterInfo(code);
+                Vector2 origin = new Vector2(0.0f, 0.0f);
+                Vector2 pos = new Vector2((float)x, (float)y);
+
+                float hsize = (float)System.Math.Ceiling(chr.Bottom);
+                float wsize = (float)System.Math.Ceiling(chr.Right);
+                float l = (float)System.Math.Floor(chr.Left);
+                float t = (float)System.Math.Ceiling(chr.Top);
+                if (direction == TextDirection.RightToLeft)
+                    pos.X -= (float)chr.Adwidth;
+
+                Push(tex, pos, new Vector2(wsize - l, (float)hsize - t), new Vector2((wsize - l) * m, (float)(hsize - t) * m), new Vector2(l, (float)t), color);
+
+                if (direction == TextDirection.LeftToRight)
+                    x += chr.Adwidth * m;
+                else
+                    x -= chr.Adwidth * m;
+            }
+            if (font.UseSDF)
+                ResetShader();
+            return new Vector2((float)x, (float)y);
+        }
+
+        public Vector2 PushString(string text, Font font, Vector2 position, Color color, TextDirection direction, float size)
+        {
+            if (font.UseSDF)
+                SetShader(textShader);
+            double x = position.X;
+            double y = position.Y;
+            ITexture tex = font.Texture;
+            Character chr;
+            float m = size / (float)font.Size;
+            foreach (char c in text)
+            {
+                ushort code = (ushort)c;
+                if (c == ' ')
+                {
+                    chr = font.GetCharacterInfo(code);
+                    if (direction == TextDirection.LeftToRight)
+                        x += chr.Adwidth * m;
+                    else
+                        x -= chr.Adwidth * m;
+                    continue;
+                }
+                if (c == '\n')
+                {
+                    y += font.Size * m;
+                    x = (int)position.X;
+                    continue;
+                }
+                chr = font.GetCharacterInfo(code);
+                Vector2 origin = new Vector2(0.0f, 0.0f);
+                Vector2 pos = new Vector2((float)x, (float)y);
+
+                float hsize = (float)chr.Bottom + 1.0f;
+                float wsize = (float)chr.Right + 1.0f;
+                float l = (float)chr.Left;
+                float t = (float)chr.Top;
+                if (direction == TextDirection.RightToLeft)
+                    pos.X -= (float)chr.Adwidth * m;
+                Push(tex, pos, new Vector2(wsize - l, (float)hsize - t), new Vector2((wsize - l) * m, (float)(hsize - t) * m), new Vector2(l, (float)t), color);
+
+                if (direction == TextDirection.LeftToRight)
+                    x += chr.Adwidth * m;
+                else
+                    x -= chr.Adwidth * m;
+            }
+            if (font.UseSDF)
+                ResetShader();
+            return new Vector2((float)x, (float)y);
         }
     }
 }

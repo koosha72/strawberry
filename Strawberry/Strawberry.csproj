@@ -9,6 +9,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Strawberry.Common\Strawberry.Common.csproj" />
     <ProjectReference Include="..\Strawberry.Physics\Strawberry.Physics.csproj" />
+
+    <EmbeddedResource Include="Graphics\Text\Joinings.txt" />
+    <EmbeddedResource Include="Graphics\Text\UnicodeDatabase.txt" />
   </ItemGroup>
 
 </Project>
