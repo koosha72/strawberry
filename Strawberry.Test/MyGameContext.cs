@@ -2,6 +2,7 @@
 using Strawberry.Core;
 using Strawberry.Graphics;
 using Strawberry.Graphics.Layers;
+using Strawberry.Graphics.Text;
 using Strawberry.Math;
 using Color = Strawberry.Graphics.Color;
 
@@ -49,6 +50,13 @@ namespace Strawberry.Test
             entity.GetComponent<TransformComponent>().Position = new Vector2(16f, 320f);
             entity.AddComponent<StaticBodyComponent>();
             entity.AddComponent<MoveToDirectionComponent>().Speed = 32f;
+            var text = entity.AddComponent<TextRendererComponent>();
+            text.Layer = layer;
+            text.Color = Color.Orange;
+            text.Font = new Font(GraphicsContext, laucnher.Storage.ReadAllBytes("BYagut.font"));
+            text.Position = new Vector2(1280 - 64f, 16);
+            text.Size = 36;
+            text.Text = "اسپیس را نگه دارید";
 
 
             Entity entity2 = new Entity();

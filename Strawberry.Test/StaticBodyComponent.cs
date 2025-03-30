@@ -1,5 +1,6 @@
 ﻿using Strawberry.Components;
 using Strawberry.Core;
+using Strawberry.Graphics.Text;
 using tainicom.Aether.Physics2D.Dynamics;
 
 namespace Strawberry.Test
@@ -49,6 +50,12 @@ namespace Strawberry.Test
             if (GameContext.InputManager.Keyboard.IsKeyDown(Input.Keys.Space))
             {
                 Transform.Position += new Math.Vector2(0f, 1f * MyGameContext.ppm) * FrameInfo.Information.DeltaTime;
+            }
+
+            var tc = Owner.GetComponent<TextRendererComponent>();
+            if (tc != null)
+            {
+                tc.Text = "فریم بر ثانیه: " + FrameInfo.Information.FPS;
             }
         }
     }
