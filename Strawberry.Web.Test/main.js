@@ -6,6 +6,8 @@ globalThis.document.getElementById("start").addEventListener('click', function (
 }, false);
 
 async function play() {
+    var loading = globalThis.document.getElementById("loading");
+    loading.style.display = 'block';
     const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
         .withDiagnosticTracing(false)
         .withApplicationArgumentsFromQuery()
@@ -19,9 +21,15 @@ async function play() {
     dotnet.instance.Module["canvas"] = canvas;
 
     setModuleImports("main.js", {
+        request_root_url: () => {
+            return window.location.toString();
+        },
         initialize: async () => {
-            const exports = await getAssemblyExports('Strawberry.Web');
-            interop = exports.Strawberry.Web.Interop;
+            loading.remove();
+            if (interop == null) {
+                const exports = await getAssemblyExports('Strawberry.Web');
+                interop = exports.Strawberry.Web.Interop;
+            }
 
             var keyDown = (e) => {
                 e.stopPropagation();

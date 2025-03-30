@@ -38,6 +38,9 @@ public class GameLauncher : IGameLauncher
     {
         instance = this;
         Storage = new StorageManager();
+        
+        SetRootUrl(Interop.RequestRootURL());
+        Console.WriteLine("Root URL: " + rootUrl);
     }
 
     public void Initialize(int width, int height)

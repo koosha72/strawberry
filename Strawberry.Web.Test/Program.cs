@@ -15,7 +15,6 @@ public static class Program
 		MyGameContext stdGameContext = new MyGameContext();
 		Game game = new Game();
 		var l = new Strawberry.Web.GameLauncher();
-		l.SetRootUrl("https://localhost:7011/");
 		await l.AOTDownload("timeup.wav");
 		await l.AOTDownload("BYagut.font");
 		game.Run(stdGameContext, l);

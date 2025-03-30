@@ -9,11 +9,16 @@ public static partial class Interop
     [JSImport("initialize", "main.js")]
     public static partial void Initialize();
 
+    [JSImport("request_root_url", "main.js")]
+    public static partial string RequestRootURL();
+
     public static event Action<Keys, bool, bool, bool, bool> KeyDown;
     public static event Action<Keys, bool, bool, bool> KeyUp;
     public static event Action<PointerButtons, int, bool, bool, bool> PointerDown;
     public static event Action<PointerButtons, int, bool, bool, bool> PointerUp;
     public static event Action<int, float, float> PointerMove;
+
+    public static string RootUrl = "";
 
     [JSExport]
     public static void OnKeyDown(bool shift, bool ctrl, bool alt, bool repeat, int code)
@@ -77,4 +82,5 @@ public static partial class Interop
     public static void OnCanvasResize(float width, float height, float devicePixelRatio)
     {
     }
+
 }
