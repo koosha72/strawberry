@@ -36,8 +36,8 @@ internal class Texture : Base, ITexture
         GL.GenTextures(1, textures);
         texture = textures[0];
         GL.BindTexture(GL.Texture2D, texture);
-        GL.TexParameteri(GL.Texture2D, GL.TextureMinFilter, GL.Linear);
-        GL.TexParameteri(GL.Texture2D, GL.TextureMagFilter, GL.Linear);
+        GL.TexParameteri(GL.Texture2D, GL.TextureMinFilter, GL.Nearest);
+        GL.TexParameteri(GL.Texture2D, GL.TextureMagFilter, GL.Nearest);
         GL.TexParameteri(GL.Texture2D, GL.TextureWrapS, GL.ClampToEdge);
         GL.TexParameteri(GL.Texture2D, GL.TextureWrapT, GL.ClampToEdge);
         int internalFormat = GL.Rgba;
@@ -81,8 +81,8 @@ internal class Texture : Base, ITexture
         texture = textures[0];
 
         GL.BindTexture(GL.Texture2D, texture);
-        GL.TexParameteri(GL.Texture2D, GL.TextureMinFilter, GL.Linear);
-        GL.TexParameteri(GL.Texture2D, GL.TextureMagFilter, GL.Linear);
+        GL.TexParameteri(GL.Texture2D, GL.TextureMinFilter, GL.Nearest);
+        GL.TexParameteri(GL.Texture2D, GL.TextureMagFilter, GL.Nearest);
         GL.TexParameteri(GL.Texture2D, GL.TextureWrapS, GL.ClampToEdge);
         GL.TexParameteri(GL.Texture2D, GL.TextureWrapT, GL.ClampToEdge);
         int internalFormat = GL.Rgba;
