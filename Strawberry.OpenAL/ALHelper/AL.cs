@@ -48,6 +48,9 @@ public class AL
     [DllImport(ALC.Lib, EntryPoint = "alGetSourcei")]
     public static extern ALSourceState GetSourcei(int source, ALGetSourcei param, out int result);
 
+    [DllImport(ALC.Lib, EntryPoint = "alGetSourcef")]
+    public static extern ALSourceState GetSourcef(int source, ALSourcef param, out float result);
+
     [DllImport(ALC.Lib, EntryPoint = "alIsSource")]
     public static extern bool IsSource(int source);
 
@@ -107,6 +110,13 @@ public class AL
     {
         int result = 0;
         GetSourcei(id, param, out result);
+        return result;
+    }
+
+    public static float GetSourcef(int id, ALSourcef param)
+    {
+        float result = 0;
+        GetSourcef(id, param, out result);
         return result;
     }
 

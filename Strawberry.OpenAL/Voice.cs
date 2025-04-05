@@ -32,6 +32,18 @@ namespace Strawberry.OpenAL
             }
         }
 
+        public float Volume
+        {
+            get
+            {
+                return AL.GetSourcef(SourceInd, ALSourcef.Gain);
+            }
+            set
+            {
+                AL.Sourcef(SourceInd, ALSourcef.Gain, value);
+            }
+        }
+
         public Voice(SoundBuffer buffer, int ind)
         {
             this.buffer = buffer;

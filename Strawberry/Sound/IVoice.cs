@@ -9,6 +9,8 @@
         /// </summary>
         float CurrentPlayTime { get; set; }
 
+        public float Volume { get; set; }
+
         /// <summary>
         /// Checks whether the voice is beign played.
         /// </summary>
@@ -34,6 +36,6 @@
         /// <summary>
         /// Resumes the voice.
         /// </summary>
-        void Resume();       
+        void Resume();
     }
 }

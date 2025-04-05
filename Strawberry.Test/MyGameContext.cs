@@ -79,7 +79,9 @@ namespace Strawberry.Test
             entity3.AddComponent<PhysicsBodyComponent>();
 
             var buffer = SoundManager.CreateSoundBuffer("timeup.wav");
-            buffer.Play();
+            var s = buffer.Play();
+            s.Volume = 0.4f;
+            var volume = s.Volume;
         }
     }
 }
