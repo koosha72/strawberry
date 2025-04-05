@@ -24,8 +24,6 @@ namespace Strawberry.Components
 
         public bool Loop { get; set; } = true;
 
-        public event EventHandler AnimationEnd = null;
-
         public Vector2 Origin { get { return Transform.Origin; } }
 
         public bool Visible { get; set; } = true;
@@ -90,6 +88,7 @@ namespace Strawberry.Components
         {
             if (Transform == null)
                 Transform = Owner.GetComponent<TransformComponent>();
+            Owner.RegisterEvent<Action>("AnimationEnd");
         }
 
         public void ComponentAdded(BaseComponent component)
@@ -98,8 +97,9 @@ namespace Strawberry.Components
                 Transform = Owner.GetComponent<TransformComponent>();
         }
 
-        void Update()
+        public override void OnUpdate()
         {
+            base.OnUpdate();
             if (Sprite != null)
             {
                 if (realImageIndex <= Sprite.ImageCount - 1)
@@ -118,10 +118,7 @@ namespace Strawberry.Components
                         imageIndex = Sprite.ImageCount - 1;
                     }
 
-                    if (AnimationEnd != null)
-                    {
-                        AnimationEnd(this, new EventArgs());
-                    }
+                    Owner.InvokeEvents("AnimationEnd");
                 }
 
                 realImageIndex = (int)(imageIndex);
