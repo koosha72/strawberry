@@ -10,7 +10,7 @@ public class StorageManager : IStorage
 
     public Stream Open(string path)
     {
-        throw new NotImplementedException();
+        return new MemoryStream(cache[path]);
     }
 
     public byte[] ReadAllBytes(string path)
@@ -20,7 +20,7 @@ public class StorageManager : IStorage
 
     public string[] List(string path)
     {
-        throw new NotImplementedException();
+        return cache.Keys.ToArray();
     }
 
     public async Task AOTDownload(string path)
