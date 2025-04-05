@@ -1,5 +1,6 @@
 ﻿using Strawberry.Graphics;
 using Strawberry.Input;
+using Strawberry.Misc;
 using Strawberry.Sound;
 
 namespace Strawberry.Core
@@ -34,6 +35,8 @@ namespace Strawberry.Core
         /// Gets the sound manager for handling audio playback.
         /// </summary>
         ISoundManager SoundManager { get; }
+
+        IStorage Storage { get; }
 
         /// <summary>
         /// Called during the initialization phase of the game.
