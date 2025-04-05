@@ -56,7 +56,8 @@ public class Keyboard : IKeyboard
         if (!repeat)
         {
             pressedKeys.Add(key);
-            downKeys.Add(key);
+            if (!downKeys.Contains(key))
+                downKeys.Add(key);
         }
     }
 
