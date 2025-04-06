@@ -27,20 +27,70 @@ namespace Strawberry.OpenGL.Graphics
 
         PixelFormat format;
 
-        public Texture(GraphicsContext gc, int width, int height, Color[] data, TextureFormat format)
+        public Texture(GraphicsContext gc, int width, int height, Color[] data, TextureSettings settings)
         {
             graphicsContext = gc;
 
             texture = GL.GenTexture();
 
+            TextureWrapMode wrapS = TextureWrapMode.ClampToEdge;
+            TextureWrapMode wrapT = TextureWrapMode.ClampToEdge;
+            switch (settings.WrapS)
+            {
+                case TextureWrap.Repeat:
+                    wrapS = TextureWrapMode.Repeat;
+                    break;
+                case TextureWrap.ClampToEdge:
+                    wrapS = TextureWrapMode.ClampToEdge;
+                    break;
+                case TextureWrap.MirroredRepeat:
+                    wrapS = TextureWrapMode.MirroredRepeat;
+                    break;
+            }
+
+            switch (settings.WrapT)
+            {
+                case TextureWrap.Repeat:
+                    wrapT = TextureWrapMode.Repeat;
+                    break;
+                case TextureWrap.ClampToEdge:
+                    wrapT = TextureWrapMode.ClampToEdge;
+                    break;
+                case TextureWrap.MirroredRepeat:
+                    wrapT = TextureWrapMode.MirroredRepeat;
+                    break;
+            }
+
+            TextureMinFilter minFilter = TextureMinFilter.Nearest;
+            TextureMagFilter magFilter = TextureMagFilter.Nearest;
+
+            switch (settings.MinFilter)
+            {
+                case TextureFiltering.Linear:
+                    minFilter = TextureMinFilter.Linear;
+                    break;
+                case TextureFiltering.Nearest:
+                    minFilter = TextureMinFilter.Nearest;
+                    break;
+            }
+            switch (settings.MagFilter)
+            {
+                case TextureFiltering.Linear:
+                    magFilter = TextureMagFilter.Linear;
+                    break;
+                case TextureFiltering.Nearest:
+                    magFilter = TextureMagFilter.Nearest;
+                    break;
+            }
+
             GL.BindTexture(TextureTarget.Texture2D, texture);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)minFilter);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)magFilter);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)wrapS);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)wrapT);
             PixelInternalFormat internalFormat = PixelInternalFormat.Rgba;
             PixelFormat pformat = PixelFormat.Rgba;
-            switch (format)
+            switch (settings.Format)
             {
                 case TextureFormat.R8G8B8A8:
                     pformat = PixelFormat.Rgba;
@@ -58,25 +108,74 @@ namespace Strawberry.OpenGL.Graphics
 
             GL.TexImage2D<Color>(TextureTarget.Texture2D, 0, internalFormat,
                 width, height, 0, pformat, PixelType.Float, data);
-            this.format = pformat;
-            this.Width = width;
-            this.Height = height;
+            format = pformat;
+            Width = width;
+            Height = height;
         }
 
-        public Texture(GraphicsContext gc, int width, int height, byte[] data, TextureFormat format)
+        public Texture(GraphicsContext gc, int width, int height, byte[] data, TextureSettings settings)
         {
             graphicsContext = gc;
 
             texture = GL.GenTexture();
+            TextureWrapMode wrapS = TextureWrapMode.ClampToEdge;
+            TextureWrapMode wrapT = TextureWrapMode.ClampToEdge;
+            switch (settings.WrapS)
+            {
+                case TextureWrap.Repeat:
+                    wrapS = TextureWrapMode.Repeat;
+                    break;
+                case TextureWrap.ClampToEdge:
+                    wrapS = TextureWrapMode.ClampToEdge;
+                    break;
+                case TextureWrap.MirroredRepeat:
+                    wrapS = TextureWrapMode.MirroredRepeat;
+                    break;
+            }
+
+            switch (settings.WrapT)
+            {
+                case TextureWrap.Repeat:
+                    wrapT = TextureWrapMode.Repeat;
+                    break;
+                case TextureWrap.ClampToEdge:
+                    wrapT = TextureWrapMode.ClampToEdge;
+                    break;
+                case TextureWrap.MirroredRepeat:
+                    wrapT = TextureWrapMode.MirroredRepeat;
+                    break;
+            }
+
+            TextureMinFilter minFilter = TextureMinFilter.Nearest;
+            TextureMagFilter magFilter = TextureMagFilter.Nearest;
+
+            switch (settings.MinFilter)
+            {
+                case TextureFiltering.Linear:
+                    minFilter = TextureMinFilter.Linear;
+                    break;
+                case TextureFiltering.Nearest:
+                    minFilter = TextureMinFilter.Nearest;
+                    break;
+            }
+            switch (settings.MagFilter)
+            {
+                case TextureFiltering.Linear:
+                    magFilter = TextureMagFilter.Linear;
+                    break;
+                case TextureFiltering.Nearest:
+                    magFilter = TextureMagFilter.Nearest;
+                    break;
+            }
 
             GL.BindTexture(TextureTarget.Texture2D, texture);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)minFilter);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)magFilter);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)wrapS);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)wrapT);
             PixelInternalFormat internalFormat = PixelInternalFormat.Rgba;
             PixelFormat pformat = PixelFormat.Rgba;
-            switch (format)
+            switch (settings.Format)
             {
                 case TextureFormat.R8G8B8A8:
                     pformat = PixelFormat.Rgba;
@@ -96,9 +195,9 @@ namespace Strawberry.OpenGL.Graphics
             GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, internalFormat,
                 width, height, 0, pformat, PixelType.UnsignedByte, data);
 
-            this.format = pformat;
-            this.Width = width;
-            this.Height = height;
+            format = pformat;
+            Width = width;
+            Height = height;
         }
 
         public void Activate(IShader shader, string name)

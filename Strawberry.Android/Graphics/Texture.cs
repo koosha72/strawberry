@@ -31,21 +31,71 @@ internal class Texture : Base, ITexture
 
     int format;
 
-    public Texture(GraphicsContext gc, int width, int height, Color[] data, TextureFormat format)
+    public Texture(GraphicsContext gc, int width, int height, Color[] data, TextureSettings settings)
     {
         graphicsContext = gc;
         int[] textures = new int[1];
         GLES30.GlGenTextures(1, textures, 0);
         texture = textures[0];
 
+        int wrapS = GLES30.GlClampToEdge;
+        int wrapT = GLES30.GlClampToEdge;
+        switch (settings.WrapS)
+        {
+            case TextureWrap.Repeat:
+                wrapS = GLES30.GlRepeat;
+                break;
+            case TextureWrap.ClampToEdge:
+                wrapS = GLES30.GlClampToEdge;
+                break;
+            case TextureWrap.MirroredRepeat:
+                wrapS = GLES30.GlMirroredRepeat;
+                break;
+        }
+
+        switch (settings.WrapT)
+        {
+            case TextureWrap.Repeat:
+                wrapT = GLES30.GlRepeat;
+                break;
+            case TextureWrap.ClampToEdge:
+                wrapT = GLES30.GlClampToEdge;
+                break;
+            case TextureWrap.MirroredRepeat:
+                wrapT = GLES30.GlMirroredRepeat;
+                break;
+        }
+
+        int minFilter = GLES30.GlNearest;
+        int magFilter = GLES30.GlNearest;
+
+        switch (settings.MinFilter)
+        {
+            case TextureFiltering.Linear:
+                minFilter = GLES30.GlLinear;
+                break;
+            case TextureFiltering.Nearest:
+                minFilter = GLES30.GlNearest;
+                break;
+        }
+        switch (settings.MagFilter)
+        {
+            case TextureFiltering.Linear:
+                magFilter = GLES30.GlLinear;
+                break;
+            case TextureFiltering.Nearest:
+                magFilter = GLES30.GlNearest;
+                break;
+        }
+
         GLES30.GlBindTexture(GLES30.GlTexture2d, texture);
-        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureMinFilter, GLES30.GlLinear);
-        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureMagFilter, GLES30.GlLinear);
-        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureWrapS, GLES30.GlClampToEdge);
-        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureWrapT, GLES30.GlClampToEdge);
+        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureMinFilter, minFilter);
+        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureMagFilter, magFilter);
+        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureWrapS, wrapS);
+        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureWrapT, wrapT);
         int internalFormat = GLES30.GlRgba;
         int pformat = GLES30.GlRgba;
-        switch (format)
+        switch (settings.Format)
         {
             case TextureFormat.R8G8B8A8:
                 pformat = GLES30.GlRgba;
@@ -70,22 +120,71 @@ internal class Texture : Base, ITexture
         this.Height = height;
     }
 
-    public Texture(GraphicsContext gc, int width, int height, byte[] data, TextureFormat format)
+    public Texture(GraphicsContext gc, int width, int height, byte[] data, TextureSettings settings)
     {
         graphicsContext = gc;
 
         int[] textures = new int[1];
         GLES30.GlGenTextures(1, textures, 0);
         texture = textures[0];
+        int wrapS = GLES30.GlClampToEdge;
+        int wrapT = GLES30.GlClampToEdge;
+        switch (settings.WrapS)
+        {
+            case TextureWrap.Repeat:
+                wrapS = GLES30.GlRepeat;
+                break;
+            case TextureWrap.ClampToEdge:
+                wrapS = GLES30.GlClampToEdge;
+                break;
+            case TextureWrap.MirroredRepeat:
+                wrapS = GLES30.GlMirroredRepeat;
+                break;
+        }
+
+        switch (settings.WrapT)
+        {
+            case TextureWrap.Repeat:
+                wrapT = GLES30.GlRepeat;
+                break;
+            case TextureWrap.ClampToEdge:
+                wrapT = GLES30.GlClampToEdge;
+                break;
+            case TextureWrap.MirroredRepeat:
+                wrapT = GLES30.GlMirroredRepeat;
+                break;
+        }
+
+        int minFilter = GLES30.GlNearest;
+        int magFilter = GLES30.GlNearest;
+
+        switch (settings.MinFilter)
+        {
+            case TextureFiltering.Linear:
+                minFilter = GLES30.GlLinear;
+                break;
+            case TextureFiltering.Nearest:
+                minFilter = GLES30.GlNearest;
+                break;
+        }
+        switch (settings.MagFilter)
+        {
+            case TextureFiltering.Linear:
+                magFilter = GLES30.GlLinear;
+                break;
+            case TextureFiltering.Nearest:
+                magFilter = GLES30.GlNearest;
+                break;
+        }
 
         GLES30.GlBindTexture(GLES30.GlTexture2d, texture);
-        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureMinFilter, GLES30.GlLinear);
-        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureMagFilter, GLES30.GlLinear);
-        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureWrapS, GLES30.GlClampToEdge);
-        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureWrapT, GLES30.GlClampToEdge);
+        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureMinFilter, minFilter);
+        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureMagFilter, magFilter);
+        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureWrapS, wrapS);
+        GLES30.GlTexParameteri(GLES30.GlTexture2d, GLES30.GlTextureWrapT, wrapT);
         int internalFormat = GLES30.GlRgba;
         int pformat = GLES30.GlRgba;
-        switch (format)
+        switch (settings.Format)
         {
             case TextureFormat.R8G8B8A8:
                 pformat = GLES30.GlRgba;

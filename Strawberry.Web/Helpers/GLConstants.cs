@@ -1129,6 +1129,8 @@ public static partial class GL
     public const int TextureWrapROes = 32882;
     public const int ClampToBorder = 33069;
     public const int ClampToEdge = 33071;
+    public const int Repeat = 10497;
+    public const int MirroredRepeat = 33648;
 
     // Texture component sizes
     public const int TextureRedSize = 32860;

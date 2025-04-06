@@ -29,20 +29,71 @@ internal class Texture : Base, ITexture
 
     int format;
 
-    public Texture(GraphicsContext gc, int width, int height, Color[] data, TextureFormat format)
+    public Texture(GraphicsContext gc, int width, int height, Color[] data, TextureSettings settings)
     {
         graphicsContext = gc;
         int[] textures = new int[1];
         GL.GenTextures(1, textures);
         texture = textures[0];
+
+        int wrapS = GL.ClampToEdge;
+        int wrapT = GL.ClampToEdge;
+        switch (settings.WrapS)
+        {
+            case TextureWrap.Repeat:
+                wrapS = GL.Repeat;
+                break;
+            case TextureWrap.ClampToEdge:
+                wrapS = GL.ClampToEdge;
+                break;
+            case TextureWrap.MirroredRepeat:
+                wrapS = GL.MirroredRepeat;
+                break;
+        }
+
+        switch (settings.WrapT)
+        {
+            case TextureWrap.Repeat:
+                wrapT = GL.Repeat;
+                break;
+            case TextureWrap.ClampToEdge:
+                wrapT = GL.ClampToEdge;
+                break;
+            case TextureWrap.MirroredRepeat:
+                wrapT = GL.MirroredRepeat;
+                break;
+        }
+
+        int minFilter = GL.Nearest;
+        int magFilter = GL.Nearest;
+
+        switch (settings.MinFilter)
+        {
+            case TextureFiltering.Linear:
+                minFilter = GL.Linear;
+                break;
+            case TextureFiltering.Nearest:
+                minFilter = GL.Nearest;
+                break;
+        }
+        switch (settings.MagFilter)
+        {
+            case TextureFiltering.Linear:
+                magFilter = GL.Linear;
+                break;
+            case TextureFiltering.Nearest:
+                magFilter = GL.Nearest;
+                break;
+        }
+
         GL.BindTexture(GL.Texture2D, texture);
-        GL.TexParameteri(GL.Texture2D, GL.TextureMinFilter, GL.Nearest);
-        GL.TexParameteri(GL.Texture2D, GL.TextureMagFilter, GL.Nearest);
-        GL.TexParameteri(GL.Texture2D, GL.TextureWrapS, GL.ClampToEdge);
-        GL.TexParameteri(GL.Texture2D, GL.TextureWrapT, GL.ClampToEdge);
+        GL.TexParameteri(GL.Texture2D, GL.TextureMinFilter, minFilter);
+        GL.TexParameteri(GL.Texture2D, GL.TextureMagFilter, magFilter);
+        GL.TexParameteri(GL.Texture2D, GL.TextureWrapS, wrapS);
+        GL.TexParameteri(GL.Texture2D, GL.TextureWrapT, wrapT);
         int internalFormat = GL.Rgba;
         int pformat = GL.Rgba;
-        switch (format)
+        switch (settings.Format)
         {
             case TextureFormat.R8G8B8A8:
                 pformat = GL.Rgba;
@@ -72,7 +123,7 @@ internal class Texture : Base, ITexture
         this.Height = height;
     }
 
-    public Texture(GraphicsContext gc, int width, int height, byte[] data, TextureFormat format)
+    public Texture(GraphicsContext gc, int width, int height, byte[] data, TextureSettings settings)
     {
         graphicsContext = gc;
 
@@ -87,7 +138,7 @@ internal class Texture : Base, ITexture
         GL.TexParameteri(GL.Texture2D, GL.TextureWrapT, GL.ClampToEdge);
         int internalFormat = GL.Rgba;
         int pformat = GL.Rgba;
-        switch (format)
+        switch (settings.Format)
         {
             case TextureFormat.R8G8B8A8:
                 pformat = GL.Rgba;

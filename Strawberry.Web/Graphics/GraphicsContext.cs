@@ -134,12 +134,28 @@ namespace Strawberry.Web.Graphics
 
         public ITexture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8)
         {
-            return new Texture(this, width, height, data, format);
+            return new Texture(this, width, height, data, new TextureSettings
+            {
+                Format = format
+            });
         }
 
         public ITexture CreateTexture(int width, int height, byte[] data, TextureFormat format = TextureFormat.R8G8B8A8)
         {
-            return new Texture(this, width, height, data, format);
+            return new Texture(this, width, height, data, new TextureSettings
+            {
+                Format = format
+            });
+        }
+        
+        public ITexture CreateTexture(int width, int height, Color[] data, TextureSettings settings)
+        {
+            return new Texture(this, width, height, data, settings);
+        }
+
+        public ITexture CreateTexture(int width, int height, byte[] data, TextureSettings settings)
+        {
+            return new Texture(this, width, height, data, settings);
         }
 
         public IShader CreateShader(string vsCode, string psCode, string vsEntryPoint,

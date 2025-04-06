@@ -102,6 +102,9 @@ namespace Strawberry.Graphics
         /// <returns></returns>
         ITexture CreateTexture(int width, int height, byte[] data, TextureFormat format = TextureFormat.R8G8B8A8);
 
+        ITexture CreateTexture(int width, int height, byte[] data, TextureSettings settings);
+        ITexture CreateTexture(int width, int height, Color[] data, TextureSettings settings);
+
         /// <summary>
         /// Creates a shader using vertex and pixel shaders passed to it
         /// </summary>
