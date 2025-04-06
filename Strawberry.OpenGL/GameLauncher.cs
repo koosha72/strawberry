@@ -27,9 +27,17 @@ namespace Strawberry.OpenGL
         public event Action GameLoop;
         OpenTK.Windowing.Desktop.GameWindow wnd;
 
+        bool fullscreen;
+
+        public GameLauncher(bool fullscreen)
+        {
+            this.fullscreen = fullscreen;
+        }
+
         public void Initialize(int width, int height)
         {
             NativeWindowSettings s = new NativeWindowSettings();
+            s.WindowState = fullscreen ? OpenTK.Windowing.Common.WindowState.Fullscreen : OpenTK.Windowing.Common.WindowState.Normal;
             s.Size = new OpenTK.Mathematics.Vector2i(width, height);
             s.Title = "Strawberry";
             s.APIVersion = Version.Parse("4.1.0");
@@ -39,6 +47,7 @@ namespace Strawberry.OpenGL
             s.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Fixed;
             s.Profile = OpenTK.Windowing.Common.ContextProfile.Any;
             wnd = new OpenTK.Windowing.Desktop.GameWindow(g, s);
+
             wnd.VSync = OpenTK.Windowing.Common.VSyncMode.Off;
 
             wnd.Load += Wnd_Load1;
