@@ -164,8 +164,6 @@ namespace Strawberry.Core
                     Entities.Values[i].OnEndUpdate();
                 if (en.Destroyed)
                     destroyList.Add(en.ID);
-                i -= DestroyCount;
-                DestroyCount = 0;
             }
             foreach (string s in destroyList)
                 Entities.Remove(s);
@@ -222,9 +220,6 @@ namespace Strawberry.Core
                     i = 0;
                 if (!Entities.Values[i].Destroyed && !Entities.Values[i].UpdateBegan && Entities.Values[i].Parent == null)
                     Entities.Values[i].OnBeginUpdate();
-
-                i -= DestroyCount;
-                DestroyCount = 0;
             }
         }
 
@@ -251,8 +246,6 @@ namespace Strawberry.Core
                     i = 0;
                 if (!Entities.Values[i].Destroyed && !Entities.Values[i].Updated && Entities.Values[i].Parent == null)
                     Entities.Values[i].OnUpdate();
-                i -= DestroyCount;
-                DestroyCount = 0;
                 //if (Entities.Values[i].Destroyed)
                 //i--;
             }
@@ -268,8 +261,6 @@ namespace Strawberry.Core
                     i = 0;
                 if (!Entities.Values[i].Destroyed && Entities.Values[i].Parent == null)
                     Entities.Values[i].OnFixedUpdate();
-                i -= DestroyCount;
-                DestroyCount = 0;
                 //if (Entities.Values[i].Destroyed)
                 //i--;
             }

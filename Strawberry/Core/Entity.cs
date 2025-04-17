@@ -285,6 +285,8 @@ namespace Strawberry.Core
 
         public override void Destroy()
         {
+            if (Destroyed)
+                return;
             Destroyed = true;
             OnDestroy();
             foreach (Entity child in Children.Values)
@@ -292,8 +294,6 @@ namespace Strawberry.Core
             Updated = false;
             UpdateBegan = false;
             UpdateEnded = false;
-            Scene.DestroyEntity(this);
-            Scene.DestroyCount++;
             if (Parent != null)
             {
                 Parent.children.Remove(this.ID);
@@ -422,7 +422,11 @@ namespace Strawberry.Core
                 UpdateBegan = true;
                 UpdateEnded = false;
                 foreach (Entity child in Children.Values)
+                {
+                    if (child.Destroyed)
+                        continue;
                     child.OnBeginUpdate();
+                }
             }
             else
             {
@@ -450,7 +454,11 @@ namespace Strawberry.Core
                 UpdateEnded = true;
                 Updated = false;
                 foreach (Entity child in Children.Values)
+                {
+                    if (child.Destroyed)
+                        continue;
                     child.OnEndUpdate();
+                }
             }
             else
             {
@@ -469,6 +477,8 @@ namespace Strawberry.Core
                     try
                     {
                         Components[i].OnUpdate();
+                        if (Destroyed)
+                            return;
                     }
                     catch (Exception e)
                     {
@@ -477,8 +487,15 @@ namespace Strawberry.Core
                 }
                 Updated = true;
                 UpdateBegan = false;
-                foreach (Entity child in Children.Values)
-                    child.OnUpdate();
+                if (!Destroyed)
+                {
+                    foreach (Entity child in Children.Values)
+                    {
+                        if (child.Destroyed)
+                            continue;
+                        child.OnUpdate();
+                    }
+                }
             }
             else
             {
@@ -504,7 +521,11 @@ namespace Strawberry.Core
                     }
                 }
                 foreach (Entity child in Children.Values)
+                {
+                    if (child.Destroyed)
+                        continue;
                     child.OnFixedUpdate();
+                }
             }
         }
 
@@ -524,7 +545,11 @@ namespace Strawberry.Core
                     }
                 }
                 foreach (Entity child in Children.Values)
+                {
+                    if (child.Destroyed)
+                        continue;
                     child.OnRender();
+                }
             }
         }
         #endregion
