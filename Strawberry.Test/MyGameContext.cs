@@ -4,6 +4,7 @@ using Strawberry.Graphics;
 using Strawberry.Graphics.Layers;
 using Strawberry.Graphics.Text;
 using Strawberry.Math;
+using Strawberry.Sound;
 using Color = Strawberry.Graphics.Color;
 
 namespace Strawberry.Test
@@ -77,11 +78,13 @@ namespace Strawberry.Test
             entity3.GetComponent<TransformComponent>().Position = new Vector2(144f, -64f);
             entity3.GetComponent<TransformComponent>().Angle = 356f;
             entity3.AddComponent<PhysicsBodyComponent>();
-
-            var buffer = SoundManager.CreateSoundBuffer("timeup.wav");
-            var s = buffer.Play();
-            s.Volume = 0.4f;
-            var volume = s.Volume;
+            using (WaveReader waveReader = new WaveReader(new FileStream("timeup.wav", FileMode.Open)))
+            {
+                var buffer = SoundManager.CreateSoundBuffer(waveReader);
+                var s = buffer.Play();
+                s.Volume = 0.4f;
+                var volume = s.Volume;
+            }
         }
     }
 }
