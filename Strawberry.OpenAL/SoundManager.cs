@@ -38,117 +38,30 @@ namespace Strawberry.OpenAL
         {
             while (streaming)
             {
-                Thread.Sleep(100);
+                lock (mutex)
+                {
+                    Thread.Sleep(100);
+
+                    for (int i = 0; i < streams.Count; i++)
+                    {
+                        if (!streams[i].Update())
+                        {
+                            streams.Remove(streams[i]);
+                            i--;
+                        }
+                    }
+                }
             }
         }
 
-
-        public ISoundBuffer CreateSoundBuffer(string fileName)
-        {
-            var bytes = Game.Storage.ReadAllBytes(fileName);
-
-            return CreateSoundBuffer(bytes);
-        }
-
-        public ISoundBuffer CreateSoundBuffer(string fileName, SoundFormat format)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ISoundBuffer CreateSoundBuffer(byte[] data)
+        public ISoundBuffer CreateSoundBuffer(ISoundReader soundReader)
         {
             int buffer = AL.GenBuffer();
 
-            int channels, bits_per_sample, sample_rate;
-            MemoryStream mem = new MemoryStream(data);
-            byte[] sound_data = LoadWave(mem, out channels, out bits_per_sample, out sample_rate);
-
-            AL.BufferData(buffer, GetSoundFormat(channels, bits_per_sample), sound_data, sound_data.Length, sample_rate);
+            AL.BufferData(buffer, GetSoundFormat(soundReader.Channels, soundReader.BitsPerSample),
+                soundReader.ReadAll(), soundReader.DataSize, soundReader.SampleRate);
 
             return new SoundBuffer(buffer, this);
-        }
-
-        public byte[] LoadWave(Stream stream, out int channels, out int bits, out int rate)
-        {
-            if (stream == null)
-                throw new ArgumentNullException("stream");
-
-
-            using (BinaryReader reader = new BinaryReader(stream))
-            {
-                // RIFF header 
-                string signature = new string(reader.ReadChars(4));
-                if (signature != "RIFF")
-                    throw new NotSupportedException("Specified stream is not a wave file.");
-
-
-                int riff_chunck_size = reader.ReadInt32();
-
-
-                string format = new string(reader.ReadChars(4));
-                if (format != "WAVE")
-                    throw new NotSupportedException("Specified stream is not a wave file.");
-
-                string format_signature;
-                string junk = new string(reader.ReadChars(4));
-                if (junk == "JUNK")
-                {
-                    int size = reader.ReadInt32();
-                    reader.ReadBytes(size);
-                    format_signature = new string(reader.ReadChars(4));
-                    if (format_signature == "bext")
-                    {
-                        size = reader.ReadInt32();
-                        reader.ReadBytes(size);
-                        format_signature = new string(reader.ReadChars(4));
-                    }
-                }
-                else
-                {
-                    format_signature = junk;
-                }
-                if (format_signature == "bext")
-                {
-                    int size = reader.ReadInt32();
-                    reader.ReadBytes(size);
-                    format_signature = new string(reader.ReadChars(4));
-                }
-
-                // WAVE header 
-                if (format_signature != "fmt ")
-                    throw new NotSupportedException("Specified wave file is not supported.");
-
-
-                int format_chunk_size = reader.ReadInt32();
-                int audio_format = reader.ReadInt16();
-                int num_channels = reader.ReadInt16();
-                int sample_rate = reader.ReadInt32();
-                int byte_rate = reader.ReadInt32();
-                int block_align = reader.ReadInt16();
-                int bits_per_sample = reader.ReadInt16();
-                reader.ReadBytes(format_chunk_size - 16);
-
-
-                string data_signature = new string(reader.ReadChars(4));
-                while (data_signature != "data")
-                {
-                    reader.ReadBytes(reader.ReadInt32());
-                    data_signature = new string(reader.ReadChars(4));
-                }
-                if (data_signature != "data")
-                    throw new NotSupportedException("Specified wave file is not supported.");
-
-
-                int data_chunk_size = reader.ReadInt32();
-
-
-                channels = num_channels;
-                bits = bits_per_sample;
-                rate = sample_rate;
-
-
-                return reader.ReadBytes(data_chunk_size);
-            }
         }
 
         public ISoundStream CreateStream(Stream stream)
@@ -271,7 +184,7 @@ namespace Strawberry.OpenAL
             return ind;
         }
 
-        private ALFormat GetSoundFormat(int channels, int bits)
+        internal ALFormat GetSoundFormat(int channels, int bits)
         {
             switch (channels)
             {

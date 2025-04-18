@@ -17,5 +17,7 @@
         void Play(bool loop = false);
 
         bool IsStreaming();
+
+        bool Update();
     }
 }
