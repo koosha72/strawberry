@@ -11,26 +11,11 @@
         ISound3DListener ActiveListener { get; set; }
 
         /// <summary>
-        /// Creates a sound buffer using the file specified.
+        /// Creates a sound buffer.
         /// </summary>
-        /// <param name="fileName">File path</param>
-        /// <returns>The created sound buffer. You can use this buffer to play sounds</returns>
-        ISoundBuffer CreateSoundBuffer(string fileName);
-
-        /// <summary>
-        /// Creates a sound buffer using the file specified.
-        /// </summary>
-        /// <param name="fileName">File path</param>
-        /// <param name="fileName">The format of the file</param>
-        /// <returns>The created sound buffer. You can use this buffer to play sounds</returns>
-        ISoundBuffer CreateSoundBuffer(string fileName, SoundFormat format);
-
-        /// <summary>
-        /// Creates a sound buffer using a byte array.
-        /// </summary>
-        /// <param name="data">The sound data</param>
-        /// <returns>The created sound buffer. You can use this buffer to play sounds</returns>
-        ISoundBuffer CreateSoundBuffer(byte[] data);
+        /// <param name="soundReader">An implementation of a sound reader, That loads correct sound format, e.g. WaveReader</param>
+        /// <returns>The created SoundBuffer</returns>
+        ISoundBuffer CreateSoundBuffer(ISoundReader soundReader);
 
         /// <summary>
         /// Creates a sound stream.
