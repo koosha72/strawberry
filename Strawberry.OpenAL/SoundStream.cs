@@ -69,6 +69,7 @@ namespace Strawberry.OpenAL
                 StartOver();
                 playing = true;
                 IsLoop = loop;
+                (SoundManager as SoundManager)?.AddStream(this);
             }
         }
 
@@ -76,8 +77,12 @@ namespace Strawberry.OpenAL
         {
             lock (mutex)
             {
+                AL.SourceStop(source);
+                AL.SourceUnqueueBuffers(source, AL.GetSourcei(source, ALGetSourcei.BuffersQueued), null);
+
                 reader.Seek(0);
-                BitsPerSample = reader.Channels;
+
+                BitsPerSample = reader.BitsPerSample;
                 SampleRate = reader.SampleRate;
                 Channels = reader.Channels;
             }
@@ -139,26 +144,33 @@ namespace Strawberry.OpenAL
             return true;
         }
 
-        internal int ReadBuffer(int bId = 0)
+
+        internal int ReadBuffer(int bufferId = 0)
         {
             lock (mutex)
             {
-                if (bId == 0)
-                    bId = buffers[0];
-                byte[] buffer = new byte[SampleRate];
-                int s = reader.Read(buffer, 0, SampleRate);
+                if (bufferId == 0)
+                    bufferId = buffers[0];
+                byte[] buffer = new byte[SampleRate * Channels * (BitsPerSample / 8)];
+                int bytesRead = reader.Read(buffer, 0, buffer.Length);
 
-
-                AL.BufferData(bId, (SoundManager as SoundManager).GetSoundFormat(Channels, BitsPerSample), buffer, s, SampleRate);
-
-                if (s != SampleRate)
+                if (bytesRead <= 0)
                 {
-                    if (!IsLoop)
-                        playing = false;
-                    return -1;
+                    if (IsLoop)
+                    {
+                        StartOver();
+                        bytesRead = reader.Read(buffer, 0, buffer.Length);
+                        if (bytesRead <= 0) return -1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
                 }
 
-                return bId;
+                AL.BufferData(bufferId, (SoundManager as SoundManager).GetSoundFormat(Channels, BitsPerSample), buffer, bytesRead, SampleRate);
+
+                return bufferId;
             }
         }
     }

@@ -20,9 +20,9 @@
         /// <summary>
         /// Creates a sound stream.
         /// </summary>
-        /// <param name="stream"></param>
+        /// <param name="soundReader">An implementation of a sound reader, That loads correct sound format, e.g. WaveReader</param>
         /// <returns>The created sound stream. You can stream sounds without loading them entirely in the memory using this class.</returns>
-        ISoundStream CreateStream(Stream stream);
+        ISoundStream CreateStream(ISoundReader soundReader);
 
         /// <summary>
         /// Stops all the sounds playing.

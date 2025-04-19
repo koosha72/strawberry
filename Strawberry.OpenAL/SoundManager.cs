@@ -11,9 +11,9 @@ namespace Strawberry.OpenAL
 
         public IEnumerable<Voice> Sources { get { return sources; } }
 
-        Thread streamBuffersThread;
-
         bool streaming = true;
+
+        Thread streamBuffersThread;
 
         List<SoundStream> streams;
 
@@ -28,10 +28,11 @@ namespace Strawberry.OpenAL
             int[] att = null;
             context = ALC.CreateContext(device, att);
             ALC.MakeContextCurrent(context);
-            //streamBuffersThread = new Thread(StreamThread);
-            //streamBuffersThread.IsBackground = true;
-            //streamBuffersThread.Start();
             streams = new List<SoundStream>();
+
+            streamBuffersThread = new Thread(StreamThread);
+            streamBuffersThread.IsBackground = true;
+            streamBuffersThread.Start();
         }
 
         void StreamThread()
@@ -41,7 +42,6 @@ namespace Strawberry.OpenAL
                 lock (mutex)
                 {
                     Thread.Sleep(100);
-
                     for (int i = 0; i < streams.Count; i++)
                     {
                         if (!streams[i].Update())
@@ -64,9 +64,9 @@ namespace Strawberry.OpenAL
             return new SoundBuffer(buffer, this);
         }
 
-        public ISoundStream CreateStream(Stream stream)
+        public ISoundStream CreateStream(ISoundReader soundReader)
         {
-            throw new NotImplementedException();
+            return new SoundStream(this, soundReader);
         }
 
         public void StopAll()
@@ -191,6 +191,14 @@ namespace Strawberry.OpenAL
                 case 1: return bits == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
                 case 2: return bits == 8 ? ALFormat.Stereo8 : ALFormat.Stereo16;
                 default: throw new NotSupportedException("The specified sound format is not supported.");
+            }
+        }
+
+        internal void AddStream(SoundStream soundStream)
+        {
+            lock (mutex)
+            {
+                streams.Add(soundStream);
             }
         }
 
