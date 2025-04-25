@@ -5,7 +5,7 @@
         public ISoundBuffer Buffer { get; }
 
         /// <summary>
-        /// Gets the current play time of the voiec in seconds.
+        /// Gets the current play time of the voice in seconds.
         /// </summary>
         float CurrentPlayTime { get; set; }
 

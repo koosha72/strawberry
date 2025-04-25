@@ -8,6 +8,7 @@ namespace Strawberry.Core
     /// <summary>
     /// Represents the context of a game, providing access to essential components
     /// and lifecycle methods for initialization, updating, and rendering.
+    /// You should implement this interface in your game and launch it using Game class's Run method.
     /// </summary>
     public interface IGameContext
     {

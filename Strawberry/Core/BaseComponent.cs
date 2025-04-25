@@ -1,7 +1,8 @@
 ﻿namespace Strawberry.Core
 {
     /// <summary>
-    /// Base class of all components in strawberry.
+    /// Base class of all components in Strawberry.
+    /// You should define your own component classes inheriting from this class.
     /// </summary>
     public abstract class BaseComponent : ReferenceObject
     {
