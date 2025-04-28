@@ -53,6 +53,8 @@ namespace Strawberry.OpenGL.Graphics
             }
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+            graphicsContext = gc;
         }
 
         public void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)

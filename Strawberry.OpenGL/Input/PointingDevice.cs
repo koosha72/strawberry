@@ -12,8 +12,6 @@ namespace Strawberry.OpenGL.Input
         public PointerButtons[] ReleasedButtons { get; private set; }
 
         Vector2 position;
-        bool pressedOnce = false;
-        bool releasedOnce = false;
 
         public PointingDevice()
         {
@@ -60,7 +58,6 @@ namespace Strawberry.OpenGL.Input
 
         internal void MousePressed(OpenTK.Windowing.Common.MouseButtonEventArgs obj)
         {
-            pressedOnce = false;
             if (obj.Button == OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left)
             {
                 DownButtons[0] |= PointerButtons.Primary;
@@ -80,7 +77,6 @@ namespace Strawberry.OpenGL.Input
 
         internal void MouseReleased(OpenTK.Windowing.Common.MouseButtonEventArgs obj)
         {
-            releasedOnce = false;
             if (obj.Button == OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left)
             {
                 DownButtons[0] = DownButtons[0] & ~PointerButtons.Primary;

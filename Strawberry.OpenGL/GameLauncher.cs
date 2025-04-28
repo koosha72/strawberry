@@ -38,7 +38,7 @@ namespace Strawberry.OpenGL
         {
             NativeWindowSettings s = new NativeWindowSettings();
             s.WindowState = fullscreen ? OpenTK.Windowing.Common.WindowState.Fullscreen : OpenTK.Windowing.Common.WindowState.Normal;
-            s.Size = new OpenTK.Mathematics.Vector2i(width, height);
+            s.ClientSize = new OpenTK.Mathematics.Vector2i(width, height);
             s.Title = "Strawberry";
             s.APIVersion = Version.Parse("4.1.0");
             GameWindowSettings g = new GameWindowSettings();
