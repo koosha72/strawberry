@@ -9,7 +9,7 @@
         /// <summary>
         /// The owner of the component
         /// </summary>
-        public Entity? Owner
+        public Entity Owner
         {
             get;
             set;
@@ -18,12 +18,12 @@
         /// <summary>
         /// The scene in which the entity is living
         /// </summary>
-        public Scene? Scene { get { return Owner?.Scene; } }
+        public Scene Scene { get { return Owner?.Scene; } }
 
         /// <summary>
         ///  The current game context
         /// </summary>
-        public IGameContext? GameContext { get { return Owner?.Scene?.GameContext; } }
+        public IGameContext GameContext { get { return Owner?.Scene?.GameContext; } }
 
         /// <summary>
         /// This method happens when the component is intialized. You can override it in your own components.

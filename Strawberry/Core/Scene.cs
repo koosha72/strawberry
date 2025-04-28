@@ -10,7 +10,7 @@ namespace Strawberry.Core
     {
         public event EventHandler Update = null;
 
-        public event EventHandler FixedUpdate = null;
+        // public event EventHandler FixedUpdate = null;
 
         public event EventHandler InitInstances = null;
 

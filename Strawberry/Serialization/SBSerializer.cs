@@ -156,7 +156,6 @@ namespace Strawberry.Serialization
                         var obj = objects[i];
                         if (obj is ReferenceObject)
                         {
-                            List<ReferenceObject> oo;
                             byte[] bytes = Serialize(obj as ReferenceObject, objs);
                             if (bytes != null)
                             {

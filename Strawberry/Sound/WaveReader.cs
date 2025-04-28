@@ -32,6 +32,7 @@ public class WaveReader : ISoundReader
     {
         if (!isDisposed)
         {
+            isDisposed = true;
             Stream?.Dispose();
             Stream = null;
         }

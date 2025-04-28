@@ -14,7 +14,6 @@ namespace Strawberry.Serialization
 
         public void RestoreObject(ReferenceObject obj)
         {
-            int count = 0;
             if (data != null)
             {
                 using (MemoryStream stream = new MemoryStream(data))

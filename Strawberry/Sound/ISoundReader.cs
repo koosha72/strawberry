@@ -5,7 +5,7 @@ namespace Strawberry.Sound;
 
 public interface ISoundReader : IDisposable
 {
-    public Stream? Stream { get; }
+    public Stream Stream { get; }
 
     public int BitsPerSample { get; }
     public int SampleRate { get; }
