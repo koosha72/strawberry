@@ -9,6 +9,9 @@
         /// </summary>
         float CurrentPlayTime { get; set; }
 
+        /// <summary>
+        /// Gets or sets the playback volume for this voice. This property allows real-time volume adjustment during playback.
+        /// </summary>
         public float Volume { get; set; }
 
         /// <summary>
