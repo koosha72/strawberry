@@ -6,9 +6,9 @@ namespace Strawberry.Android.Helpers;
 
 public class EGLHelper
 {
-    private EGLDisplay? eglDisplay;
-    private EGLContext? eglContext;
-    private EGLSurface? eglSurface;
+    private EGLDisplay eglDisplay;
+    private EGLContext eglContext;
+    private EGLSurface eglSurface;
 
     public void Init(Surface surface)
     {

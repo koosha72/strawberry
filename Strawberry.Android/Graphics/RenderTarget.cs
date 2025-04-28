@@ -57,6 +57,7 @@ internal class RenderTarget : Base, IRenderTarget
         }
 
         GLES30.GlBindFramebuffer(GLES30.GlFramebuffer, 0);
+        graphicsContext = gc;
     }
 
     public void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
