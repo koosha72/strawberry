@@ -3,7 +3,7 @@ using Strawberry.Math;
 
 namespace Strawberry.OpenGL.Input
 {
-    public class PointingDevice : IPoitingDevice
+    public class PointingDevice : IPointingDevice
     {
         public PointerButtons[] PressedButtons { get; private set; }
 

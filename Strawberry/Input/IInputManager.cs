@@ -5,7 +5,7 @@
         /// <summary>
         /// The pointing device used by the game. You can use this object to get information about mouse clicks or touch input.
         /// </summary>
-        IPoitingDevice PointingDevice { get; }
+        IPointingDevice PointingDevice { get; }
 
         /// <summary>
         /// The keyboard device used by the game.

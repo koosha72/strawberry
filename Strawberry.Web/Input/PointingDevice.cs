@@ -4,7 +4,7 @@ using Strawberry.Math;
 
 namespace Strawberry.Web.Input;
 
-public class PointingDevice : IPoitingDevice
+public class PointingDevice : IPointingDevice
 {
     public PointerButtons[] PressedButtons { get; private set; } = new PointerButtons[10];
 

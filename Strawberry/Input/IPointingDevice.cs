@@ -5,7 +5,7 @@ namespace Strawberry.Input
     /// <summary>
     /// A pointing device like mouse, touchpad or touchscreen.
     /// </summary>
-    public interface IPoitingDevice
+    public interface IPointingDevice
     {
         /// <summary>
         /// The buttons that are pressed. A button can only be pressed for 1 FixedUpdate.

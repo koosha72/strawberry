@@ -4,7 +4,7 @@ namespace Strawberry.OpenGL.Input
 {
     public class InputManager : IInputManager
     {
-        public IPoitingDevice PointingDevice { get; private set; }
+        public IPointingDevice PointingDevice { get; private set; }
 
         public IKeyboard Keyboard { get; private set; }
 

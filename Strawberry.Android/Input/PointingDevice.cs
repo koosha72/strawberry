@@ -5,7 +5,7 @@ using Strawberry.Math;
 
 namespace Strawberry.Android.Input;
 
-internal class PointingDevice : IPoitingDevice
+internal class PointingDevice : IPointingDevice
 {
     public PointerButtons[] PressedButtons { get; private set; } = new PointerButtons[10];
 
@@ -46,7 +46,7 @@ internal class PointingDevice : IPoitingDevice
         return (ReleasedButtons[index] & button) == button;
     }
 
-    internal void OnTouch(MotionEvent? e)
+    internal void OnTouch(MotionEvent e)
     {
         if (e != null)
         {
