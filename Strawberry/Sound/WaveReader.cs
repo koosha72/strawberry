@@ -1,11 +1,10 @@
-using System;
 using System.Text;
 
 namespace Strawberry.Sound;
 
 public class WaveReader : ISoundReader
 {
-    public Stream? Stream { get; private set; }
+    public Stream Stream { get; private set; }
 
     public int BitsPerSample { get; private set; }
 
