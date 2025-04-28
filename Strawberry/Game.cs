@@ -16,8 +16,6 @@ namespace Strawberry
 
         IFrameInfoProvider frameInfoProvider;
 
-        public static IStorage Storage { get; private set; }
-
         bool initialized = false;
 
 
@@ -58,7 +56,6 @@ namespace Strawberry
         {
             frameInfoProvider.Initialize();
             launcher.InputManager?.Initialize();
-            Storage = launcher.Storage;
             GameContext.OnInitialize(launcher);
             initialized = true;
         }
