@@ -103,7 +103,6 @@ internal class Texture : Base, ITexture
                 break;
             case TextureFormat.B8G8R8A8:
                 throw new NotSupportedException();
-                break;
             case TextureFormat.A:
                 pformat = GLES30.GlAlpha;
                 internalFormat = GLES30.GlAlpha;
@@ -192,7 +191,6 @@ internal class Texture : Base, ITexture
                 break;
             case TextureFormat.B8G8R8A8:
                 throw new NotSupportedException();
-                break;
             case TextureFormat.A:
                 pformat = GLES30.GlAlpha;
                 internalFormat = GLES30.GlAlpha;
