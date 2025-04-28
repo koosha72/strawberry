@@ -3,7 +3,7 @@ using System.Runtime.InteropServices.JavaScript;
 using Strawberry.Input;
 
 namespace Strawberry.Web;
-
+#pragma warning disable CA1416
 public static partial class Interop
 {
     [JSImport("initialize", "main.js")]

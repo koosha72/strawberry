@@ -101,7 +101,6 @@ internal class Texture : Base, ITexture
                 break;
             case TextureFormat.B8G8R8A8:
                 throw new NotSupportedException();
-                break;
             case TextureFormat.A:
                 pformat = GL.Alpha;
                 internalFormat = GL.Alpha;
@@ -146,7 +145,6 @@ internal class Texture : Base, ITexture
                 break;
             case TextureFormat.B8G8R8A8:
                 throw new NotSupportedException();
-                break;
             case TextureFormat.A:
                 pformat = GL.Alpha;
                 internalFormat = GL.Alpha;
