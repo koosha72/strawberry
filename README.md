@@ -1,45 +1,62 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+# موتر بازی سازی توت فرنگی
+## شرح
+موتور بازی سازی توت فرنگی یک موتور بازی سازی چند سکوی دو بعدی است که به طور کامل بر مبنای .NET ساخته شده است.
+هستۀ مرکزی این موتور به صورت کاملا باز در اختیار کاربران قرار می گیرد.
+جهت استفاده از هسته مرکزی موتور باید به زبان برنامه نویسی C# کاملاً مسلط باشید.
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+## محیط بصری و ویرایشگر
+البته محیط بصری این موتور در دست ساخت می باشد که شما می توانید در نسخه اولیه خصوصی (Private Alpha Version) ثبت نام نمایید.
+تایید ثبت نام بر مبنای رزومه ارسالی شما انجام خواهد شد.
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+## راه اندازی اولیه
+راه اندازی یک پروژه برای سکوهای مختلف تفاوتهایی دارد. در حالت عادی شما باید چندین پروژه داشته باشید.
+### 1- پروژه اصلی بازی (به صورت چند سکویی)
+در این پروژه تا حد ممکن نباید از کد اختصاصی سکوها استفاده نمود، کد به صورت اشتراکی است وبازی روی تمام سکو ها از یک کد استفاده می نماید.
+### 2- راه انداز سکوها
+برای هر سکو باید یک پروژه راه انداز ساخته شود. کد پروژه راه انداز عموماً بسیار ساده است.
+پروژه راه اندازی به پروژه اصلی بازی وابسته است و آن را اجرا می کند.
+برای مثال کد راه اندازی سکوی رایانه رومیزی (Desktop) به شرح زیر می باشد:
+```csharp
+using Strawberry.Test;
 
----
+namespace Strawberry.Desktop.Test
+{
+    internal static class Program
+    {
+        /// <summary>
+        ///  The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            MyGameContext stdGameContext = new MyGameContext();
+            Game game = new Game();
+            game.Run(stdGameContext, new OpenGL.GameLauncher(true));
+        }
+    }
+}
+```
+در کد بالا MyGameContext زمینه اصلی بازی است که از پروژه چند سکویی فراخوانی شده است. بازی با استفاده از یک GameLauncher مخصوص سکوی رومیزی (Desktop) اجرا می شود.
+راه اندازی و اجرا در سایر سکو ها کمی متفاوت است که می توانید در راهنمای توت فرنگی مشاهده نمایید.
 
-## Edit a file
+[راه اندازی و اجرای بازی](https://docs.sb-engine.ir/manual/setup)
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+## راهنما
+راهنمای موتور توت فرنگی دو بخش دارد:
+### کتابچه راهنما
+این راهنما به صورت آموزشی نگاشته شده و شما را قدم به قدم در انجام کار های مختلف با موتور راهنمایی می نماید.
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+[کتابچه راهنما](https://docs.sb-engine.ir/manual/)
 
----
+### فهرست مستندات
+این بخش به طور کامل تمام ساختارها و توابع موتور را لیست نموده و شرح مختصری از کارکرد هر کدام داده است.
 
-## Create a file
+[فهرست مستندات](https://docs.sb-engine.ir/reference/)
 
-Next, you’ll add a new file to this repository.
+## حمایت
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+## گزارش خطا
+یکی از کمک های بزرگی که می توانید به ما در امر ساخت این موتور انجام دهید، استفاده از موتور و گزارش خطا ها و یا حتی پیشنهاد تغییرات در ساختار آن می باشد.
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
-
----
-
-## Clone a repository
-
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
-
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
-
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+با استفاده از لینک زیر ما را در توسعۀ هر چه بهتر توت فرنگی یاری نمایید
+[گزارش خطا و پیشنها](https://github.com/koosha72/strawberry/issues)
