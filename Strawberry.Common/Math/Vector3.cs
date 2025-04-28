@@ -266,7 +266,7 @@ namespace Strawberry.Math
             result = vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
         }
 
-        public override bool Equals([NotNullWhen(true)] object? obj)
+        public override bool Equals([NotNullWhen(true)] object obj)
         {
             return (obj is Vector3) ? this == (Vector3)obj : false;
         }

@@ -1115,7 +1115,7 @@ namespace Strawberry.Math
 
         #region Object Overrides
 
-        public override bool Equals([NotNullWhen(true)] object? obj)
+        public override bool Equals([NotNullWhen(true)] object obj)
         {
             return this == (Matrix4?)obj;
         }
