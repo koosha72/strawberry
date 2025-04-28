@@ -29,10 +29,12 @@ public class GameLauncher : Activity, IGameLauncher
 
     Thread gameLoop;
 
+    StrawberrySurfaceView surfaceView;
+
     bool running = true;
     int w, h;
 
-    protected override void OnCreate(Bundle? savedInstanceState)
+    protected override void OnCreate(Bundle savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
     }
@@ -42,7 +44,7 @@ public class GameLauncher : Activity, IGameLauncher
         w = width;
         h = height;
 
-        StrawberrySurfaceView surfaceView = new StrawberrySurfaceView(this);
+        surfaceView = new StrawberrySurfaceView(this);
         surfaceView.OnSurfaceCreated += surfaceView_SurfaceCreated;
         surfaceView.OnSurfaceDestroyed += surfaceView_SurfaceDestroyed;
         SetContentView(surfaceView);
@@ -72,7 +74,7 @@ public class GameLauncher : Activity, IGameLauncher
         eglHelper.CleanUp();
     }
 
-    private void GameLoopThread(object? obj)
+    private void GameLoopThread(object obj)
     {
         eglHelper.MakeCurrent();
         GraphicsContext = new GraphicsContext();
@@ -94,9 +96,9 @@ public class GameLauncher : Activity, IGameLauncher
         //gameLoop.Start();
     }
 
-    public override bool OnTouchEvent(MotionEvent? e)
+    public override bool OnTouchEvent(MotionEvent e)
     {
-        (this.InputManager.PointingDevice as PointingDevice).OnTouch(e);
+        (this.InputManager.PointingDevice as PointingDevice).OnTouch(surfaceView, e);
 
         return base.OnTouchEvent(e);
     }

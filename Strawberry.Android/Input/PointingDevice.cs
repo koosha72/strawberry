@@ -46,7 +46,7 @@ internal class PointingDevice : IPointingDevice
         return (ReleasedButtons[index] & button) == button;
     }
 
-    internal void OnTouch(MotionEvent e)
+    internal void OnTouch(View view,MotionEvent e)
     {
         if (e != null)
         {
@@ -64,7 +64,9 @@ internal class PointingDevice : IPointingDevice
 
             for (int i = 0; i < e.PointerCount; i++)
             {
-                positions[i] = new Vector2(e.GetRawX(i), e.GetRawY(i));
+                int[] location = new int[2];
+                view.GetLocationOnScreen(location);
+                positions[i] = new Vector2(e.GetX(i) + location[0], e.GetY(i) + location[1]);
             }
         }
     }
