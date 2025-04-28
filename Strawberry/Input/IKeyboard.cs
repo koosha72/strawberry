@@ -4,7 +4,7 @@
     {
         IEnumerable<Keys> DownKeys { get; }
         IEnumerable<Keys> PressedKeys { get; }
-        IEnumerable<Keys> RelasedKeys { get; }
+        IEnumerable<Keys> ReleasedKeys { get; }
 
         void FirePressed(Keys key);
         void FireReleased(Keys key);

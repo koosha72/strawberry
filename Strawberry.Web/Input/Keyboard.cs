@@ -8,7 +8,7 @@ public class Keyboard : IKeyboard
 
     public IEnumerable<Keys> PressedKeys => pressedKeys;
 
-    public IEnumerable<Keys> RelasedKeys => releasedKeys;
+    public IEnumerable<Keys> ReleasedKeys => releasedKeys;
 
     List<Keys> downKeys = new List<Keys>();
     List<Keys> pressedKeys = new List<Keys>();

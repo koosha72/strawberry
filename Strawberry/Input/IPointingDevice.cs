@@ -9,7 +9,7 @@ namespace Strawberry.Input
     {
         /// <summary>
         /// The buttons that are pressed. A button can only be pressed for 1 FixedUpdate.
-        /// The pressed button will be available in DownButtons untill the button is released;
+        /// The pressed button will be available in DownButtons until the button is released;
         /// </summary>
         PointerButtons[] PressedButtons { get; }
         /// <summary>
