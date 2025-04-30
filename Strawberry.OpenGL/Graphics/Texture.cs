@@ -16,6 +16,8 @@ namespace Strawberry.OpenGL.Graphics
 
         public Vector2 UVFactor { get { return new Vector2(1.0f, 1.0f); } }
 
+        public TextureSettings TextureSettings { get; private set; }
+
         int texture = 0;
 
         internal int GLTexture { get { return texture; } }
@@ -111,6 +113,8 @@ namespace Strawberry.OpenGL.Graphics
             format = pformat;
             Width = width;
             Height = height;
+
+            TextureSettings = settings;
         }
 
         public Texture(GraphicsContext gc, int width, int height, byte[] data, TextureSettings settings)
@@ -198,6 +202,8 @@ namespace Strawberry.OpenGL.Graphics
             format = pformat;
             Width = width;
             Height = height;
+
+            TextureSettings = settings;
         }
 
         public void Activate(IShader shader, string name)

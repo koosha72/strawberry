@@ -27,6 +27,8 @@
         /// </summary>
         IGraphicsContext GraphicsContext { get; }
 
+        TextureSettings TextureSettings { get; }
+
         /// <summary>
         /// Activates the texture to be used by the given shader
         /// </summary>

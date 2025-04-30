@@ -20,6 +20,8 @@ internal class Texture : Base, ITexture
 
     public Vector2 UVFactor { get { return new Vector2(1.0f, 1.0f); } }
 
+    public TextureSettings TextureSettings { get; private set; }
+
     int texture = 0;
 
     internal int GLTexture { get { return texture; } }
@@ -114,9 +116,11 @@ internal class Texture : Base, ITexture
 
         GLES30.GlTexImage2D(GLES30.GlTexture2d, 0, internalFormat,
             width, height, 0, pformat, GLES30.GlFloat, colorsBuffer);
-        this.format = pformat;
-        this.Width = width;
-        this.Height = height;
+        format = pformat;
+        Width = width;
+        Height = height;
+
+        TextureSettings = settings;
     }
 
     public Texture(GraphicsContext gc, int width, int height, byte[] data, TextureSettings settings)
@@ -204,9 +208,10 @@ internal class Texture : Base, ITexture
         GLES30.GlTexImage2D(GLES30.GlTexture2d, 0, internalFormat,
             width, height, 0, pformat, GLES30.GlUnsignedByte, buffer);
 
-        this.format = pformat;
-        this.Width = width;
-        this.Height = height;
+        format = pformat;
+        Width = width;
+        Height = height;
+        TextureSettings = settings;
     }
 
     public void Activate(IShader shader, string name)
