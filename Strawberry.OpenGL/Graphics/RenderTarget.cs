@@ -1,7 +1,7 @@
 ﻿using Strawberry.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-namespace Strawberry.OpenGL.Graphics
+namespace Strawberry.Desktop.Graphics
 {
     public class RenderTarget : Base, IRenderTarget
     {

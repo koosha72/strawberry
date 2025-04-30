@@ -1,14 +1,14 @@
 ﻿using OpenTK.Windowing.Desktop;
 using Strawberry.Graphics;
 using Strawberry.Input;
-using Strawberry.OpenGL.Graphics;
-using Strawberry.OpenGL.Input;
+using Strawberry.Desktop.Graphics;
+using Strawberry.Desktop.Input;
 using Strawberry.Sound;
 using Strawberry.OpenAL;
 using Strawberry.Misc;
 
 
-namespace Strawberry.OpenGL
+namespace Strawberry.Desktop
 {
     /// <summary>
     /// Launches a game using an opengl renderer.

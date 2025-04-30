@@ -1,6 +1,6 @@
 using Strawberry.Misc;
 
-namespace Strawberry.OpenGL;
+namespace Strawberry.Desktop;
 
 public class StorageManager : IStorage
 {

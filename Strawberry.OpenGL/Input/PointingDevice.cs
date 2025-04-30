@@ -1,7 +1,7 @@
 ﻿using Strawberry.Input;
 using Strawberry.Math;
 
-namespace Strawberry.OpenGL.Input
+namespace Strawberry.Desktop.Input
 {
     public class PointingDevice : IPointingDevice
     {

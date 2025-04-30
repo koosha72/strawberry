@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using Strawberry.Graphics;
 
-namespace Strawberry.OpenGL.Graphics
+namespace Strawberry.Desktop.Graphics
 {
     public class BlendState
     {

@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Common", "Strawb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Physics", "Strawberry.Physics\Strawberry.Physics.csproj", "{029C0187-ED54-4597-811B-98E2DCE98766}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.OpenGL", "Strawberry.OpenGL\Strawberry.OpenGL.csproj", "{6EA61883-C39F-4E0B-B1C0-DD8035AE850B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Desktop", "Strawberry.OpenGL\Strawberry.Desktop.csproj", "{6EA61883-C39F-4E0B-B1C0-DD8035AE850B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Test", "Strawberry.Test\Strawberry.Test.csproj", "{F0BCB1E0-4B54-443A-9E2E-2BD531710290}"
 EndProject

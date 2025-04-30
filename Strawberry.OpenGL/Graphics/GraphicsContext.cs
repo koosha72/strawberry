@@ -3,7 +3,7 @@ using OpenTK.Windowing.Desktop;
 using Strawberry.Graphics;
 using Strawberry.Math;
 
-namespace Strawberry.OpenGL.Graphics
+namespace Strawberry.Desktop.Graphics
 {
     public class GraphicsContext : Base, IGraphicsContext
     {

@@ -2,7 +2,7 @@
 using Strawberry.Graphics;
 using System.Runtime.InteropServices;
 
-namespace Strawberry.OpenGL.Graphics
+namespace Strawberry.Desktop.Graphics
 {
     internal class Geometry<T> : Base, IGeometry<T> where T : struct
     {

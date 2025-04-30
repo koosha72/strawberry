@@ -1,6 +1,6 @@
 ﻿using Strawberry.Input;
 
-namespace Strawberry.OpenGL.Input
+namespace Strawberry.Desktop.Input
 {
     public class Keyboard : IKeyboard
     {
