@@ -73,6 +73,14 @@
                         this.Top <= rect.Top && this.Bottom >= rect.Bottom;
         }
 
+        public bool IntersectsWith(Rectangle rect)
+        {
+            return (rect.X < this.X + this.Width) &&
+            (this.X < (rect.X + rect.Width)) &&
+            (rect.Y < this.Y + this.Height) &&
+            (this.Y < rect.Y + rect.Height);
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is Rectangle))
