@@ -14,6 +14,12 @@
         public int Channels { get; }
         bool IsLoop { get; }
 
+        public float Seconds { get; }
+
+        public float Volume { get; set; }
+
+        float CurrentPlayTime { get; set; }
+
         void Play(bool loop = false);
 
         bool IsStreaming();

@@ -14,6 +14,42 @@ namespace Strawberry.OpenAL
 
         public bool IsLoop { get; private set; }
 
+        public float Seconds
+        {
+            get
+            {
+                if (reader.DataSize == 0)
+                    return 0;
+
+                long totalSamples = reader.DataSize / (reader.Channels * (reader.BitsPerSample / 8));
+
+                return (float)totalSamples / reader.SampleRate;
+            }
+        }
+
+        public float CurrentPlayTime
+        {
+            get
+            {
+                return 0;
+            }
+            set
+            {
+            }
+        }
+
+        public float Volume
+        {
+            get
+            {
+                return AL.GetSourcef(source, ALSourcef.Gain);
+            }
+            set
+            {
+                AL.Sourcef(source, ALSourcef.Gain, value);
+            }
+        }
+
 
         int bufferCount = 3;
         int[] buffers;
