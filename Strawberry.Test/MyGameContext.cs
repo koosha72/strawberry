@@ -12,7 +12,6 @@ namespace Strawberry.Test
     public class MyGameContext : StdGameContext
     {
         public const float ppm = 32f;
-
         public MyGameContext() : base(1280, 720)
         {
 
@@ -85,6 +84,15 @@ namespace Strawberry.Test
                 s.Volume = 0.4f;
                 var volume = s.Volume;
             }
+
+            var music01 = SoundManager.CreateStream(new WaveReader(Storage.Open("music01.wav")));
+            music01.Play(false);
+            music01.CurrentPlayTime = 70;
+            Console.WriteLine(music01.Seconds);
+        }
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
         }
     }
 }

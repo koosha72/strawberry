@@ -42,11 +42,22 @@ namespace Strawberry.OpenAL
                 lock (mutex)
                 {
                     Thread.Sleep(100);
+
                     for (int i = 0; i < streams.Count; i++)
                     {
                         if (!streams[i].Update())
                         {
+                            streams[i].Dispose();
                             streams.Remove(streams[i]);
+                            i--;
+                        }
+                    }
+                    for (int i = 0; i < sources.Count; i++)
+                    {
+                        if (!sources[i].IsPlaying() && !sources[i].IsPaused())
+                        {
+                            sources[i].Dispose();
+                            sources.RemoveAt(i);
                             i--;
                         }
                     }
@@ -90,10 +101,13 @@ namespace Strawberry.OpenAL
             Voice v;
             if (ind == -1)
             {
-                source = AL.GenSource();
+                lock (mutex)
+                {
+                    source = AL.GenSource();
 
-                v = new Voice(buffer, source);
-                sources.Add(v);
+                    v = new Voice(buffer, source);
+                    sources.Add(v);
+                }
             }
             else
             {

@@ -12,7 +12,7 @@ namespace Strawberry.Desktop.Test
         {
             MyGameContext stdGameContext = new MyGameContext();
             Game game = new Game();
-            game.Run(stdGameContext, new GameLauncher(true));
+            game.Run(stdGameContext, new GameLauncher(false));
         }
     }
 }

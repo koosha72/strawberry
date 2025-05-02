@@ -14,6 +14,9 @@ namespace Strawberry.OpenAL
 
         public bool IsLoop { get; private set; }
 
+        int totalSamplesPlayed = 0;
+        bool shouldStop = false;
+
         public float Seconds
         {
             get
@@ -21,9 +24,9 @@ namespace Strawberry.OpenAL
                 if (reader.DataSize == 0)
                     return 0;
 
-                long totalSamples = reader.DataSize / (reader.Channels * (reader.BitsPerSample / 8));
+                long totalSamples = reader.DataSize / (Channels * (BitsPerSample / 8));
 
-                return (float)totalSamples / reader.SampleRate;
+                return (float)totalSamples / SampleRate;
             }
         }
 
@@ -31,10 +34,28 @@ namespace Strawberry.OpenAL
         {
             get
             {
-                return 0;
+                if (reader.DataSize == 0 || !playing)
+                    return 0;
+
+                int currentSampleOffset = AL.GetSourcei(source, ALGetSourcei.SampleOffset);
+
+                return (float)(totalSamplesPlayed + currentSampleOffset) / SampleRate;
             }
             set
             {
+                if (reader.DataSize == 0)
+                    return;
+
+                int targetSample = (int)(value * SampleRate);
+                long targetBytePos = targetSample * Channels * (BitsPerSample / 8);
+                totalSamplesPlayed = targetSample;
+
+                AL.SourceStop(source);
+                AL.SourceUnqueueBuffers(source, AL.GetSourcei(source, ALGetSourcei.BuffersQueued), null);
+
+                reader.Seek(targetBytePos);
+
+                Update();
             }
         }
 
@@ -113,9 +134,7 @@ namespace Strawberry.OpenAL
         {
             lock (mutex)
             {
-                AL.SourceStop(source);
-                AL.SourceUnqueueBuffers(source, AL.GetSourcei(source, ALGetSourcei.BuffersQueued), null);
-
+                totalSamplesPlayed = 0;
                 reader.Seek(0);
 
                 BitsPerSample = reader.BitsPerSample;
@@ -135,7 +154,7 @@ namespace Strawberry.OpenAL
                 return true;
 
             int b;
-            if (processedCount == 0 && qCount == 0 && playing)
+            if (qCount == 0 && playing)
             {
                 b = ReadBuffer();
                 AL.SourceQueueBuffers(source, 1, new int[] { b });
@@ -153,29 +172,37 @@ namespace Strawberry.OpenAL
             if (processedCount > 0)
             {
                 tempBuffers = new int[processedCount];
+                if (shouldStop && qCount == processedCount)
+                {
+                    AL.SourceStop(source);
+                    playing = false;
+                    return false;
+                }
                 AL.SourceUnqueueBuffers(source, processedCount, tempBuffers);
+
+                int bytesPerSample = Channels * (BitsPerSample / 8);
+                int samplesPerBuffer = (SampleRate * Channels * (BitsPerSample / 8)) / bytesPerSample;
+                totalSamplesPlayed += processedCount * samplesPerBuffer;
             }
             else
                 tempBuffers = buffers.Skip(qCount).ToArray();
 
+            int buffersCount = 0;
             for (int j = 0; j < tempBuffers.Length; j++)
             {
                 b = ReadBuffer(tempBuffers[j]);
                 if (b == -1)
                 {
-                    if (!IsLoop)
-                    {
-                        AL.SourceStop(source);
-                        return false;
-                    }
-                    else
-                        StartOver();
-
+                    shouldStop = true;
                     break;
                 }
+                buffersCount++;
             }
 
-            AL.SourceQueueBuffers(source, tempBuffers.Length, tempBuffers);
+            if (buffersCount > 0)
+            {
+                AL.SourceQueueBuffers(source, buffersCount, tempBuffers);
+            }
 
             return true;
         }
@@ -187,7 +214,7 @@ namespace Strawberry.OpenAL
             {
                 if (bufferId == 0)
                     bufferId = buffers[0];
-                byte[] buffer = new byte[SampleRate * Channels * (BitsPerSample / 8)];
+                byte[] buffer = new byte[SampleRate * Channels * (BitsPerSample / 8) / 4];
                 int bytesRead = reader.Read(buffer, 0, buffer.Length);
 
                 if (bytesRead <= 0)
@@ -204,10 +231,27 @@ namespace Strawberry.OpenAL
                     }
                 }
 
-                AL.BufferData(bufferId, (SoundManager as SoundManager).GetSoundFormat(Channels, BitsPerSample), buffer, bytesRead, SampleRate);
+                AL.BufferData(bufferId, (SoundManager as SoundManager).GetSoundFormat(Channels, BitsPerSample), buffer, buffer.Length, SampleRate);
 
                 return bufferId;
             }
+        }
+
+        protected override void CleanUnmanaged()
+        {
+            Console.WriteLine("test");
+            AL.DeleteSource(source);
+            source = 0;
+            AL.DeleteBuffers(buffers.Length, buffers);
+            reader.Dispose();
+            for (int i = 0; i < buffers.Length; i++)
+            {
+                buffers[i] = 0;
+            }
+
+            buffers = null;
+
+            base.CleanUnmanaged();
         }
     }
 }

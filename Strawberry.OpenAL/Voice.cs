@@ -2,7 +2,7 @@
 
 namespace Strawberry.OpenAL
 {
-    public class Voice : IVoice
+    public class Voice : Base, IVoice
     {
         SoundBuffer buffer;
         public virtual ISoundBuffer Buffer { get { return buffer; } internal set { buffer = value as SoundBuffer; } }
@@ -85,6 +85,18 @@ namespace Strawberry.OpenAL
                 return state == ALSourceState.Paused;
             }
             return false;
+        }
+
+        protected override void CleanUnmanaged()
+        {
+            if (AL.IsSource(SourceInd))
+            {
+                AL.SourceStop(SourceInd);
+                AL.DeleteSource(SourceInd);
+                SourceInd = 0;
+                Buffer = null;
+            }
+            base.CleanUnmanaged();
         }
     }
 }
