@@ -4,7 +4,6 @@ namespace Strawberry.Sound;
 
 using System;
 using System.IO;
-using System.Text;
 using MeltySynth;
 
 public class MidiReader : ISoundReader
