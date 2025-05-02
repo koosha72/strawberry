@@ -17,6 +17,8 @@ namespace Strawberry.OpenAL
         int totalSamplesPlayed = 0;
         bool shouldStop = false;
 
+        bool paused = false;
+
         public float Seconds
         {
             get
@@ -121,6 +123,12 @@ namespace Strawberry.OpenAL
         {
             lock (mutex)
             {
+                if (paused && playing)
+                {
+                    AL.SourcePlay(source);
+                    paused = false;
+                    return;
+                }
                 if (playing)
                     return;
                 StartOver();
@@ -145,6 +153,8 @@ namespace Strawberry.OpenAL
 
         public bool Update()
         {
+            if (paused)
+                return true;
             int qCount;
             AL.GetSourcei(source, ALGetSourcei.BuffersQueued, out qCount);
             int processedCount;
@@ -234,6 +244,32 @@ namespace Strawberry.OpenAL
                 AL.BufferData(bufferId, (SoundManager as SoundManager).GetSoundFormat(Channels, BitsPerSample), buffer, buffer.Length, SampleRate);
 
                 return bufferId;
+            }
+        }
+
+        public void Stop()
+        {
+            lock (mutex)
+            {
+                if (!playing)
+                    return;
+                AL.SourceStop(source);
+                AL.SourceUnqueueBuffers(source, AL.GetSourcei(source, ALGetSourcei.BuffersQueued), null);
+                totalSamplesPlayed = 0;
+                reader.Seek(0);
+                playing = false;
+                paused = false;
+            }
+        }
+
+        public void Pause()
+        {
+            lock (mutex)
+            {
+                if (!playing)
+                    return;
+                AL.SourcePause(source);
+                paused = true;
             }
         }
 

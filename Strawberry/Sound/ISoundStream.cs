@@ -22,6 +22,10 @@
 
         void Play(bool loop = false);
 
+        void Stop();
+
+        void Pause();
+
         bool IsStreaming();
 
         bool Update();
