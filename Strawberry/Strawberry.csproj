@@ -12,6 +12,11 @@
 
     <EmbeddedResource Include="Graphics\Text\Joinings.txt" />
     <EmbeddedResource Include="Graphics\Text\UnicodeDatabase.txt" />
+    <EmbeddedResource Include="Sound\8MBGMSFX.SF2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MeltySynth" Version="2.4.1" />
   </ItemGroup>
 
 </Project>
