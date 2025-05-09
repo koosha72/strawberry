@@ -92,6 +92,10 @@ namespace Strawberry.OpenAL
             source = AL.GenSource();
             SoundManager = soundManager;
             this.reader = reader;
+
+            BitsPerSample = reader.BitsPerSample;
+            SampleRate = reader.SampleRate;
+            Channels = reader.Channels;
         }
 
         public void Load(string path)
@@ -116,26 +120,32 @@ namespace Strawberry.OpenAL
 
         public bool IsStreaming()
         {
-            return playing;
+            return playing && !paused;
+        }
+
+        public bool IsPaused()
+        {
+            return paused;
         }
 
         public void Play(bool loop = false)
         {
             lock (mutex)
             {
-                if (paused && playing)
-                {
-                    AL.SourcePlay(source);
-                    paused = false;
-                    return;
-                }
                 if (playing)
-                    return;
+                    Stop();
                 StartOver();
                 playing = true;
                 IsLoop = loop;
                 (SoundManager as SoundManager)?.AddStream(this);
             }
+        }
+
+        public void Resume()
+        {
+            AL.SourcePlay(source);
+            paused = false;
+            return;
         }
 
         private void StartOver()
@@ -144,10 +154,6 @@ namespace Strawberry.OpenAL
             {
                 totalSamplesPlayed = 0;
                 reader.Seek(0);
-
-                BitsPerSample = reader.BitsPerSample;
-                SampleRate = reader.SampleRate;
-                Channels = reader.Channels;
             }
         }
 
