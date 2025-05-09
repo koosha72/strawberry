@@ -19,7 +19,7 @@ namespace Strawberry.Core
 
         public Scene Scene { get; private set; }
 
-        public string ID { get; internal set; }
+        public string ID { get; set; }
 
         public bool Destroyed { get; private set; }
 
@@ -28,12 +28,13 @@ namespace Strawberry.Core
             set
             {
                 string[] temp = value.Split(',');
-                tags.AddRange(temp);
+                foreach (var t in temp)
+                    tags.Add(t);
             }
             get
             {
                 if (tags.Count > 0)
-                    return tags[0];
+                    return string.Join(",", tags);
                 else
                     return null;
             }
@@ -77,7 +78,7 @@ namespace Strawberry.Core
 
         public EntityCollection Children { get { return children; } }
 
-        List<string> tags = new List<string>();
+        HashSet<string> tags = new HashSet<string>();
 
         public void Initialize(string id, Scene owner)
         {
