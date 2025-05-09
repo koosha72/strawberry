@@ -80,15 +80,28 @@ namespace Strawberry.Core
 
         HashSet<string> tags = new HashSet<string>();
 
+        public Entity()
+        {
+            Components = new ComponentCollection();
+            PauseState = PauseStateFlags.None;
+            Destroyed = false;
+        }
+
         public void Initialize(string id, Scene owner)
         {
-            this.Components = new ComponentCollection();
-            this.Scene = owner;
-            this.ID = id;
-            Destroyed = false;
+            Scene = owner;
+            ID = id;
             owner.AddEntity(this);
-            this.PauseState = PauseStateFlags.None;
-            this.Parent = null;
+            Parent = null;
+        }
+
+        public void Initialize(string id, Entity parent)
+        {
+            Scene = parent.Scene;
+            ID = id;
+            parent.children.Add(ID, this);
+            Scene.AddEntity(this);
+            this.parent = parent;
         }
 
         public void Enable()
@@ -114,19 +127,6 @@ namespace Strawberry.Core
             }
 
             return en;
-        }
-
-        public void Initialize(string id, Entity parent)
-        {
-            this.Components = new ComponentCollection();
-            this.Scene = parent.Scene;
-            this.ID = id;
-            Destroyed = false;
-            parent.children.Add(this.ID, this);
-            Scene.AddEntity(this);
-
-            this.PauseState = PauseStateFlags.None;
-            this.parent = parent;
         }
 
         public bool IsChildOf(Entity parent)
