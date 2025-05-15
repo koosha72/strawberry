@@ -6,19 +6,19 @@ using Color = Strawberry.Graphics.Color;
 
 namespace Strawberry.Web.Graphics;
 
-internal class Texture : Base, ITexture
+internal class Texture : Strawberry.Graphics.Texture
 {
-    public int Width { get; private set; }
+    public override int Width { get; }
 
-    public int Height { get; private set; }
+    public override int Height { get; }
 
-    public int ActualWidth { get { return Width; } }
+    public override int ActualWidth { get { return Width; } }
 
-    public int ActualHeight { get { return Height; } }
+    public override int ActualHeight { get { return Height; } }
 
-    public Vector2 UVFactor { get { return new Vector2(1.0f, 1.0f); } }
+    public override Vector2 UVFactor { get { return new Vector2(1.0f, 1.0f); } }
 
-    public TextureSettings TextureSettings { get; private set; }
+    public override TextureSettings TextureSettings { get; }
 
     int texture = 0;
 
@@ -27,7 +27,7 @@ internal class Texture : Base, ITexture
 
     GraphicsContext graphicsContext;
 
-    public IGraphicsContext GraphicsContext { get { return graphicsContext; } }
+    public override IGraphicsContext GraphicsContext { get { return graphicsContext; } }
 
     int format;
 
@@ -174,7 +174,7 @@ internal class Texture : Base, ITexture
         TextureSettings = settings;
     }
 
-    public void Activate(IShader shader, string name)
+    public override void Activate(Strawberry.Graphics.Shader shader, string name)
     {
         Shader s = (Shader)shader;
         GL.ActiveTexture(GL.Texture0);
@@ -189,7 +189,7 @@ internal class Texture : Base, ITexture
     }
 
 
-    public void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
+    public override void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
     {
         int min = GL.Linear;
         if (minFilter == TextureFiltering.Nearest)
@@ -205,12 +205,12 @@ internal class Texture : Base, ITexture
         GL.BindTexture(GL.Texture2D, 0);
     }
 
-    public byte[] CopyToByteArray()
+    public override byte[] CopyToByteArray()
     {
         throw new NotImplementedException();
     }
 
-    public void Update(byte[] data)
+    public override void Update(byte[] data)
     {
         GL.BindTexture(GL.Texture2D, texture);
         unsafe

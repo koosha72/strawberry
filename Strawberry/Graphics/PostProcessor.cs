@@ -8,7 +8,7 @@ namespace Strawberry.Graphics
 
         public IGraphicsContext GraphicsContext { get; private set; }
 
-        IGeometry<VertexPositionTexColor> geometry;
+        Geometry<VertexPositionTexColor> geometry;
 
         VertexPositionTexColor[] vertices;
 

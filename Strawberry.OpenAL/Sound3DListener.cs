@@ -3,11 +3,11 @@ using Strawberry.Sound;
 
 namespace Strawberry.OpenAL
 {
-    public class Sound3DListener : Base, ISound3DListener
+    public class Sound3DListener : Strawberry.Sound.Sound3DListener
     {
-        private SoundManager soundManager;
+        private ISoundManager soundManager;
 
-        public ISoundManager SoundManager
+        public override ISoundManager SoundManager
         {
             get { return soundManager; }
         }
@@ -15,7 +15,7 @@ namespace Strawberry.OpenAL
 
         private Vector3 position;
 
-        public Vector3 Position
+        public override Vector3 Position
         {
             get { return position; }
             set
@@ -27,7 +27,7 @@ namespace Strawberry.OpenAL
 
         private Vector3 lookAt;
 
-        public Vector3 LookAt
+        public override Vector3 LookAt
         {
             get { return lookAt; }
             set
@@ -38,7 +38,7 @@ namespace Strawberry.OpenAL
         }
         private Vector3 up;
 
-        public Vector3 Up
+        public override Vector3 Up
         {
             get { return up; }
             set
@@ -50,7 +50,7 @@ namespace Strawberry.OpenAL
 
         private Vector3 velocity;
 
-        public Vector3 Velocity
+        public override Vector3 Velocity
         {
             get { return velocity; }
             set
@@ -62,7 +62,7 @@ namespace Strawberry.OpenAL
 
         private FallOffMode fallOffMode;
 
-        public FallOffMode FallOffMode
+        public override FallOffMode FallOffMode
         {
             get
             {
@@ -75,7 +75,7 @@ namespace Strawberry.OpenAL
             }
         }
 
-        public bool IsActive
+        public override bool IsActive
         {
             get { return soundManager.ActiveListener == this; }
         }

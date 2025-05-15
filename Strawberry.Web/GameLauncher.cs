@@ -91,7 +91,7 @@ public class GameLauncher : IGameLauncher
         GraphicsContext = new GraphicsContext();
         GraphicsContext.Initialize(new EGLDisplayHolder(display, surface), width, height, true);
 
-        SoundManager = new SoundManager();
+        SoundManager = new OpenAL.SoundManager();
         InputManager = new InputManager();
 
         Initialized?.Invoke();

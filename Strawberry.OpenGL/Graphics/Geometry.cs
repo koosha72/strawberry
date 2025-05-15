@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Strawberry.Desktop.Graphics
 {
-    internal class Geometry<T> : Base, IGeometry<T> where T : struct
+    internal class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
     {
         int vbo;
         int ibo;
@@ -12,7 +12,7 @@ namespace Strawberry.Desktop.Graphics
         int size = 0;
 
         GraphicsContext graphicsContext;
-        public IGraphicsContext GraphicsContext { get { return graphicsContext; } }
+        public override IGraphicsContext GraphicsContext { get { return graphicsContext; } }
 
         public int IndicesCout { get; private set; }
 
@@ -44,7 +44,7 @@ namespace Strawberry.Desktop.Graphics
             this.IndicesCout = indices.Length;
         }
 
-        public void Render()
+        public override void Render()
         {
             GL.BindVertexArray(vao);
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
@@ -65,14 +65,14 @@ namespace Strawberry.Desktop.Graphics
         }
 
 
-        public void UpdateVB(T[] vertices)
+        public override void UpdateVB(T[] vertices)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
             GL.BufferData<T>(BufferTarget.ArrayBuffer, (IntPtr)(vertices.Length * size), vertices, BufferUsageHint.StreamDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
-        public void UpdateIB(uint[] indices)
+        public override void UpdateIB(uint[] indices)
         {
             throw new NotImplementedException();
         }

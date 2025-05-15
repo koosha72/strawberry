@@ -1,6 +1,6 @@
 ﻿namespace Strawberry.Graphics
 {
-    public class BasicShader : Shader
+    public class BasicShader : StrawberryShader
     {
         string vs = @"<HLSL>struct VOut
                             {
@@ -96,7 +96,7 @@
             }
         }
 
-        public void SetTexture(ITexture tex)
+        public void SetTexture(Texture tex)
         {
             tex.Activate(this.BaseShader, "tex0");
         }

@@ -2,24 +2,26 @@
 
 namespace Strawberry.OpenAL
 {
-    public class SoundStream : Base, ISoundStream
+    public class SoundStream : Strawberry.Sound.SoundStream
     {
-        public ISoundManager SoundManager { get; private set; }
+        public override ISoundManager SoundManager { get; }
 
-        public int BitsPerSample { get; private set; }
+        public override int BitsPerSample { get; }
 
-        public int SampleRate { get; private set; }
+        public override int SampleRate { get; }
 
-        public int Channels { get; private set; }
+        public override int Channels { get; }
 
-        public bool IsLoop { get; private set; }
+        bool isLoop = false;
+
+        public override bool IsLoop { get { return isLoop; } }
 
         int totalSamplesPlayed = 0;
         bool shouldStop = false;
 
         bool paused = false;
 
-        public float Seconds
+        public override float Seconds
         {
             get
             {
@@ -32,7 +34,7 @@ namespace Strawberry.OpenAL
             }
         }
 
-        public float CurrentPlayTime
+        public override float CurrentPlayTime
         {
             get
             {
@@ -61,7 +63,7 @@ namespace Strawberry.OpenAL
             }
         }
 
-        public float Volume
+        public override float Volume
         {
             get
             {
@@ -103,32 +105,17 @@ namespace Strawberry.OpenAL
 
         }
 
-        public void Load(Stream stream)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Load(byte[] data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Unload()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsStreaming()
+        public override bool IsStreaming()
         {
             return playing && !paused;
         }
 
-        public bool IsPaused()
+        public override bool IsPaused()
         {
             return paused;
         }
 
-        public void Play(bool loop = false)
+        public override void Play(bool loop = false)
         {
             lock (mutex)
             {
@@ -136,12 +123,12 @@ namespace Strawberry.OpenAL
                     Stop();
                 StartOver();
                 playing = true;
-                IsLoop = loop;
+                isLoop = loop;
                 (SoundManager as SoundManager)?.AddStream(this);
             }
         }
 
-        public void Resume()
+        public override void Resume()
         {
             AL.SourcePlay(source);
             paused = false;
@@ -157,7 +144,7 @@ namespace Strawberry.OpenAL
             }
         }
 
-        public bool Update()
+        public override bool Update()
         {
             if (paused)
                 return true;
@@ -253,7 +240,7 @@ namespace Strawberry.OpenAL
             }
         }
 
-        public void Stop()
+        public override void Stop()
         {
             lock (mutex)
             {
@@ -268,7 +255,7 @@ namespace Strawberry.OpenAL
             }
         }
 
-        public void Pause()
+        public override void Pause()
         {
             lock (mutex)
             {

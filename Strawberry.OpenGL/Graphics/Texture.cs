@@ -4,19 +4,19 @@ using Strawberry.Math;
 
 namespace Strawberry.Desktop.Graphics
 {
-    internal class Texture : Base, ITexture
+    internal class Texture : Strawberry.Graphics.Texture
     {
-        public int Width { get; private set; }
+        public override int Width { get; }
 
-        public int Height { get; private set; }
+        public override int Height { get; }
 
-        public int ActualWidth { get { return Width; } }
+        public override int ActualWidth { get { return Width; } }
 
-        public int ActualHeight { get { return Height; } }
+        public override int ActualHeight { get { return Height; } }
 
-        public Vector2 UVFactor { get { return new Vector2(1.0f, 1.0f); } }
+        public override Vector2 UVFactor { get { return new Vector2(1.0f, 1.0f); } }
 
-        public TextureSettings TextureSettings { get; private set; }
+        public override TextureSettings TextureSettings { get; }
 
         int texture = 0;
 
@@ -25,7 +25,7 @@ namespace Strawberry.Desktop.Graphics
 
         GraphicsContext graphicsContext;
 
-        public IGraphicsContext GraphicsContext { get { return graphicsContext; } }
+        public override IGraphicsContext GraphicsContext { get { return graphicsContext; } }
 
         PixelFormat format;
 
@@ -206,7 +206,7 @@ namespace Strawberry.Desktop.Graphics
             TextureSettings = settings;
         }
 
-        public void Activate(IShader shader, string name)
+        public override void Activate(Strawberry.Graphics.Shader shader, string name)
         {
             Shader s = (Shader)shader;
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -221,7 +221,7 @@ namespace Strawberry.Desktop.Graphics
         }
 
 
-        public void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
+        public override void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
         {
             TextureMinFilter min = TextureMinFilter.Linear;
             if (minFilter == TextureFiltering.Nearest)
@@ -237,12 +237,12 @@ namespace Strawberry.Desktop.Graphics
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
-        public byte[] CopyToByteArray()
+        public override byte[] CopyToByteArray()
         {
             throw new NotImplementedException();
         }
 
-        public void Update(byte[] data)
+        public override void Update(byte[] data)
         {
             GL.BindTexture(TextureTarget.Texture2D, texture);
             GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, Width, Height, format, PixelType.UnsignedByte, data);

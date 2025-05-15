@@ -80,7 +80,7 @@ public class GameLauncher : Activity, IGameLauncher
         GraphicsContext = new GraphicsContext();
         GraphicsContext.Initialize(eglHelper, w, h, true);
         InputManager = new InputManager();
-        SoundManager = new SoundManager();
+        SoundManager = new OpenAL.SoundManager();
         Storage = new StorageManager();
         Initialized?.Invoke();
 

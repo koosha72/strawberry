@@ -1,44 +1,45 @@
 ﻿namespace Strawberry.Sound
 {
-    public interface IVoice
+    public abstract class Voice : DisposableReferenceObject
+
     {
-        public ISoundBuffer Buffer { get; }
+        public abstract SoundBuffer Buffer { get; }
 
         /// <summary>
         /// Gets the current play time of the voice in seconds.
         /// </summary>
-        float CurrentPlayTime { get; set; }
+        public abstract float CurrentPlayTime { get; set; }
 
         /// <summary>
         /// Gets or sets the playback volume for this voice. This property allows real-time volume adjustment during playback.
         /// </summary>
-        public float Volume { get; set; }
+        public abstract float Volume { get; set; }
 
         /// <summary>
         /// Checks whether the voice is beign played.
         /// </summary>
         /// <returns>True if the voice is playing, Otherwise false.</returns>
-        bool IsPlaying();
+        public abstract bool IsPlaying();
 
         /// <summary>
         /// Checks wether the voice is paused.
         /// </summary>
         /// <returns>True if the voice is paused, Otherwise false.</returns>
-        bool IsPaused();
+        public abstract bool IsPaused();
 
         /// <summary>
         /// Stops the voice from playing.
         /// </summary>
-        void Stop();
+        public abstract void Stop();
 
         /// <summary>
         /// Pauses the voice.
         /// </summary>
-        void Pause();
+        public abstract void Pause();
 
         /// <summary>
         /// Resumes the voice.
         /// </summary>
-        void Resume();
+        public abstract void Resume();
     }
 }

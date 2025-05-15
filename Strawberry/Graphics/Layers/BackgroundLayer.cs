@@ -10,7 +10,7 @@ namespace Strawberry.Graphics.Layers
 
         List<SpriteQuad> quadList;
 
-        IGeometry<VertexPositionTexColor> geometry;
+        Geometry<VertexPositionTexColor> geometry;
 
         VertexPositionTexColor[] vertices;
 

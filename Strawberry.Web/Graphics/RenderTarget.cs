@@ -3,17 +3,16 @@ using Strawberry.Web.Helpers;
 
 namespace Strawberry.Web.Graphics;
 
-internal class RenderTarget : Base, IRenderTarget
+internal class RenderTarget : Strawberry.Graphics.RenderTarget
 {
     Texture texture;
 
     int depthBuffer = 0;
     int frameBuffer = 0;
 
-    public ITexture Texture
+    public override Strawberry.Graphics.Texture Texture
     {
         get { return texture; }
-        private set { texture = (Texture)value; }
     }
 
     public int Width
@@ -29,7 +28,7 @@ internal class RenderTarget : Base, IRenderTarget
     internal int GLFrameBuffer { get { return frameBuffer; } }
 
     GraphicsContext graphicsContext;
-    public IGraphicsContext GraphicsContext { get { return graphicsContext; } }
+    public override IGraphicsContext GraphicsContext { get { return graphicsContext; } }
 
     public RenderTarget(GraphicsContext gc, int width, int height)
     {
@@ -60,7 +59,7 @@ internal class RenderTarget : Base, IRenderTarget
         graphicsContext = gc;
     }
 
-    public void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
+    public override void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
     {
         Texture.SetFilter(minFilter, magFilter);
     }

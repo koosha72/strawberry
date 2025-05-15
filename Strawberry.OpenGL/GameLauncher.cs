@@ -56,7 +56,7 @@ namespace Strawberry.Desktop
             GraphicsContext.Initialize(wnd, width, height, true);
 
             InputManager = new Input.InputManager();
-            SoundManager = new SoundManager();
+            SoundManager = new OpenAL.SoundManager();
             Storage = new StorageManager();
         }
 

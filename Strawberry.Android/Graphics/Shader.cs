@@ -4,10 +4,10 @@ using Strawberry.Math;
 
 namespace Strawberry.Android.Graphics;
 
-public class Shader : Base, IShader
+public class Shader : Strawberry.Graphics.Shader
 {
     GraphicsContext graphicsContext;
-    public IGraphicsContext GraphicsContext { get { return graphicsContext; } }
+    public override IGraphicsContext GraphicsContext { get { return graphicsContext; } }
 
     int program;
 
@@ -65,7 +65,7 @@ public class Shader : Base, IShader
         GLES30.GlLinkProgram(program);
     }
 
-    public void Activate()
+    public override void Activate()
     {
         GLES30.GlUseProgram(program);
         graphicsContext.ActiveShader = this;
@@ -81,7 +81,7 @@ public class Shader : Base, IShader
         layout.DeActivate();
     }
 
-    public void SetMatrixParameterByName(string constant, string name, Matrix4 mat, bool transpose)
+    public override void SetMatrixParameterByName(string constant, string name, Matrix4 mat, bool transpose)
     {
         GLES30.GlUniformMatrix4fv(GLES30.GlGetUniformLocation(program, name), 1, transpose,
             mat.Array, 0);

@@ -6,7 +6,7 @@ using Strawberry.Graphics;
 
 namespace Strawberry.Android.Graphics;
 
-internal class Geometry<T> : Base, IGeometry<T> where T : struct
+internal class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
 {
     int vbo;
     int ibo;
@@ -14,7 +14,7 @@ internal class Geometry<T> : Base, IGeometry<T> where T : struct
     int size = 0;
 
     GraphicsContext graphicsContext;
-    public IGraphicsContext GraphicsContext { get { return graphicsContext; } }
+    public override IGraphicsContext GraphicsContext { get { return graphicsContext; } }
 
     public int IndicesCout { get; private set; }
 
@@ -59,7 +59,7 @@ internal class Geometry<T> : Base, IGeometry<T> where T : struct
         this.IndicesCout = indices.Length;
     }
 
-    public void Render()
+    public override void Render()
     {
         GLES30.GlBindVertexArray(vao);
         GLES30.GlBindBuffer(GLES30.GlArrayBuffer, vbo);
@@ -79,7 +79,7 @@ internal class Geometry<T> : Base, IGeometry<T> where T : struct
     }
 
 
-    public void UpdateVB(T[] vertices)
+    public override void UpdateVB(T[] vertices)
     {
         GLES30.GlBindBuffer(GLES30.GlArrayBuffer, vbo);
         byte[] verticesBytes = MemoryMarshal.AsBytes<T>(vertices).ToArray();
@@ -90,7 +90,7 @@ internal class Geometry<T> : Base, IGeometry<T> where T : struct
         GLES30.GlBindBuffer(GLES30.GlArrayBuffer, 0);
     }
 
-    public void UpdateIB(uint[] indices)
+    public override void UpdateIB(uint[] indices)
     {
         throw new NotImplementedException();
     }

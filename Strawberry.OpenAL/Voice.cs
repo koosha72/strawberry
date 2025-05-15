@@ -2,14 +2,14 @@
 
 namespace Strawberry.OpenAL
 {
-    public class Voice : Base, IVoice
+    public class Voice : Strawberry.Sound.Voice, IVoice
     {
         SoundBuffer buffer;
-        public virtual ISoundBuffer Buffer { get { return buffer; } internal set { buffer = value as SoundBuffer; } }
+        public override Strawberry.Sound.SoundBuffer Buffer { get { return buffer; } }
 
         internal int SourceInd { get; set; }
 
-        public float CurrentPlayTime
+        public override float CurrentPlayTime
         {
             get
             {
@@ -32,7 +32,7 @@ namespace Strawberry.OpenAL
             }
         }
 
-        public float Volume
+        public override float Volume
         {
             get
             {
@@ -44,13 +44,15 @@ namespace Strawberry.OpenAL
             }
         }
 
+        int IVoice.SourceInd { get => SourceInd; set => SourceInd = value; }
+
         public Voice(SoundBuffer buffer, int ind)
         {
             this.buffer = buffer;
             this.SourceInd = ind;
         }
 
-        public bool IsPlaying()
+        public override bool IsPlaying()
         {
             if (AL.IsSource(SourceInd))
             {
@@ -60,24 +62,24 @@ namespace Strawberry.OpenAL
             return false;
         }
 
-        public void Stop()
+        public override void Stop()
         {
             (buffer.SoundManager as SoundManager).Stop(this);
         }
 
-        public void Pause()
+        public override void Pause()
         {
             if (AL.IsSource(SourceInd))
                 AL.SourcePause(SourceInd);
         }
 
-        public void Resume()
+        public override void Resume()
         {
             if (AL.IsSource(SourceInd))
                 AL.SourcePlay(SourceInd);
         }
 
-        public bool IsPaused()
+        public override bool IsPaused()
         {
             if (AL.IsSource(SourceInd))
             {
@@ -94,9 +96,14 @@ namespace Strawberry.OpenAL
                 AL.SourceStop(SourceInd);
                 AL.DeleteSource(SourceInd);
                 SourceInd = 0;
-                Buffer = null;
+                buffer = null;
             }
             base.CleanUnmanaged();
+        }
+
+        public void SetBuffer(SoundBuffer soundBuffer)
+        {
+            buffer = soundBuffer as SoundBuffer;
         }
     }
 }

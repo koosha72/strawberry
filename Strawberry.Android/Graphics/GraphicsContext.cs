@@ -9,13 +9,13 @@ public class GraphicsContext : Base, IGraphicsContext
 {
     public Viewport ActiveViewport { get; private set; }
 
-    public IShader ActiveShader { get; internal set; }
+    public Strawberry.Graphics.Shader ActiveShader { get; internal set; }
 
-    public ITexture PixelTexture { get; private set; }
+    public Strawberry.Graphics.Texture PixelTexture { get; private set; }
 
     RenderTarget renderTarget;
 
-    public IRenderTarget ActiveRenderTarget
+    public Strawberry.Graphics.RenderTarget ActiveRenderTarget
     {
         get { return renderTarget; }
     }
@@ -57,7 +57,7 @@ public class GraphicsContext : Base, IGraphicsContext
         GLES30.GlBlendEquationSeparate(state.RGBEquation, state.AlphaEquation);
     }
 
-    public void ActivateRenderTarget(IRenderTarget renderTarget)
+    public void ActivateRenderTarget(Strawberry.Graphics.RenderTarget renderTarget)
     {
         this.renderTarget = (RenderTarget)renderTarget;
         if (this.renderTarget == null)
@@ -120,31 +120,31 @@ public class GraphicsContext : Base, IGraphicsContext
         Clear(color.R, color.G, color.B, color.A);
     }
 
-    public IGeometry<T> CreateGeometry<T>(T[] vertices, uint[] indices, GeometryType vbType, GeometryType ibType) where T : struct
+    public Strawberry.Graphics.Geometry<T> CreateGeometry<T>(T[] vertices, uint[] indices, GeometryType vbType, GeometryType ibType) where T : struct
     {
-        IGeometry<T> geo = new Geometry<T>(this, vertices, indices, vbType, ibType);
+        Strawberry.Graphics.Geometry<T> geo = new Geometry<T>(this, vertices, indices, vbType, ibType);
 
         return geo;
     }
 
-    public IRenderTarget CreateRenderTarget(int width, int height)
+    public Strawberry.Graphics.RenderTarget CreateRenderTarget(int width, int height)
     {
         return new RenderTarget(this, width, height);
     }
 
-    public IRenderTarget CreateRenderTarget(Vector2 size)
+    public Strawberry.Graphics.RenderTarget CreateRenderTarget(Vector2 size)
     {
         return CreateRenderTarget((int)size.X, (int)size.Y);
     }
 
-    public IShader CreateShader(string vsCode, string psCode, string vsEntryPoint, string psEntryPoint, VertexElementContainer elements)
+    public Strawberry.Graphics.Shader CreateShader(string vsCode, string psCode, string vsEntryPoint, string psEntryPoint, VertexElementContainer elements)
     {
         Shader shader = new Shader(this, vsCode, psCode, elements);
 
         return shader;
     }
 
-    public ITexture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8)
+    public Strawberry.Graphics.Texture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8)
     {
         return new Texture(this, width, height, data, new TextureSettings
         {
@@ -152,7 +152,7 @@ public class GraphicsContext : Base, IGraphicsContext
         });
     }
 
-    public ITexture CreateTexture(int width, int height, byte[] data, TextureFormat format = TextureFormat.R8G8B8A8)
+    public Strawberry.Graphics.Texture CreateTexture(int width, int height, byte[] data, TextureFormat format = TextureFormat.R8G8B8A8)
     {
         return new Texture(this, width, height, data, new TextureSettings
         {
@@ -160,12 +160,12 @@ public class GraphicsContext : Base, IGraphicsContext
         });
     }
 
-    public ITexture CreateTexture(int width, int height, Color[] data, TextureSettings settings)
+    public Strawberry.Graphics.Texture CreateTexture(int width, int height, Color[] data, TextureSettings settings)
     {
         return new Texture(this, width, height, data, settings);
     }
 
-    public ITexture CreateTexture(int width, int height, byte[] data, TextureSettings settings)
+    public Strawberry.Graphics.Texture CreateTexture(int width, int height, byte[] data, TextureSettings settings)
     {
         return new Texture(this, width, height, data, settings);
     }

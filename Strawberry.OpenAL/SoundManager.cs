@@ -7,9 +7,9 @@ namespace Strawberry.OpenAL
         nint device;
         nint context;
 
-        List<Voice> sources = new List<Voice>();
+        List<IVoice> sources = new List<IVoice>();
 
-        public IEnumerable<Voice> Sources { get { return sources; } }
+        public IEnumerable<IVoice> Sources { get { return sources; } }
 
         bool streaming = true;
 
@@ -20,7 +20,7 @@ namespace Strawberry.OpenAL
         object mutex = new object();
 
         public bool IsEnabled { get; set; }
-        public ISound3DListener ActiveListener { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Strawberry.Sound.Sound3DListener ActiveListener { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public SoundManager()
         {
@@ -65,7 +65,7 @@ namespace Strawberry.OpenAL
             }
         }
 
-        public ISoundBuffer CreateSoundBuffer(ISoundReader soundReader)
+        public Strawberry.Sound.SoundBuffer CreateSoundBuffer(ISoundReader soundReader)
         {
             int buffer = AL.GenBuffer();
 
@@ -75,7 +75,7 @@ namespace Strawberry.OpenAL
             return new SoundBuffer(buffer, this);
         }
 
-        public ISoundStream CreateStream(ISoundReader soundReader)
+        public Strawberry.Sound.SoundStream CreateStream(ISoundReader soundReader)
         {
             return new SoundStream(this, soundReader);
         }
@@ -112,8 +112,8 @@ namespace Strawberry.OpenAL
             else
             {
                 source = sources[ind].SourceInd;
-                sources[ind].Buffer = buffer;
-                v = sources[ind];
+                sources[ind].SetBuffer(buffer);
+                v = (Voice)sources[ind];
             }
 
 
@@ -140,7 +140,7 @@ namespace Strawberry.OpenAL
             else
             {
                 source = sources[ind].SourceInd;
-                sources[ind].Buffer = buffer;
+                sources[ind].SetBuffer(buffer);
                 v = (Voice3D)sources[ind];
             }
 
@@ -156,7 +156,7 @@ namespace Strawberry.OpenAL
             return v;
         }
 
-        internal void Stop(Voice voice)
+        internal void Stop(IVoice voice)
         {
             if (AL.IsSource(voice.SourceInd))
             {
@@ -170,7 +170,7 @@ namespace Strawberry.OpenAL
         {
             for (int i = 0; i < sources.Count; i++)
             {
-                Voice voice = sources[i];
+                IVoice voice = sources[i];
                 if (voice != null)
                 {
                     if (voice.IsPlaying() && voice.Buffer == buffer)

@@ -3,21 +3,21 @@ using Strawberry.Sound;
 
 namespace Strawberry.OpenAL
 {
-    public class SoundBuffer : Base, ISoundBuffer
+    public class SoundBuffer : Strawberry.Sound.SoundBuffer
     {
         SoundManager soundManager;
 
-        public ISoundManager SoundManager => soundManager;
+        public override ISoundManager SoundManager => soundManager;
 
-        public int BitsPerSample { get; internal set; }
+        public override int BitsPerSample { get;}
 
-        public int SampleRate { get; internal set; }
+        public override int SampleRate { get; }
 
-        public int Channels { get; internal set; }
+        public override int Channels { get; }
 
-        public int ID { get; private set; }
+        public int ID { get; }
 
-        public float Seconds
+        public override float Seconds
         {
             get
             {
@@ -37,7 +37,7 @@ namespace Strawberry.OpenAL
             this.soundManager = soundManager;
         }
 
-        public bool IsPlaying()
+        public override bool IsPlaying()
         {
             foreach (Voice voice in soundManager.Sources)
             {
@@ -51,17 +51,17 @@ namespace Strawberry.OpenAL
             return false;
         }
 
-        public IVoice Play(bool loop = false)
+        public override Strawberry.Sound.Voice Play(bool loop = false)
         {
             return soundManager.Play(this, 1.0f, loop);
         }
 
-        public IVoice Play(float frequencyRatio = 1.0f, bool loop = false)
+        public override Strawberry.Sound.Voice Play(float frequencyRatio = 1.0f, bool loop = false)
         {
             return soundManager.Play(this, frequencyRatio, loop);
         }
 
-        public void Stop()
+        public override void Stop()
         {
             soundManager.Stop(this);
         }
@@ -72,7 +72,7 @@ namespace Strawberry.OpenAL
             base.CleanUnmanaged();
         }
 
-        public IVoice3D Play(Vector2 position, bool loop = false)
+        public override Strawberry.Sound.Voice3D Play(Vector2 position, bool loop = false)
         {
             return soundManager.Play(this, new Voice3DSettings()
             {
@@ -82,7 +82,7 @@ namespace Strawberry.OpenAL
             }, 1.0f, loop);
         }
 
-        public IVoice3D Play(Vector2 position, float frequencyRatio, bool loop = false)
+        public override Strawberry.Sound.Voice3D Play(Vector2 position, float frequencyRatio, bool loop = false)
         {
             return soundManager.Play(this, new Voice3DSettings()
             {
@@ -92,12 +92,12 @@ namespace Strawberry.OpenAL
             }, frequencyRatio, loop);
         }
 
-        public IVoice3D Play(Voice3DSettings settings, bool loop = false)
+        public override Strawberry.Sound.Voice3D Play(Voice3DSettings settings, bool loop = false)
         {
             return soundManager.Play(this, settings, 1.0f, loop);
         }
 
-        public IVoice3D Play(Voice3DSettings settings, float frequencyRatio, bool loop = false)
+        public override Strawberry.Sound.Voice3D Play(Voice3DSettings settings, float frequencyRatio, bool loop = false)
         {
             return soundManager.Play(this, settings, frequencyRatio, loop);
         }

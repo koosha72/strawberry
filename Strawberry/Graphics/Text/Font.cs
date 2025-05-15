@@ -6,7 +6,7 @@ public class Font
 
     public Dictionary<ushort, Character> Characters { get; private set; }
 
-    public ITexture Texture { get; private set; }
+    public Texture Texture { get; private set; }
 
     public byte Minor { get; private set; }
 

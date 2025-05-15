@@ -2,13 +2,13 @@
 {
     public class PostProcessEffect
     {
-        public IRenderTarget RenderTarget { get; private set; }
+        public RenderTarget RenderTarget { get; private set; }
         public IGraphicsContext GraphicsContext { get; set; }
-        public IShader Shader { get; set; }
+        public Shader Shader { get; set; }
 
         public string TextureParameterName { get; private set; }
 
-        public PostProcessEffect(IShader shader, string textureParameterName)
+        public PostProcessEffect(Shader shader, string textureParameterName)
         {
             GraphicsContext = shader.GraphicsContext;
             RenderTarget = GraphicsContext.CreateRenderTarget(GraphicsContext.ActiveViewport.ScreenSize);

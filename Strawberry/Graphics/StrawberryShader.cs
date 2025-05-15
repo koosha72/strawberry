@@ -1,0 +1,107 @@
+﻿using Strawberry.Math;
+using System.Text.RegularExpressions;
+
+namespace Strawberry.Graphics
+{
+    public class StrawberryShader : Base, IDisposable
+    {
+        public Shader BaseShader { get; private set; }
+
+        public string VsEntryPoint { get; private set; }
+
+        public string PsEntryPoint { get; private set; }
+
+        public IGraphicsContext GraphicsContext { get; private set; }
+
+        public StrawberryShader(IGraphicsContext context)
+        {
+            this.GraphicsContext = context;
+        }
+
+        public void Initialize(string vsCode, string psCode,
+            string vsEntryPoint, string psEntryPoint, VertexElementContainer elements, ShaderLanguage lang = ShaderLanguage.GLSL)
+        {
+            string vs = "";
+            string ps = "";
+
+            if (lang == ShaderLanguage.HLSL)
+            {
+                Match m = Regex.Match(vsCode, "<HLSL>([^<]*)</HLSL>");
+                vs = m.Value;
+                vs = vs.Replace("<HLSL>", "");
+                vs = vs.Replace("</HLSL>", "");
+
+                m = Regex.Match(psCode, "<HLSL>([^<]*)</HLSL>");
+                ps = m.Value;
+                ps = ps.Replace("<HLSL>", "");
+                ps = ps.Replace("</HLSL>", "");
+            }
+
+            if (lang == ShaderLanguage.GLSL)
+            {
+                Match m = Regex.Match(vsCode, "<GLSL>([^<]*)</GLSL>");
+                vs = m.Value;
+                vs = vs.Replace("<GLSL>", "");
+                vs = vs.Replace("</GLSL>", "");
+
+                m = Regex.Match(psCode, "<GLSL>([^<]*)</GLSL>");
+                ps = m.Value;
+                ps = ps.Replace("<GLSL>", "");
+                ps = ps.Replace("</GLSL>", "");
+            }
+
+            BaseShader = GraphicsContext.CreateShader(vs, ps, vsEntryPoint, psEntryPoint, elements);
+        }
+
+        public virtual void Activate()
+        {
+            BaseShader.Activate();
+        }
+
+        protected override void CleanManaged()
+        {
+            BaseShader.Dispose();
+        }
+    }
+
+    public struct VertexPositionColor
+    {
+        public Vector2 Position { get; set; }
+
+        public Color Color { get; set; }
+
+
+        public VertexPositionColor(Vector2 pos, Color color)
+            : this()
+        {
+            this.Position = pos;
+            this.Color = color;
+        }
+    }
+
+    public struct VertexPositionTexColor
+    {
+        public Vector2 Position { get; set; }
+
+        public Vector2 TexCoord { get; set; }
+
+        public Color Color { get; set; }
+
+
+        public VertexPositionTexColor(Vector2 pos, Vector2 texCoord, Color color)
+            : this()
+        {
+            this.Position = pos;
+            this.Color = color;
+            this.TexCoord = texCoord;
+        }
+
+        public VertexPositionTexColor(Vector4 pos, Color color)
+            : this()
+        {
+            this.Position = new Math.Vector2(pos.X, pos.Y);
+            this.Color = color;
+            this.TexCoord = new Math.Vector2(pos.Z, pos.W);
+        }
+    }
+}

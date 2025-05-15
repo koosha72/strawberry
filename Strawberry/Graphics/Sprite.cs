@@ -4,7 +4,7 @@ namespace Strawberry.Graphics
 {
     public class Sprite : ReferenceObject
     {
-        public ITexture Texture { get; set; }
+        public Texture Texture { get; set; }
 
         public int ImageCount { get; private set; }
 
@@ -18,7 +18,7 @@ namespace Strawberry.Graphics
 
         public List<Vector2> FrameMap { get; set; }
 
-        public Sprite(ITexture texture, int imageCount, Vector2 size, Vector2 topLeft, Vector2 texSize, Vector2 skip)
+        public Sprite(Texture texture, int imageCount, Vector2 size, Vector2 topLeft, Vector2 texSize, Vector2 skip)
         {
             this.Texture = texture;
             this.ImageCount = imageCount;
@@ -28,7 +28,7 @@ namespace Strawberry.Graphics
             this.Size = size;
         }
 
-        public Sprite(ITexture texture, Vector2[] imageMap, Vector2 size, Vector2 texSize)
+        public Sprite(Texture texture, Vector2[] imageMap, Vector2 size, Vector2 texSize)
         {
             this.Texture = texture;
             this.ImageCount = imageMap.Length;
@@ -40,7 +40,7 @@ namespace Strawberry.Graphics
             FrameMap.AddRange(imageMap);
         }
 
-        public void ReInitialize(ITexture texture, Vector2[] imageMap, Vector2 size, Vector2 texSize)
+        public void ReInitialize(Texture texture, Vector2[] imageMap, Vector2 size, Vector2 texSize)
         {
             this.Texture = texture;
             this.ImageCount = imageMap.Length;

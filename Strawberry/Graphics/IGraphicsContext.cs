@@ -14,12 +14,12 @@ namespace Strawberry.Graphics
         /// <summary>
         /// Represents a single pixel with white color. You can use it to draw rectangles, lines, etc.
         /// </summary>
-        ITexture PixelTexture { get; }
+        Texture PixelTexture { get; }
 
         /// <summary>
         /// Gets the currently active render target.
         /// </summary>
-        IRenderTarget ActiveRenderTarget { get; }
+        RenderTarget ActiveRenderTarget { get; }
 
         /// <summary>
         /// Initializes the graphics context for rendering.
@@ -78,7 +78,7 @@ namespace Strawberry.Graphics
         /// Activates renderTarget to be used for rendering.
         /// </summary>
         /// <param name="renderTarget">The render target object. If null will switch to default render target.</param>
-        void ActivateRenderTarget(IRenderTarget renderTarget);
+        void ActivateRenderTarget(RenderTarget renderTarget);
 
         bool IsApplicationIdle();
 
@@ -90,7 +90,7 @@ namespace Strawberry.Graphics
         /// <param name="data">The color data (This data depends on Texture format)</param>
         /// <param name="format">The format the texture will use</param>
         /// <returns>The texture object</returns>
-        ITexture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8);
+        Texture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8);
 
         /// <summary>
         /// Creates a texture using an array of bytes
@@ -100,10 +100,10 @@ namespace Strawberry.Graphics
         /// <param name="data">The color data (This data depends on Texture format)</param>
         /// <param name="format">The format the texture will use</param>
         /// <returns></returns>
-        ITexture CreateTexture(int width, int height, byte[] data, TextureFormat format = TextureFormat.R8G8B8A8);
+        Texture CreateTexture(int width, int height, byte[] data, TextureFormat format = TextureFormat.R8G8B8A8);
 
-        ITexture CreateTexture(int width, int height, byte[] data, TextureSettings settings);
-        ITexture CreateTexture(int width, int height, Color[] data, TextureSettings settings);
+        Texture CreateTexture(int width, int height, byte[] data, TextureSettings settings);
+        Texture CreateTexture(int width, int height, Color[] data, TextureSettings settings);
 
         /// <summary>
         /// Creates a shader using vertex and pixel shaders passed to it
@@ -114,7 +114,7 @@ namespace Strawberry.Graphics
         /// <param name="psEntryPoint">The pixel shader main function</param>
         /// <param name="elements">The elements to be passed to the shader like positions, colors, normals, etc</param>
         /// <returns></returns>
-        IShader CreateShader(string vsCode, string psCode, string vsEntryPoint,
+        Strawberry.Graphics.Shader CreateShader(string vsCode, string psCode, string vsEntryPoint,
             string psEntryPoint, VertexElementContainer elements);
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Strawberry.Graphics
         /// <param name="vbType">Type of vertex buffer (Dynamic or Static)</param>
         /// <param name="ibType">Type of index buffer (Dynamic or Static)</param>
         /// <returns></returns>
-        IGeometry<T> CreateGeometry<T>(T[] vertices, uint[] indices, GeometryType vbType, GeometryType ibType) where T : struct;
+        Geometry<T> CreateGeometry<T>(T[] vertices, uint[] indices, GeometryType vbType, GeometryType ibType) where T : struct;
 
         /// <summary>
         /// Creates a render target. It can be used for render to texture, etc.
@@ -134,9 +134,9 @@ namespace Strawberry.Graphics
         /// <param name="width">Width of the render target</param>
         /// <param name="height">Height of the render target</param>
         /// <returns></returns>
-        IRenderTarget CreateRenderTarget(int width, int height);
+        RenderTarget CreateRenderTarget(int width, int height);
 
-        IRenderTarget CreateRenderTarget(Vector2 size);
+        RenderTarget CreateRenderTarget(Vector2 size);
 
         /// <summary>
         /// Resizes the main render target used by the graphics context

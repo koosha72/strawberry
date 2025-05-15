@@ -3,17 +3,16 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Strawberry.Desktop.Graphics
 {
-    public class RenderTarget : Base, IRenderTarget
+    public class RenderTarget : Strawberry.Graphics.RenderTarget
     {
         Texture texture;
 
         int depthBuffer = 0;
         int frameBuffer = 0;
 
-        public ITexture Texture
+        public override Strawberry.Graphics.Texture Texture
         {
             get { return texture; }
-            private set { texture = (Texture)value; }
         }
 
         public int Width
@@ -29,7 +28,7 @@ namespace Strawberry.Desktop.Graphics
         internal int GLFrameBuffer { get { return frameBuffer; } }
 
         GraphicsContext graphicsContext;
-        public IGraphicsContext GraphicsContext { get { return graphicsContext; } }
+        public override IGraphicsContext GraphicsContext { get { return graphicsContext; } }
 
         public RenderTarget(GraphicsContext gc, int width, int height)
         {
@@ -57,7 +56,7 @@ namespace Strawberry.Desktop.Graphics
             graphicsContext = gc;
         }
 
-        public void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
+        public override void SetFilter(TextureFiltering minFilter, TextureFiltering magFilter)
         {
             Texture.SetFilter(minFilter, magFilter);
         }

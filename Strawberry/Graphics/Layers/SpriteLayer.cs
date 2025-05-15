@@ -11,7 +11,7 @@ namespace Strawberry.Graphics.Layers
 
         List<SpriteQuad> quadList;
 
-        IGeometry<VertexPositionTexColor> geometry;
+        Geometry<VertexPositionTexColor> geometry;
 
         VertexPositionTexColor[] vertices;
 
@@ -176,7 +176,7 @@ namespace Strawberry.Graphics.Layers
         }
 
 
-        public void Push(ITexture texture, Vector2 position, Vector2 texSize, Vector2 size, Vector2 topLeft, Color color)
+        public void Push(Texture texture, Vector2 position, Vector2 texSize, Vector2 size, Vector2 topLeft, Color color)
         {
             float x = (float)System.Math.Round(position.X);
             float y = (float)System.Math.Round(position.Y);
@@ -335,7 +335,7 @@ namespace Strawberry.Graphics.Layers
                 SetShader(textShader);
             double x = position.X;
             double y = position.Y;
-            ITexture tex = font.Texture;
+            Texture tex = font.Texture;
             Character chr;
             float m = 1f;
             foreach (char c in text)
@@ -385,7 +385,7 @@ namespace Strawberry.Graphics.Layers
                 SetShader(textShader);
             double x = position.X;
             double y = position.Y;
-            ITexture tex = font.Texture;
+            Texture tex = font.Texture;
             Character chr;
             float m = size / (float)font.Size;
             foreach (char c in text)

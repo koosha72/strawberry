@@ -4,7 +4,7 @@ namespace Strawberry.Graphics.Layers
 {
     public class SpriteQuad : IEquatable<SpriteQuad>
     {
-        public ITexture Texture { get; set; }
+        public Texture Texture { get; set; }
 
         public Vector4 XYUV1 { get; set; }
 
@@ -21,7 +21,7 @@ namespace Strawberry.Graphics.Layers
         public string BlendName { get; set; }
 
 
-        public SpriteQuad(ITexture texture, Vector4 xyuv1, Vector4 xyuv2, Vector4 xyuv3, Vector4 xyuv4,
+        public SpriteQuad(Texture texture, Vector4 xyuv1, Vector4 xyuv2, Vector4 xyuv3, Vector4 xyuv4,
             Color color, BasicShader shader, string blendName)
         {
             this.Texture = texture;

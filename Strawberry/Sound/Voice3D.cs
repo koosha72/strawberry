@@ -2,28 +2,28 @@
 
 namespace Strawberry.Sound
 {
-    public interface IVoice3D : IVoice
+    public abstract class Voice3D : Voice
     {
         /// <summary>
         /// The position of the source sound.
         /// </summary>
-        Vector3 Position { get; set; }
+        public abstract Vector3 Position { get; set; }
 
         /// <summary>
         /// The direction to which the sound is projecting
         /// </summary>
-        Vector3 Direction { get; set; }
+        public abstract Vector3 Direction { get; set; }
 
         /// <summary>
         /// The velocity of the sound projection
         /// </summary>
-        Vector3 Velocity { get; set; }
+        public abstract Vector3 Velocity { get; set; }
 
         /// <summary>
         /// The maximum distance the sound can be heared from.
         /// </summary>
-        float MaxDistance { get; set; }
+        public abstract float MaxDistance { get; set; }
 
-        float RefrenceDistance { get; set; }
+        public abstract float RefrenceDistance { get; set; }
     }
 }
