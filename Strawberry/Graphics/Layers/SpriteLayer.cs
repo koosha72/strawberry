@@ -1,7 +1,7 @@
-﻿using Strawberry.Core;
+﻿using Strawberry.Common;
+using Strawberry.Core;
 using Strawberry.Graphics.Text;
 using Strawberry.Math;
-using Strawberry.Misc;
 
 namespace Strawberry.Graphics.Layers
 {

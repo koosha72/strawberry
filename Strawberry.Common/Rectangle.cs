@@ -1,4 +1,4 @@
-﻿namespace Strawberry.Misc
+﻿namespace Strawberry.Common
 {
     [Serializable]
     public struct Rectangle

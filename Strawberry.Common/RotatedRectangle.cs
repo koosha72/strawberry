@@ -1,6 +1,6 @@
 ﻿using Strawberry.Math;
 
-namespace Strawberry.Misc
+namespace Strawberry.Common
 {
     public struct RotatedRectangle
     {
