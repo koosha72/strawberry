@@ -1,6 +1,4 @@
 ﻿using Strawberry.Core;
-using Strawberry.Graphics;
-using Strawberry.Misc;
 
 
 namespace Strawberry

@@ -16,8 +16,14 @@ namespace Strawberry
         /// </summary>
         IGraphicsContext GraphicsContext { get; }
 
+        /// <summary>
+        /// The object that handles platform specific input.
+        /// </summary>
         IInputManager InputManager { get; }
 
+        /// <summary>
+        /// The platform specific object responsible for playing and managing sounds.
+        /// </summary>
         ISoundManager SoundManager { get; }
 
         IStorage Storage { get; }
@@ -33,14 +39,14 @@ namespace Strawberry
         event Action GameLoop;
 
         /// <summary>
-        /// Starts the initialization process
+        /// Starts the initialization process. By default this is called by the game class, do not call it!
         /// </summary>
         /// <param name="width">width of the window or rendering target</param>
         /// <param name="height">height of the window or rendering target</param>
         void Initialize(int width, int height);
 
         /// <summary>
-        /// Runs the game.
+        /// Runs the game. By default this is called by the game class, do not call it!
         /// </summary>
         void Run();
     }
