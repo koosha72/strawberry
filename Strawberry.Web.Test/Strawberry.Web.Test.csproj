@@ -11,6 +11,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <EmccFlags>-s FULL_ES3=1 -s MIN_WEBGL_VERSION=2 -lopenal -lGL -s</EmccFlags>
     <WasmMainJSPath>main.js</WasmMainJSPath>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
