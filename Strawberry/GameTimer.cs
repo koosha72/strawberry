@@ -33,6 +33,10 @@ namespace Strawberry
             get { return gameSpeed; }
             set
             {
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
                 gameSpeed = value;
                 msSkip = 1000 / gameSpeed;
                 if (Stopwatch.IsHighResolution)

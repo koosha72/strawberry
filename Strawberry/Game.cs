@@ -31,6 +31,12 @@ namespace Strawberry
 
         public void Run(IGameContext context, IGameLauncher launcher, IFrameInfoProvider frameInfoProvider)
         {
+            
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+            if (launcher == null)
+                throw new ArgumentNullException(nameof(launcher));
+                
             GameContext = context;
             this.frameInfoProvider = frameInfoProvider;
             FrameInfo.Register(frameInfoProvider);
@@ -40,11 +46,6 @@ namespace Strawberry
             launcher.Initialize(context.Width, context.Height);
             launcher.GameLoop += Update;
             launcher.Run();
-
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
-            if (launcher == null)
-                throw new ArgumentNullException(nameof(launcher));
         }
 
         /// <summary>
