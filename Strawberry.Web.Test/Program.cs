@@ -16,6 +16,8 @@ public static class Program
 		Game game = new Game();
 		var l = new Strawberry.Web.GameLauncher();
 		await l.AOTDownload("timeup.wav");
+		await l.AOTDownload("timeup_mono.wav");
+		await l.AOTDownload("music.mid");
 		await l.AOTDownload("BYagut.font");
 		game.Run(stdGameContext, l);
 	}
