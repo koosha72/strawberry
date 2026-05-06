@@ -81,15 +81,15 @@ namespace Strawberry.OpenAL
         }
 
         public override float MaxDistance { get; set; }
-        public override float RefrenceDistance { get; set; }
+        public override float ReferenceDistance { get; set; }
 
         public Voice3D(SoundBuffer soundBuffer, Voice3DSettings settings, int ind)
         {
+            SourceInd = ind;
             Position = settings.Position;
             Direction = settings.Direction;
             Velocity = settings.Velocity;
             buffer = soundBuffer;
-            SourceInd = ind;
         }
 
         public override bool IsPlaying()

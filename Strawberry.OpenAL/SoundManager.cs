@@ -1,4 +1,5 @@
-﻿using Strawberry.Sound;
+﻿using Strawberry.Math;
+using Strawberry.Sound;
 
 namespace Strawberry.OpenAL
 {
@@ -20,7 +21,21 @@ namespace Strawberry.OpenAL
         object mutex = new object();
 
         public bool IsEnabled { get; set; }
-        public Strawberry.Sound.Sound3DListener ActiveListener { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        Strawberry.Sound.Sound3DListener sound3DListener;
+
+        public Strawberry.Sound.Sound3DListener ActiveListener
+        {
+            get => sound3DListener;
+            set
+            {
+                sound3DListener = value;
+                if (sound3DListener != null)
+                {
+                    sound3DListener.Activate();
+                }
+            }
+        }
 
         public SoundManager()
         {
@@ -79,6 +94,25 @@ namespace Strawberry.OpenAL
         {
             return new SoundStream(this, soundReader);
         }
+
+        public Strawberry.Sound.Sound3DListener Create3DListener(Vector3 position, Vector3 velocity, Vector3 lookAt, Vector3 up, bool activate)
+        {
+            var listener = new Sound3DListener(this)
+            {
+                Position = position,
+                Velocity = velocity,
+                LookAt = lookAt,
+                Up = up,
+            };
+
+            if (activate)
+            {
+                ActiveListener = listener;
+            }
+
+            return listener;
+        }
+
 
         public void StopAll()
         {
@@ -150,6 +184,11 @@ namespace Strawberry.OpenAL
             AL.Source3f(source, ALSource3f.Position, settings.Position.X, settings.Position.Y, settings.Position.Z);
             AL.Source3f(source, ALSource3f.Velocity, settings.Velocity.X, settings.Velocity.Y, settings.Velocity.Z);
             AL.Source3f(source, ALSource3f.Direction, settings.Direction.X, settings.Direction.Y, settings.Direction.Z);
+            AL.Sourceb(source, ALSourceb.SourceRelative, false);
+            AL.Sourcef(source, ALSourcef.ReferenceDistance, 100.0f);
+            AL.Sourcef(source, ALSourcef.RolloffFactor, 1.0f);
+            AL.Sourcef(source, ALSourcef.MaxDistance, 10000.0f);
+
             if (loop)
                 AL.Sourceb(source, ALSourceb.Looping, true);
             AL.SourcePlay(source);
@@ -225,5 +264,6 @@ namespace Strawberry.OpenAL
             streaming = false;
             base.CleanUnmanaged();
         }
+
     }
 }

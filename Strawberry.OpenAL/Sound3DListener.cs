@@ -21,7 +21,10 @@ namespace Strawberry.OpenAL
             set
             {
                 position = value;
-                AL.Listener3f(ALListener3f.Position, value.X, value.Y, value.Z);
+                if (IsActive)
+                {
+                    AL.Listener3f(ALListener3f.Position, position.X, position.Y, position.Z);
+                }
             }
         }
 
@@ -33,7 +36,10 @@ namespace Strawberry.OpenAL
             set
             {
                 lookAt = value;
-                AL.Listenerfv(ALListenerfv.Orientation, ref lookAt, ref up);
+                if (IsActive)
+                {
+                    AL.Listenerfv(ALListenerfv.Orientation, ref lookAt, ref up);
+                }
             }
         }
         private Vector3 up;
@@ -44,7 +50,10 @@ namespace Strawberry.OpenAL
             set
             {
                 up = value;
-                AL.Listenerfv(ALListenerfv.Orientation, ref lookAt, ref up);
+                if (IsActive)
+                {
+                    AL.Listenerfv(ALListenerfv.Orientation, ref lookAt, ref up);
+                }
             }
         }
 
@@ -56,7 +65,10 @@ namespace Strawberry.OpenAL
             set
             {
                 velocity = value;
-                AL.Listener3f(ALListener3f.Velocity, value.X, value.Y, value.Z);
+                if (IsActive)
+                {
+                    AL.Listener3f(ALListener3f.Velocity, velocity.X, velocity.Y, velocity.Z);
+                }
             }
         }
 
@@ -71,7 +83,10 @@ namespace Strawberry.OpenAL
             set
             {
                 fallOffMode = value;
-                AL.DistanceModel(GetDistanceModel(value));
+                if (IsActive)
+                {
+                    AL.DistanceModel(GetDistanceModel(fallOffMode));
+                }
             }
         }
 
@@ -106,6 +121,14 @@ namespace Strawberry.OpenAL
                 default:
                     return ALDistanceModel.None;
             }
+        }
+
+        public override void Activate()
+        {
+            AL.Listener3f(ALListener3f.Position, position.X, position.Y, position.Z);
+            AL.Listenerfv(ALListenerfv.Orientation, ref lookAt, ref up);
+            AL.Listener3f(ALListener3f.Velocity, velocity.X, velocity.Y, velocity.Z);
+            AL.DistanceModel(GetDistanceModel(fallOffMode));
         }
     }
 }

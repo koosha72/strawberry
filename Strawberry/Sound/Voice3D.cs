@@ -24,6 +24,6 @@ namespace Strawberry.Sound
         /// </summary>
         public abstract float MaxDistance { get; set; }
 
-        public abstract float RefrenceDistance { get; set; }
+        public abstract float ReferenceDistance { get; set; }
     }
 }

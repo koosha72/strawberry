@@ -51,7 +51,8 @@ namespace Strawberry.Test
             entity.AddComponent<SpriteComponent>().Setup(pixelSprite, 0, new Vector2(), Color.Red, layer);
             entity.GetComponent<TransformComponent>().Position = new Vector2(16f, 320f);
             entity.AddComponent<StaticBodyComponent>();
-            entity.AddComponent<MoveToDirectionComponent>().Speed = 32f;
+            entity.AddComponent<MoveToDirectionComponent>().Speed = 64f;
+            entity.AddComponent<SoundListenerComponent>();
             var text = entity.AddComponent<TextRendererComponent>();
             text.Layer = layer;
             text.Color = Color.Orange;
@@ -77,18 +78,19 @@ namespace Strawberry.Test
             entity3.GetComponent<TransformComponent>().Position = new Vector2(144f, -64f);
             entity3.GetComponent<TransformComponent>().Angle = 356f;
             entity3.AddComponent<PhysicsBodyComponent>();
-            using (WaveReader waveReader = new WaveReader(new FileStream("timeup.wav", FileMode.Open)))
+
+            using (WaveReader waveReader = new WaveReader(new FileStream("timeup_mono.wav", FileMode.Open)))
             {
                 var buffer = SoundManager.CreateSoundBuffer(waveReader);
-                var s = buffer.Play();
-                s.Volume = 0.4f;
+                var s = buffer.Play(Vector2.Right() * 256f, true);
+                s.Volume = 1f;
                 var volume = s.Volume;
             }
 
-            var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid")));
-            music01.Play(true);
-            music01.CurrentPlayTime = 65;
-            Console.WriteLine(music01.Seconds);
+            //var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid")));
+            //music01.Play(true);
+            //music01.CurrentPlayTime = 65;
+            //Console.WriteLine(music01.Seconds);
         }
         public override void OnUpdate()
         {

@@ -36,5 +36,7 @@ namespace Strawberry.Sound
         public abstract bool IsActive { get; }
 
         public abstract ISoundManager SoundManager { get; }
+
+        public abstract void Activate();
     }
 }

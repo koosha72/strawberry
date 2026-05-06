@@ -8,6 +8,9 @@ public class AL
     [DllImport(ALC.Lib, EntryPoint = "alListener3f")]
     public static extern void Listener3f(ALListener3f param, float value1, float value2, float value3);
 
+    [DllImport(ALC.Lib, EntryPoint = "alGetListener3f")]
+    public static extern void GetListener3f(ALListener3f param, out float value1, out float value2, out float value3);
+
     [DllImport(ALC.Lib, EntryPoint = "alListenerfv")]
     public static extern void Listenerfv(ALListenerfv param, float[] values);
 
