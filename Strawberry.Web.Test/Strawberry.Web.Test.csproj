@@ -21,9 +21,11 @@
     <RunAOTCompilation>true</RunAOTCompilation>
     <!-- Disable SIMD support as it's prerelease only on Safari -->
     <WasmEnableSIMD>false</WasmEnableSIMD>
+    <WasmEnableThreads>true</WasmEnableThreads>
     <!-- Normal,JustInterp,Full,FullInterp,Hybrid,LLVMOnly,LLVMOnlyInterp -->
     <!-- <AOTMode>LLVMOnly</AOTMode> -->
   </PropertyGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\Strawberry.Test\Strawberry.Test.csproj" />
