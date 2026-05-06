@@ -5,76 +5,76 @@ namespace Strawberry.OpenAL;
 
 public class AL
 {
-    [DllImport(ALC.Lib, EntryPoint = "alListener3f")]
+    [DllImport(ALC.Lib, EntryPoint = "alListener3f", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Listener3f(ALListener3f param, float value1, float value2, float value3);
 
-    [DllImport(ALC.Lib, EntryPoint = "alGetListener3f")]
+    [DllImport(ALC.Lib, EntryPoint = "alGetListener3f", CallingConvention = CallingConvention.Cdecl)]
     public static extern void GetListener3f(ALListener3f param, out float value1, out float value2, out float value3);
 
-    [DllImport(ALC.Lib, EntryPoint = "alListenerfv")]
+    [DllImport(ALC.Lib, EntryPoint = "alListenerfv", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Listenerfv(ALListenerfv param, float[] values);
 
     // Source management
-    [DllImport(ALC.Lib, EntryPoint = "alGenSources")]
+    [DllImport(ALC.Lib, EntryPoint = "alGenSources", CallingConvention = CallingConvention.Cdecl)]
     public static extern void GenSources(int n, int[] sources);
 
-    [DllImport(ALC.Lib, EntryPoint = "alDeleteSources")]
+    [DllImport(ALC.Lib, EntryPoint = "alDeleteSources", CallingConvention = CallingConvention.Cdecl)]
     public static extern void DeleteSources(int n, int[] sources);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSourcef")]
+    [DllImport(ALC.Lib, EntryPoint = "alSourcef", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Sourcef(int source, ALSourcef param, float value);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSource3f")]
+    [DllImport(ALC.Lib, EntryPoint = "alSource3f", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Source3f(int source, ALSource3f param, float v1, float v2, float v3);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSourcei")]
+    [DllImport(ALC.Lib, EntryPoint = "alSourcei", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Sourcei(int source, ALSourcei param, int value);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSourcei")] // Using alSourcei since there's no alSourceb in OpenAL
+    [DllImport(ALC.Lib, EntryPoint = "alSourcei", CallingConvention = CallingConvention.Cdecl)] // Using alSourcei since there's no alSourceb in OpenAL
     public static extern void Sourceb(int source, ALSourceb param, bool value);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSourcePlay")]
+    [DllImport(ALC.Lib, EntryPoint = "alSourcePlay", CallingConvention = CallingConvention.Cdecl)]
     public static extern void SourcePlay(int source);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSourceStop")]
+    [DllImport(ALC.Lib, EntryPoint = "alSourceStop", CallingConvention = CallingConvention.Cdecl)]
     public static extern void SourceStop(int source);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSourcePause")]
+    [DllImport(ALC.Lib, EntryPoint = "alSourcePause", CallingConvention = CallingConvention.Cdecl)]
     public static extern void SourcePause(int source);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSourceQueueBuffers")]
+    [DllImport(ALC.Lib, EntryPoint = "alSourceQueueBuffers", CallingConvention = CallingConvention.Cdecl)]
     public static extern void SourceQueueBuffers(int source, int numEntries, int[] buffers);
 
-    [DllImport(ALC.Lib, EntryPoint = "alSourceUnqueueBuffers")]
+    [DllImport(ALC.Lib, EntryPoint = "alSourceUnqueueBuffers", CallingConvention = CallingConvention.Cdecl)]
     public static extern void SourceUnqueueBuffers(int source, int numEntries, int[] buffers);
 
-    [DllImport(ALC.Lib, EntryPoint = "alGetSourcei")]
+    [DllImport(ALC.Lib, EntryPoint = "alGetSourcei", CallingConvention = CallingConvention.Cdecl)]
     public static extern ALSourceState GetSourcei(int source, ALGetSourcei param, out int result);
 
-    [DllImport(ALC.Lib, EntryPoint = "alGetSourcef")]
+    [DllImport(ALC.Lib, EntryPoint = "alGetSourcef", CallingConvention = CallingConvention.Cdecl)]
     public static extern ALSourceState GetSourcef(int source, ALSourcef param, out float result);
 
-    [DllImport(ALC.Lib, EntryPoint = "alIsSource")]
+    [DllImport(ALC.Lib, EntryPoint = "alIsSource", CallingConvention = CallingConvention.Cdecl)]
     public static extern bool IsSource(int source);
 
     // Buffer management
-    [DllImport(ALC.Lib, EntryPoint = "alGenBuffers")]
+    [DllImport(ALC.Lib, EntryPoint = "alGenBuffers", CallingConvention = CallingConvention.Cdecl)]
     public static extern void GenBuffers(int n, int[] buffers);
 
-    [DllImport(ALC.Lib, EntryPoint = "alDeleteBuffers")]
+    [DllImport(ALC.Lib, EntryPoint = "alDeleteBuffers", CallingConvention = CallingConvention.Cdecl)]
     public static extern void DeleteBuffers(int n, int[] buffers);
 
-    [DllImport(ALC.Lib, EntryPoint = "alBufferData")]
+    [DllImport(ALC.Lib, EntryPoint = "alBufferData", CallingConvention = CallingConvention.Cdecl)]
     public static extern void BufferData(int buffer, ALFormat format, IntPtr data, int size, int freq);
 
-    [DllImport(ALC.Lib, EntryPoint = "alGetBufferi")]
+    [DllImport(ALC.Lib, EntryPoint = "alGetBufferi", CallingConvention = CallingConvention.Cdecl)]
     public static extern ALBufferState GetBufferi(int id, ALGetBufferi param, out int result);
 
-    [DllImport(ALC.Lib, EntryPoint = "alDistanceModel")]
+    [DllImport(ALC.Lib, EntryPoint = "alDistanceModel", CallingConvention = CallingConvention.Cdecl)]
     public static extern void DistanceModel(ALDistanceModel distancemodel);
 
     // Error handling
-    [DllImport(ALC.Lib, EntryPoint = "alGetError")]
+    [DllImport(ALC.Lib, EntryPoint = "alGetError", CallingConvention = CallingConvention.Cdecl)]
     public static extern ALError GetError();
 
     // Extension for buffer data with byte[]

@@ -79,7 +79,7 @@ namespace Strawberry.Test
             entity3.GetComponent<TransformComponent>().Angle = 356f;
             entity3.AddComponent<PhysicsBodyComponent>();
 
-            using (WaveReader waveReader = new WaveReader(new FileStream("timeup_mono.wav", FileMode.Open)))
+            using (WaveReader waveReader = new WaveReader(Storage.Open("timeup_mono.wav")))
             {
                 var buffer = SoundManager.CreateSoundBuffer(waveReader);
                 var s = buffer.Play(Vector2.Right() * 256f, true);
@@ -87,8 +87,8 @@ namespace Strawberry.Test
                 var volume = s.Volume;
             }
 
-            //var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid")));
-            //music01.Play(true);
+            var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid")));
+            music01.Play(true);
             //music01.CurrentPlayTime = 65;
             //Console.WriteLine(music01.Seconds);
         }
