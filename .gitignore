@@ -8,5 +8,7 @@
 
 **/.history/
 /.VSCodeCounter/
+/docs/
+/generate_docs_with_template.py
 
 /staging/
