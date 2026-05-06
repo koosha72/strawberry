@@ -198,7 +198,10 @@ namespace Strawberry.Desktop.Graphics
         public Vector2 GetScreenSize()
         {
             var monitor = Monitors.GetPrimaryMonitor();
-            return new Vector2(monitor.ClientArea.Size.X, monitor.ClientArea.Size.Y);
+            if (wnd.IsFullscreen)
+                return new Vector2(monitor.ClientArea.Size.X, monitor.ClientArea.Size.Y);
+            else
+                return new Vector2(wnd.ClientSize.X, wnd.ClientSize.Y);
         }
 
         #region private methods
