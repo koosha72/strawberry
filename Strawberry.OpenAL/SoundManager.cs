@@ -14,7 +14,7 @@ namespace Strawberry.OpenAL
 
         bool streaming = true;
 
-        Thread streamBuffersThread;
+        // Thread streamBuffersThread;
 
         List<SoundStream> streams;
 
@@ -23,6 +23,9 @@ namespace Strawberry.OpenAL
         public bool IsEnabled { get; set; }
 
         Strawberry.Sound.Sound3DListener sound3DListener;
+
+        private long lastStreamUpdate;
+        private const long ticksPer100ms = 1000000;
 
         public Strawberry.Sound.Sound3DListener ActiveListener
         {
@@ -45,39 +48,41 @@ namespace Strawberry.OpenAL
             ALC.MakeContextCurrent(context);
             streams = new List<SoundStream>();
 
-            streamBuffersThread = new Thread(StreamThread);
+            /* streamBuffersThread = new Thread(StreamThread);
             streamBuffersThread.IsBackground = true;
-            streamBuffersThread.Start();
+            streamBuffersThread.Start(); */
         }
 
-        void StreamThread()
+        public void Update()
         {
-            while (streaming)
-            {
-                lock (mutex)
-                {
-                    Thread.Sleep(100);
+            long now = System.Diagnostics.Stopwatch.GetTimestamp();
 
-                    for (int i = 0; i < streams.Count; i++)
-                    {
-                        if (!streams[i].Update())
-                        {
-                            streams[i].Dispose();
-                            streams.Remove(streams[i]);
-                            i--;
-                        }
-                    }
-                    for (int i = 0; i < sources.Count; i++)
-                    {
-                        if (!sources[i].IsPlaying() && !sources[i].IsPaused())
-                        {
-                            sources[i].Dispose();
-                            sources.RemoveAt(i);
-                            i--;
-                        }
-                    }
+            if ((double)(now - lastStreamUpdate) / System.Diagnostics.Stopwatch.Frequency < 0.1)
+            {
+                return;
+            }
+
+
+            for (int i = 0; i < streams.Count; i++)
+            {
+                if (!streams[i].Update())
+                {
+                    streams[i].Dispose();
+                    streams.Remove(streams[i]);
+                    i--;
                 }
             }
+            for (int i = 0; i < sources.Count; i++)
+            {
+                if (!sources[i].IsPlaying() && !sources[i].IsPaused())
+                {
+                    sources[i].Dispose();
+                    sources.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            lastStreamUpdate = now;
         }
 
         public Strawberry.Sound.SoundBuffer CreateSoundBuffer(ISoundReader soundReader)
@@ -135,13 +140,10 @@ namespace Strawberry.OpenAL
             Voice v;
             if (ind == -1)
             {
-                lock (mutex)
-                {
-                    source = AL.GenSource();
+                source = AL.GenSource();
 
-                    v = new Voice(buffer, source);
-                    sources.Add(v);
-                }
+                v = new Voice(buffer, source);
+                sources.Add(v);
             }
             else
             {
@@ -249,10 +251,7 @@ namespace Strawberry.OpenAL
 
         internal void AddStream(SoundStream soundStream)
         {
-            lock (mutex)
-            {
-                streams.Add(soundStream);
-            }
+            streams.Add(soundStream);
         }
 
         protected override void CleanUnmanaged()

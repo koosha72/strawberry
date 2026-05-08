@@ -87,6 +87,10 @@ namespace Strawberry.OpenAL
 
         object mutex = new object();
 
+        byte[] buffer;
+
+        ALFormat alFormat;
+
         public SoundStream(SoundManager soundManager, ISoundReader reader)
         {
             buffers = new int[bufferCount];
@@ -98,6 +102,9 @@ namespace Strawberry.OpenAL
             BitsPerSample = reader.BitsPerSample;
             SampleRate = reader.SampleRate;
             Channels = reader.Channels;
+            buffer = new byte[SampleRate * Channels * (BitsPerSample / 8) / 4];
+
+            alFormat = (SoundManager as SoundManager).GetSoundFormat(Channels, BitsPerSample);
         }
 
         public void Load(string path)
@@ -117,7 +124,7 @@ namespace Strawberry.OpenAL
 
         public override void Play(bool loop = false)
         {
-            lock (mutex)
+            //lock (mutex)
             {
                 if (playing)
                     Stop();
@@ -137,7 +144,7 @@ namespace Strawberry.OpenAL
 
         private void StartOver()
         {
-            lock (mutex)
+            //lock (mutex)
             {
                 totalSamplesPlayed = 0;
                 reader.Seek(0);
@@ -148,53 +155,52 @@ namespace Strawberry.OpenAL
         {
             if (paused)
                 return true;
-            int qCount;
-            AL.GetSourcei(source, ALGetSourcei.BuffersQueued, out qCount);
+
             int processedCount;
             AL.GetSourcei(source, ALGetSourcei.BuffersProcessed, out processedCount);
-
-            if (processedCount == 0 && qCount == SampleRate)
-                return true;
-
-            int b;
+            int qCount = AL.GetSourcei(source, ALGetSourcei.BuffersQueued);
+            
             if (qCount == 0 && playing)
             {
-                b = ReadBuffer();
-                AL.SourceQueueBuffers(source, 1, new int[] { b });
+                for (int i = 0; i < buffers.Length; i++)
+                {
+                    if (ReadBuffer(buffers[i]) == -1)
+                    {
+                        shouldStop = true;
+                        break;
+                    }
+                }
+                AL.SourceQueueBuffers(source, buffers.Length, buffers);
                 AL.SourcePlay(source);
                 return true;
             }
 
-            ALSourceState state = (ALSourceState)AL.GetSourcei(source, ALGetSourcei.SourceState);
-            if (state == ALSourceState.Stopped && playing)
+            if (processedCount == 0)
             {
-                AL.SourcePlay(source);
-            }
-
-            int[] tempBuffers;
-            if (processedCount > 0)
-            {
-                tempBuffers = new int[processedCount];
-                if (shouldStop && qCount == processedCount)
+                ALSourceState state = (ALSourceState)AL.GetSourcei(source, ALGetSourcei.SourceState);
+                if (state == ALSourceState.Stopped && playing)
                 {
-                    AL.SourceStop(source);
-                    playing = false;
-                    return false;
+                    AL.SourcePlay(source);
                 }
-                AL.SourceUnqueueBuffers(source, processedCount, tempBuffers);
-
-                int bytesPerSample = Channels * (BitsPerSample / 8);
-                int samplesPerBuffer = (SampleRate * Channels * (BitsPerSample / 8)) / bytesPerSample;
-                totalSamplesPlayed += processedCount * samplesPerBuffer;
+                return true;
             }
-            else
-                tempBuffers = buffers.Skip(qCount).ToArray();
+
+            int[] tempBuffers = new int[processedCount];
+
+            if (shouldStop)
+            {
+                AL.SourceUnqueueBuffers(source, processedCount, tempBuffers);
+                AL.SourceStop(source);
+                playing = false;
+                return false;
+            }
+
+            AL.SourceUnqueueBuffers(source, processedCount, tempBuffers);
 
             int buffersCount = 0;
             for (int j = 0; j < tempBuffers.Length; j++)
             {
-                b = ReadBuffer(tempBuffers[j]);
-                if (b == -1)
+                if (ReadBuffer(tempBuffers[j]) == -1)
                 {
                     shouldStop = true;
                     break;
@@ -213,11 +219,10 @@ namespace Strawberry.OpenAL
 
         internal int ReadBuffer(int bufferId = 0)
         {
-            lock (mutex)
+            //lock (mutex)
             {
                 if (bufferId == 0)
                     bufferId = buffers[0];
-                byte[] buffer = new byte[SampleRate * Channels * (BitsPerSample / 8) / 4];
                 int bytesRead = reader.Read(buffer, 0, buffer.Length);
 
                 if (bytesRead <= 0)
@@ -234,7 +239,7 @@ namespace Strawberry.OpenAL
                     }
                 }
 
-                AL.BufferData(bufferId, (SoundManager as SoundManager).GetSoundFormat(Channels, BitsPerSample), buffer, buffer.Length, SampleRate);
+                AL.BufferData(bufferId, alFormat, buffer, bytesRead, SampleRate);
 
                 return bufferId;
             }
@@ -242,7 +247,7 @@ namespace Strawberry.OpenAL
 
         public override void Stop()
         {
-            lock (mutex)
+            //lock (mutex)
             {
                 if (!playing)
                     return;
@@ -257,7 +262,7 @@ namespace Strawberry.OpenAL
 
         public override void Pause()
         {
-            lock (mutex)
+            //lock (mutex)
             {
                 if (!playing)
                     return;

@@ -12,6 +12,8 @@ namespace Strawberry.Sound
         /// </summary>
         Sound3DListener ActiveListener { get; set; }
 
+        void Update();
+
         /// <summary>
         /// Creates a sound buffer.
         /// </summary>
