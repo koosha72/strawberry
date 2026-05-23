@@ -87,9 +87,9 @@ namespace Strawberry.Test
                 var volume = s.Volume;
             }
 
-            var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid")));
+            /*var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid")));
             music01.Play(true);
-            //music01.CurrentPlayTime = 65;
+            music01.CurrentPlayTime = 65;*/
             //Console.WriteLine(music01.Seconds);
         }
         public override void OnUpdate()
