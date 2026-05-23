@@ -172,7 +172,7 @@ namespace Strawberry.Core
 
         public Vector2 GetMousePositionOnViewport(int viewPortIndex, int pointerIndex)
         {
-            Vector2 result = new Vector2(MousePosition[pointerIndex]);
+            Vector2 result = new Vector2(GameContext.InputManager.PointingDevice.GetPosition(pointerIndex));
             Viewport vp = Viewports[viewPortIndex];
 
 
@@ -265,7 +265,7 @@ namespace Strawberry.Core
                 //i--;
             }
 
-            if(PhysicsEnabled)
+            if (PhysicsEnabled)
             {
                 PhysicsWorld?.Step(FrameInfo.Information.FixedDeltaTime);
             }
