@@ -1,4 +1,5 @@
 ﻿using Strawberry.Serialization;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Strawberry.Core
@@ -176,13 +177,13 @@ namespace Strawberry.Core
             }
         }
 
-        public T AddComponent<T>() where T : BaseComponent, new()
+        public T AddComponent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>() where T : BaseComponent, new()
         {
             T component = new T();
             return AddComponent(component);
         }
 
-        public T AddComponent<T>(T component) where T : BaseComponent
+        public T AddComponent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(T component) where T : BaseComponent
         {
             Components.Add(component);
             component.Owner = this;
@@ -318,7 +319,7 @@ namespace Strawberry.Core
             return tags.Contains(tag);
         }
 
-        public void RegisterEvent<T>(string name) where T : class
+        public void RegisterEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(string name) where T : class
         {
             Type delegateType = typeof(T);
             if (delegateType.IsSubclassOf(typeof(Delegate)))
@@ -594,7 +595,7 @@ namespace Strawberry.Core
             componentEvents.Remove(component);
         }
 
-        MethodInfo[] GetMethodInfo(Type t, string methodName)
+        MethodInfo[] GetMethodInfo([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] Type t, string methodName)
         {
 
             MethodInfo[] method = (from m in t.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic)
