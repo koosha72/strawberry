@@ -5,6 +5,7 @@ using Strawberry.Graphics.Layers;
 using Strawberry.Graphics.Text;
 using Strawberry.Math;
 using Strawberry.Sound;
+using Strawberry.Sound.Midi;
 using Color = Strawberry.Graphics.Color;
 
 namespace Strawberry.Test
@@ -87,10 +88,11 @@ namespace Strawberry.Test
                 var volume = s.Volume;
             }
 
-            /*var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid")));
+            var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid"), Storage.Open("8MBGMSFX.SF2")));
+            music01.Volume = 0.1f;
             music01.Play(true);
-            music01.CurrentPlayTime = 65;*/
-            //Console.WriteLine(music01.Seconds);
+            // music01.CurrentPlayTime = 0;
+            // Console.WriteLine(music01.Seconds);
         }
         public override void OnUpdate()
         {
