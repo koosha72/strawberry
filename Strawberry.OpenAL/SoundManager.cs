@@ -148,6 +148,10 @@ namespace Strawberry.OpenAL
             else
             {
                 source = sources[ind].SourceInd;
+                if (sources[ind] is not Voice)
+                {
+                    sources[ind] = new Voice(buffer, source);
+                }
                 sources[ind].SetBuffer(buffer);
                 v = (Voice)sources[ind];
             }
@@ -176,6 +180,10 @@ namespace Strawberry.OpenAL
             else
             {
                 source = sources[ind].SourceInd;
+                if (sources[ind] is not Voice3D)
+                {
+                    sources[ind] = new Voice3D(buffer, settings, source);
+                }
                 sources[ind].SetBuffer(buffer);
                 v = (Voice3D)sources[ind];
             }
