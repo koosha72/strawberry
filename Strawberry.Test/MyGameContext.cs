@@ -88,7 +88,8 @@ namespace Strawberry.Test
                 var volume = s.Volume;
             }
 
-            var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid"), Storage.Open("8MBGMSFX.SF2")));
+            //var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid"), Storage.Open("8MBGMSFX.SF2")));
+            var music01 = SoundManager.CreateStream(new OggReader(Storage.Open("music-ogg.ogg")));
             music01.Volume = 0.1f;
             music01.Play(true);
             // music01.CurrentPlayTime = 0;

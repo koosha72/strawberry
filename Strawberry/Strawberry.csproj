@@ -15,4 +15,8 @@
     <EmbeddedResource Include="Graphics\Text\UnicodeDatabase.txt" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NVorbis" Version="0.10.5" />
+  </ItemGroup>
+
 </Project>
