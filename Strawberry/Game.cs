@@ -29,14 +29,21 @@ namespace Strawberry
             Run(context, launcher, new GameTimer());
         }
 
+        /// <summary>
+        /// Runs the game
+        /// </summary>
+        /// <param name="context">The game context in which the actual game is happening</param>
+        /// <param name="launcher">The launcher to be used to initialize the game.</param>
+        /// <param name="frameInfoProvider">The frame info provider to be used to store frame information</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void Run(IGameContext context, IGameLauncher launcher, IFrameInfoProvider frameInfoProvider)
         {
-            
+
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
             if (launcher == null)
                 throw new ArgumentNullException(nameof(launcher));
-                
+
             GameContext = context;
             this.frameInfoProvider = frameInfoProvider;
             FrameInfo.Register(frameInfoProvider);
@@ -58,7 +65,10 @@ namespace Strawberry
             GameContext.OnInitialize(launcher);
             initialized = true;
         }
-
+        /// <summary>
+        /// Calls the OnFixedUpdate method of the game context and then calls the FixedUpdate method on the frame info provider
+        /// Happens at fixed intervals, may be called more than once per frame
+        /// </summary>
         void FixedUpdate()
         {
             while (frameInfoProvider.ShouldFixedUpdate)
@@ -67,7 +77,10 @@ namespace Strawberry
                 frameInfoProvider.FixedUpdate();
             }
         }
-
+        /// <summary>
+        /// Calls the OnUpdate method of the game context if OnBeginUpdate returns true and OnEndUpdate is called after the update method has been called
+        /// Happens as fast as possible, may be called less than fixed update
+        /// </summary>
         void VariableUpdate()
         {
             if (GameContext.OnBeginUpdate())
@@ -77,7 +90,10 @@ namespace Strawberry
                 launcher.InputManager?.Update();
             }
         }
-
+        /// <summary>
+        /// Calls the OnRender method of the game context if OnBeginRender returns true and OnEndRender is called after the render method has been called
+        /// Happens as fast as possible
+        /// </summary>
         void Render()
         {
             if (GameContext.OnBeginRender())
@@ -88,7 +104,7 @@ namespace Strawberry
         }
 
         /// <summary>
-        /// This method is called every frame.
+        /// The main game loop.
         /// </summary>
         void Update()
         {
