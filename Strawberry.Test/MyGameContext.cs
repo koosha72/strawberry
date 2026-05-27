@@ -2,6 +2,7 @@
 using Strawberry.Core;
 using Strawberry.Graphics;
 using Strawberry.Graphics.Layers;
+using Strawberry.Graphics.ParticleSystem;
 using Strawberry.Graphics.Text;
 using Strawberry.Math;
 using Strawberry.Sound;
@@ -44,6 +45,27 @@ namespace Strawberry.Test
             scene.Viewports[0] = viewport;
             scene.EnablePhysics(Vector2.Down() * 9.8f);
             scene.AddLayer("Sprite1", layer);
+            ParticleLayer pl = new ParticleLayer();
+            scene.AddLayer("Particles1", pl);
+            var pt = new ParticleTimeline();
+            pt.AddAffector(new ScaleAffector(6f, 12f));
+            var pe = pl.AddEmitter(pixelSprite, new ParticleInitiator()
+            {
+                Shape = EmitShape.Circle,
+                ShapeRadius = 10f,
+                SpeedMin = 100f,
+                SpeedMax = 250f,
+                DirectionMin = 80f,
+                DirectionMax = 100f,
+                LifetimeMin = 0.5f,
+                LifetimeMax = 1f,
+                ScaleMin = 6f,
+                ScaleMax = 7f,
+                ColorStart = Color.Red,
+            }, pt);
+            pe.Position = new Vector2(256f, 256f);
+            pe.EmitRate = 100;
+            pe.Enabled = true;
 
 
             Entity entity = new Entity();
@@ -61,7 +83,6 @@ namespace Strawberry.Test
             text.Position = new Vector2(1280 - 64f, 16);
             text.Size = 36;
             text.Text = "اسپیس را نگه دارید";
-
 
             Entity entity2 = new Entity();
             entity2.Initialize("test2", scene);
@@ -83,13 +104,13 @@ namespace Strawberry.Test
             using (WaveReader waveReader = new WaveReader(Storage.Open("timeup_mono.wav")))
             {
                 var buffer = SoundManager.CreateSoundBuffer(waveReader);
-                var s = buffer.Play(Vector2.Right() * 256f, true);
+                var s = buffer.Play(Vector2.Right() * 256f, false);
                 s.Volume = 1f;
                 var volume = s.Volume;
             }
 
-            //var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid"), Storage.Open("8MBGMSFX.SF2")));
-            var music01 = SoundManager.CreateStream(new OggReader(Storage.Open("music-ogg.ogg")));
+            var music01 = SoundManager.CreateStream(new MidiReader(Storage.Open("music.mid"), Storage.Open("8MBGMSFX.SF2")));
+            //var music01 = SoundManager.CreateStream(new OggReader(Storage.Open("music-ogg.ogg")));
             music01.Volume = 0.1f;
             music01.Play(true);
             // music01.CurrentPlayTime = 0;
