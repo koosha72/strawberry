@@ -339,32 +339,19 @@ namespace Strawberry.Core
         {
             foreach (var ev in componentEvents)
             {
-                try
-                {
-                    if (ev.Value.ContainsKey(name))
-                        ev.Value[name].Method.Invoke(ev.Key, args);
-                }
-                catch (TargetInvocationException e)
-                {
-                    ExceptionHelper.Throw(this, e.InnerException);
-                }
+                if (ev.Value.ContainsKey(name))
+                    ev.Value[name].Method.Invoke(ev.Key, args);
+
             }
         }
 
         public void InvokeEvent(BaseComponent component, string name, params object[] args)
         {
-            try
+            if (componentEvents.ContainsKey(component))
             {
-                if (componentEvents.ContainsKey(component))
-                {
-                    var ev = componentEvents[component];
-                    if (ev.ContainsKey(name))
-                        ev[name].Method.Invoke(component, args);
-                }
-            }
-            catch (TargetInvocationException e)
-            {
-                ExceptionHelper.Throw(this, e.InnerException);
+                var ev = componentEvents[component];
+                if (ev.ContainsKey(name))
+                    ev[name].Method.Invoke(component, args);
             }
         }
 
@@ -412,14 +399,7 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    try
-                    {
-                        Components[i].OnBeginUpdate();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHelper.Throw(this, e);
-                    }
+                    Components[i].OnBeginUpdate();
                 }
                 UpdateBegan = true;
                 UpdateEnded = false;
@@ -444,14 +424,7 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    try
-                    {
-                        Components[i].OnEndUpdate();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHelper.Throw(this, e);
-                    }
+                    Components[i].OnEndUpdate();
                 }
                 UpdateEnded = true;
                 Updated = false;
@@ -476,16 +449,9 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    try
-                    {
-                        Components[i].OnUpdate();
-                        if (Destroyed)
-                            return;
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHelper.Throw(this, e);
-                    }
+                    Components[i].OnUpdate();
+                    if (Destroyed)
+                        return;
                 }
                 Updated = true;
                 UpdateBegan = false;
@@ -513,14 +479,7 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    try
-                    {
-                        Components[i].OnFixedUpdate();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHelper.Throw(this, e);
-                    }
+                    Components[i].OnFixedUpdate();
                 }
                 foreach (Entity child in Children.Values)
                 {
@@ -537,14 +496,7 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    try
-                    {
-                        Components[i].OnRender();
-                    }
-                    catch (Exception e)
-                    {
-                        ExceptionHelper.Throw(this, e);
-                    }
+                    Components[i].OnRender();
                 }
                 foreach (Entity child in Children.Values)
                 {
