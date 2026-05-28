@@ -13,4 +13,5 @@
 
 /staging/
 
-/Strawberry.OpenAL/Native/*
+**/*.so
+**/*.dll
