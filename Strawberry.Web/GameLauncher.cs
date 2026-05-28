@@ -97,6 +97,10 @@ public class GameLauncher : IGameLauncher
         Initialized?.Invoke();
     }
 
+    /// <summary>
+    /// Sets the root url for asset loading
+    /// </summary>
+    /// <param name="rootUrl">The root url</param>
     public void SetRootUrl(string rootUrl)
     {
         if (Storage != null)
@@ -105,6 +109,11 @@ public class GameLauncher : IGameLauncher
         this.rootUrl = rootUrl;
     }
 
+    /// <summary>
+    /// Downloads a file from the root url and caches it in memory
+    /// </summary>
+    /// <param name="path">Path to the file relative to the root url</param>
+    /// <returns>Awaitable task</returns>
     public async Task AOTDownload(string path)
     {
         if (rootUrl == null)

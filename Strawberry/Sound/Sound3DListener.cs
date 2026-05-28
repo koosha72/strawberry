@@ -34,9 +34,13 @@ namespace Strawberry.Sound
         /// NOTE: You can only have 1 active listener.
         /// </summary>
         public abstract bool IsActive { get; }
-
+        /// <summary>
+        /// The sound manager using which the listener is created.
+        /// </summary>
         public abstract ISoundManager SoundManager { get; }
-
+        /// <summary>
+        /// Activates the listener.
+        /// </summary>
         public abstract void Activate();
     }
 }
