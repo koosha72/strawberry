@@ -16,4 +16,13 @@
     <PackageReference Include="OpenTK" Version="4.9.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="runtimes\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>contentFiles\any\any\runtimes\</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <CopyToOutput>true</CopyToOutput>
+    </Content>
+  </ItemGroup>
 </Project>
