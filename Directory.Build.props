@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    
+    <Authors>Koosha Abedini Nassab</Authors>
+    <Company>Strawberry Team</Company>
+    <Copyright>Copyright © $(Year) Strawberry Team</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="All" />
+  </ItemGroup>
+</Project>
