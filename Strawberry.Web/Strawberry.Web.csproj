@@ -12,6 +12,28 @@
     <ProjectReference Include="..\Strawberry\Strawberry.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="native\emscripten.c"
+      Pack="true"
+      PackagePath="native/" />
+
+    <None Include="native\libEGL.c"
+      Pack="true"
+      PackagePath="native/" />
+
+    <None Include="native\libGLESv3.c"
+      Pack="true"
+      PackagePath="native/" />
+
+    <None Include="native\libopenal.c"
+      Pack="true"
+      PackagePath="native/" />
+
+    <None Include="buildTransitive\Strawberry.Web.targets"
+      Pack="true"
+      PackagePath="buildTransitive/" />
+  </ItemGroup>
+
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

@@ -1,0 +1,15 @@
+<Project InitialTargets="WASM">
+    <Target Name="WASM">
+        <ItemGroup>
+            <NativeFileReference Include="$(MSBuildThisFileDirectory)..\native\libopenal.c"
+                ScanForPInvokes="true" />
+            <NativeFileReference
+            Include="$(MSBuildThisFileDirectory)..\native\emscripten.c"
+                ScanForPInvokes="true" />
+            <NativeFileReference Include="$(MSBuildThisFileDirectory)..\native\libEGL.c"
+                ScanForPInvokes="true" />
+            <NativeFileReference Include="$(MSBuildThisFileDirectory)..\native\libGLESv3.c"
+                ScanForPInvokes="true" />
+        </ItemGroup>
+    </Target>
+</Project>

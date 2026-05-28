@@ -23,7 +23,7 @@
       Pack="true"
       PackagePath="android/" />
 
-    <None Include="buildTransitive\Strawberry.OpenAL.targets"
+    <None Include="buildTransitive\Strawberry.Android.targets"
       Pack="true"
       PackagePath="buildTransitive/" />
   </ItemGroup>
