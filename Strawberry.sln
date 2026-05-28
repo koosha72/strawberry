@@ -11,19 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Physics", "Straw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Desktop", "Strawberry.Desktop\Strawberry.Desktop.csproj", "{6EA61883-C39F-4E0B-B1C0-DD8035AE850B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Test", "Strawberry.Test\Strawberry.Test.csproj", "{F0BCB1E0-4B54-443A-9E2E-2BD531710290}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Android", "Strawberry.Android\Strawberry.Android.csproj", "{40E86411-4FF3-45CD-A18B-E4B8F1EBE51E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Android.Test", "Strawberry.Android.Test\Strawberry.Android.Test.csproj", "{813CB2E1-6C3C-44AB-A698-E093F3F5EEEE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Desktop.Test", "Strawberry.Desktop.Test\Strawberry.Desktop.Test.csproj", "{BF86C599-E679-4075-8EC2-7CAB92E42D6E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.OpenAL", "Strawberry.OpenAL\Strawberry.OpenAL.csproj", "{BFC25F6E-D5B5-455D-A9AA-B8A2A8FE1FE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Web", "Strawberry.Web\Strawberry.Web.csproj", "{E5E96B5B-07AE-47F7-99E1-2302A4FD1898}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Web.Test", "Strawberry.Web.Test\Strawberry.Web.Test.csproj", "{57B28981-C60D-4EE7-ADA6-10B64DFF21D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strawberry.Sound.Midi", "Strawberry.Sound.Midi\Strawberry.Sound.Midi.csproj", "{E13849E0-42FB-4549-86C1-02838DAD7F5A}"
 EndProject
