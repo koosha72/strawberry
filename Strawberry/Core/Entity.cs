@@ -4,10 +4,19 @@ using System.Reflection;
 
 namespace Strawberry.Core
 {
+    /// <summary>
+    /// Represents a game entity that can contain components, children, tags, and event handlers.
+    /// </summary>
     public class Entity : ReferenceObject
     {
+        /// <summary>
+        /// Holds the collection of components attached to this entity.
+        /// </summary>
         protected ComponentCollection Components;
 
+        /// <summary>
+        /// Gets all components attached to this entity.
+        /// </summary>
         public List<BaseComponent> AllComponents
         {
             get { return Components; }
@@ -18,12 +27,25 @@ namespace Strawberry.Core
         Dictionary<BaseComponent, Dictionary<string, Delegate>> componentEvents =
             new Dictionary<BaseComponent, Dictionary<string, Delegate>>();
 
+        /// <summary>
+        /// Gets the scene that owns this entity.
+        /// </summary>
         public Scene Scene { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the identifier for this entity.
+        /// </summary>
         public string ID { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this entity has been destroyed.
+        /// </summary>
         public bool Destroyed { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the comma-separated tags assigned to this entity.
+        /// Setting this property adds tags from the comma-delimited string.
+        /// </summary>
         public string Tag
         {
             set
@@ -41,16 +63,32 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the entity has started its update phase.
+        /// </summary>
         public bool UpdateBegan { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether the entity has completed its update phase.
+        /// </summary>
         public bool Updated { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether the entity has ended its update phase.
+        /// </summary>
         public bool UpdateEnded { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the pause state flags for this entity.
+        /// </summary>
         public PauseStateFlags PauseState { get; set; }
 
         Entity parent;
 
+        /// <summary>
+        /// Gets or sets the parent entity of this entity.
+        /// Setting the parent updates the child collection on the old and new parents.
+        /// </summary>
         public Entity Parent
         {
             get { return parent; }
@@ -71,16 +109,21 @@ namespace Strawberry.Core
                 {
                     parent = value;
                 }
-                //NotifyPropertyChanged("Parent");
             }
         }
 
         EntityCollection children = new EntityCollection();
 
+        /// <summary>
+        /// Gets the child entities owned by this entity.
+        /// </summary>
         public EntityCollection Children { get { return children; } }
 
         HashSet<string> tags = new HashSet<string>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Entity"/> class.
+        /// </summary>
         public Entity()
         {
             Components = new ComponentCollection();
@@ -88,6 +131,11 @@ namespace Strawberry.Core
             Destroyed = false;
         }
 
+        /// <summary>
+        /// Initializes the entity with an identifier and owning scene.
+        /// </summary>
+        /// <param name="id">The entity identifier.</param>
+        /// <param name="owner">The scene that owns the entity.</param>
         public void Initialize(string id, Scene owner)
         {
             Scene = owner;
@@ -96,6 +144,11 @@ namespace Strawberry.Core
             Parent = null;
         }
 
+        /// <summary>
+        /// Initializes the entity as a child of another entity.
+        /// </summary>
+        /// <param name="id">The entity identifier.</param>
+        /// <param name="parent">The parent entity.</param>
         public void Initialize(string id, Entity parent)
         {
             Scene = parent.Scene;
@@ -105,11 +158,19 @@ namespace Strawberry.Core
             this.parent = parent;
         }
 
+        /// <summary>
+        /// Enables the entity and triggers its initialization logic.
+        /// </summary>
         public void Enable()
         {
             OnInitialize(ID, Scene);
         }
 
+        /// <summary>
+        /// Creates a clone of this entity using a new identifier.
+        /// </summary>
+        /// <param name="newId">The identifier for the cloned entity.</param>
+        /// <returns>The cloned entity.</returns>
         public Entity Clone(string newId)
         {
             Entity en = new Entity();
@@ -130,6 +191,11 @@ namespace Strawberry.Core
             return en;
         }
 
+        /// <summary>
+        /// Determines whether this entity is a descendant of the specified parent entity.
+        /// </summary>
+        /// <param name="parent">The potential ancestor entity.</param>
+        /// <returns><c>true</c> if this entity is a child or descendant of the parent; otherwise, <c>false</c>.</returns>
         public bool IsChildOf(Entity parent)
         {
             Entity p = Parent;
@@ -143,14 +209,11 @@ namespace Strawberry.Core
         }
 
         #region public methods
-        /*public void Initialize(string id, List<IComponent> components, World owner)
-        {
-            this.Initialize(id, owner);
-
-            foreach (IComponent c in components)
-                this.AddComponent(c);
-        }*/
-
+        /// <summary>
+        /// Adds a component to the entity and optionally initializes it.
+        /// </summary>
+        /// <param name="component">The component instance to add.</param>
+        /// <param name="init">If set to <c>true</c>, the component is initialized immediately.</param>
         internal void AddComponent(BaseComponent component, bool init)
         {
             Components.Add(component);
@@ -177,12 +240,23 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Creates and adds a new component of type <typeparamref name="T"/> to the entity.
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <returns>The created component instance.</returns>
         public T AddComponent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>() where T : BaseComponent, new()
         {
             T component = new T();
             return AddComponent(component);
         }
 
+        /// <summary>
+        /// Adds an existing component instance to the entity.
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <param name="component">The component instance to add.</param>
+        /// <returns>The added component.</returns>
         public T AddComponent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(T component) where T : BaseComponent
         {
             Components.Add(component);
@@ -196,7 +270,11 @@ namespace Strawberry.Core
             return component;
         }
 
-
+        /// <summary>
+        /// Adds a set of new components to the entity.
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <param name="components">The list of components to add.</param>
         public void AddComponents<T>(List<T> components) where T : BaseComponent, new()
         {
             foreach (T c in components)
@@ -205,6 +283,11 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Gets the first component of type <typeparamref name="T"/> attached to the entity.
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <returns>The component instance or <c>null</c> if not found.</returns>
         public T GetComponent<T>() where T : BaseComponent
         {
             Type t = typeof(T);
@@ -213,12 +296,22 @@ namespace Strawberry.Core
             return c;
         }
 
+        /// <summary>
+        /// Determines whether this entity contains a component of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <returns><c>true</c> if the component exists; otherwise, <c>false</c>.</returns>
         public bool HasComponent<T>() where T : BaseComponent
         {
             Type t = typeof(T);
             return (from cmp in Components where cmp.GetType() == t select cmp).Count() > 0;
         }
 
+        /// <summary>
+        /// Gets all components of type <typeparamref name="T"/> attached to this entity.
+        /// </summary>
+        /// <typeparam name="T">The component type.</typeparam>
+        /// <returns>An array of matching components.</returns>
         public T[] GetComponents<T>() where T : BaseComponent
         {
             Type t = typeof(T);
@@ -227,6 +320,10 @@ namespace Strawberry.Core
             return c;
         }
 
+        /// <summary>
+        /// Gets all components attached to this entity.
+        /// </summary>
+        /// <returns>An array of attached components.</returns>
         public BaseComponent[] GetComponents()
         {
             List<BaseComponent> result = new List<BaseComponent>();
@@ -238,16 +335,30 @@ namespace Strawberry.Core
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Gets the index of the specified component in the entity component list.
+        /// </summary>
+        /// <param name="component">The component to locate.</param>
+        /// <returns>The zero-based index, or -1 if not found.</returns>
         public int GetComponentIndex(BaseComponent component)
         {
             return Components.IndexOf(component);
         }
 
+        /// <summary>
+        /// Sets the index of the specified component in the entity component list.
+        /// </summary>
+        /// <param name="component">The component to reposition.</param>
+        /// <param name="index">The new index position.</param>
         public void SetComponentIndex(BaseComponent component, int index)
         {
 
         }
 
+        /// <summary>
+        /// Removes the first component of type <typeparamref name="T"/> from the entity.
+        /// </summary>
+        /// <typeparam name="T">The component type to remove.</typeparam>
         public void RemoveComponent<T>() where T : BaseComponent
         {
             Type t = typeof(T);
@@ -260,6 +371,10 @@ namespace Strawberry.Core
             c.Destroy();
         }
 
+        /// <summary>
+        /// Removes the specified component instance from the entity.
+        /// </summary>
+        /// <param name="component">The component instance to remove.</param>
         public void RemoveComponent(BaseComponent component)
         {
             Type t = component.GetType();
@@ -272,6 +387,9 @@ namespace Strawberry.Core
             c.Destroy();
         }
 
+        /// <summary>
+        /// Removes and destroys all components attached to the entity.
+        /// </summary>
         public void ClearComponents()
         {
             for (int i = 0; i < Components.Count; i++)
@@ -285,6 +403,9 @@ namespace Strawberry.Core
             Components.Clear();
         }
 
+        /// <summary>
+        /// Destroys the entity and all of its children.
+        /// </summary>
         public override void Destroy()
         {
             if (Destroyed)
@@ -304,21 +425,39 @@ namespace Strawberry.Core
             base.Destroy();
         }
 
+        /// <summary>
+        /// Adds a tag to this entity.
+        /// </summary>
+        /// <param name="tag">The tag to add.</param>
         public void AddTag(string tag)
         {
             tags.Add(tag);
         }
 
+        /// <summary>
+        /// Removes a tag from this entity.
+        /// </summary>
+        /// <param name="tag">The tag to remove.</param>
         public void RemoveTag(string tag)
         {
             tags.Remove(tag);
         }
 
+        /// <summary>
+        /// Checks whether this entity contains the specified tag.
+        /// </summary>
+        /// <param name="tag">The tag to check.</param>
+        /// <returns><c>true</c> if the entity has the tag; otherwise, <c>false</c>.</returns>
         public bool HasTag(string tag)
         {
             return tags.Contains(tag);
         }
 
+        /// <summary>
+        /// Registers a named event type for entity components.
+        /// </summary>
+        /// <typeparam name="T">The delegate type for the event.</typeparam>
+        /// <param name="name">The event name.</param>
         public void RegisterEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(string name) where T : class
         {
             Type delegateType = typeof(T);
@@ -335,6 +474,11 @@ namespace Strawberry.Core
             RegisterEventsForComponents();
         }
 
+        /// <summary>
+        /// Invokes the named event on all registered component listeners.
+        /// </summary>
+        /// <param name="name">The event name.</param>
+        /// <param name="args">The event arguments.</param>
         public void InvokeEvents(string name, params object[] args)
         {
             foreach (var ev in componentEvents)
@@ -345,6 +489,12 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Invokes a named event on the specified component.
+        /// </summary>
+        /// <param name="component">The component that should receive the event.</param>
+        /// <param name="name">The event name.</param>
+        /// <param name="args">The event arguments.</param>
         public void InvokeEvent(BaseComponent component, string name, params object[] args)
         {
             if (componentEvents.ContainsKey(component))
@@ -358,6 +508,11 @@ namespace Strawberry.Core
         #endregion
 
         #region On...
+        /// <summary>
+        /// Initializes the entity event registrations and triggers component startup events.
+        /// </summary>
+        /// <param name="id">The entity identifier.</param>
+        /// <param name="owner">The owning scene.</param>
         public virtual void OnInitialize(string id, Scene owner)
         {
             RegisterEvent<Action>("Begin");
@@ -375,6 +530,9 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Handles entity cleanup by invoking disable and finish events on attached components.
+        /// </summary>
         public void OnDestroy()
         {
             InvokeEvents("Disabled");
@@ -393,6 +551,9 @@ namespace Strawberry.Core
             Components.Clear();
         }
 
+        /// <summary>
+        /// Performs the beginning of the update cycle for this entity and its children.
+        /// </summary>
         public void OnBeginUpdate()
         {
             if (!Destroyed && (PauseStateFlags.Update & this.PauseState) != PauseStateFlags.Update)
@@ -418,6 +579,9 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Performs the end of the update cycle for this entity and its children.
+        /// </summary>
         public void OnEndUpdate()
         {
             if (!Destroyed && (PauseStateFlags.Update & this.PauseState) != PauseStateFlags.Update)
@@ -443,6 +607,9 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Updates this entity and its children during the update cycle.
+        /// </summary>
         public void OnUpdate()
         {
             if (!Destroyed && (PauseStateFlags.Update & this.PauseState) != PauseStateFlags.Update)
@@ -473,6 +640,9 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Performs fixed-step updates for this entity and its children.
+        /// </summary>
         public void OnFixedUpdate()
         {
             if (!Destroyed && (PauseStateFlags.Update & this.PauseState) != PauseStateFlags.Update)
@@ -490,6 +660,9 @@ namespace Strawberry.Core
             }
         }
 
+        /// <summary>
+        /// Renders this entity and its children.
+        /// </summary>
         public void OnRender()
         {
             if (!Destroyed && (PauseStateFlags.Render & this.PauseState) != PauseStateFlags.Render)

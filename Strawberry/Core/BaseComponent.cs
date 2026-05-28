@@ -1,13 +1,13 @@
 ﻿namespace Strawberry.Core
 {
     /// <summary>
-    /// Base class of all components in Strawberry.
-    /// You should define your own component classes inheriting from this class.
+    /// Base class for all components in the Strawberry engine.
+    /// Custom components should inherit from this class to integrate with the entity-component system.
     /// </summary>
     public abstract class BaseComponent : ReferenceObject
     {
         /// <summary>
-        /// The owner of the component
+        /// Gets or sets the <see cref="Entity"/> that owns this component.
         /// </summary>
         public Entity Owner
         {
@@ -16,48 +16,72 @@
         }
 
         /// <summary>
-        /// The scene in which the entity is living
+        /// Gets the <see cref="Scene"/> in which the owning entity currently resides.
+        /// Returns <c>null</c> if the entity is not part of any scene.
         /// </summary>
         public Scene Scene { get { return Owner?.Scene; } }
 
         /// <summary>
-        ///  The current game context
+        /// Gets the current <see cref="IGameContext"/>.
+        /// Returns <c>null</c> if the entity or scene is not available.
         /// </summary>
         public IGameContext GameContext { get { return Owner?.Scene?.GameContext; } }
 
         /// <summary>
-        /// This method happens when the component is intialized. You can override it in your own components.
+        /// Called when the component is initialized. Override this method to set up the component's initial state.
         /// </summary>
-        /// <param name="owner">The owner of the component</param>
+        /// <param name="owner">The <see cref="Entity"/> that owns this component.</param>
         public virtual void Initialize(Entity owner)
         {
         }
 
+        /// <summary>
+        /// Called when the component or its owning entity is finishing its lifecycle. 
+        /// Override to perform cleanup or final actions.
+        /// </summary>
         public virtual void OnFinished()
         {
 
         }
 
+        /// <summary>
+        /// Called at the beginning of the update cycle, before <see cref="OnUpdate"/>.
+        /// </summary>
         public virtual void OnBeginUpdate()
         {
 
         }
 
+        /// <summary>
+        /// Called every frame during the main update cycle. 
+        /// Override to implement frame-by-frame logic.
+        /// </summary>
         public virtual void OnUpdate()
         {
 
         }
 
+        /// <summary>
+        /// Called at the end of the update cycle, after <see cref="OnUpdate"/>.
+        /// </summary>
         public virtual void OnEndUpdate()
         {
 
         }
 
+        /// <summary>
+        /// Called at a fixed time interval, independent of the frame rate. 
+        /// Typically used for physics calculations and other time-sensitive logic.
+        /// </summary>
         public virtual void OnFixedUpdate()
         {
 
         }
 
+        /// <summary>
+        /// Called during the rendering phase. 
+        /// Override to implement drawing or rendering logic for the component.
+        /// </summary>
         public virtual void OnRender()
         {
 
@@ -65,7 +89,8 @@
 
 
         /// <summary>
-        /// This method happens when the component is removed. You can override it in your own components.
+        /// Called when the component is removed from its owner. 
+        /// Override to perform cleanup and release resources. Sets the <see cref="Owner"/> to <c>null</c>.
         /// </summary>
         public virtual void Removed()
         {
