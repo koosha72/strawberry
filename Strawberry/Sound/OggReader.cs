@@ -27,7 +27,7 @@ namespace Strawberry.Sound
         bool disposed;
 
         // Reusable float decode buffer to avoid per-call GC allocation
-        float[]? decodeBuffer;
+        float[] decodeBuffer;
         int decodeBufferCapacity;
 
         // ─────────────────────────────────────────────
@@ -152,7 +152,7 @@ namespace Strawberry.Sound
             if (vorbis.TotalSamples > 0)
                 targetFrame = Math.Clamp(targetFrame, 0, vorbis.TotalSamples);
 
-            vorbis.DecodedPosition = targetFrame;
+            vorbis.SamplePosition = targetFrame;
         }
 
         // ─────────────────────────────────────────────
