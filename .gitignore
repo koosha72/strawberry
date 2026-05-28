@@ -12,3 +12,5 @@
 /generate_docs_with_template.py
 
 /staging/
+
+/Strawberry.OpenAL/Native/*

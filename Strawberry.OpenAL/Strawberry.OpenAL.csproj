@@ -12,4 +12,11 @@
     <ProjectReference Include="..\Strawberry\Strawberry.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Native\**\*">
+      <Pack>true</Pack>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
