@@ -114,7 +114,7 @@ namespace Strawberry.Sound.Midi
                 {
                     backend = new TinySoundFontBackend(soundFont, sampleRate, channels, -10);
                 }
-                catch (DllNotFoundException)
+                catch (DllNotFoundException x)
                 {
                     // libtsf not available — fall back to managed synth
                     System.Diagnostics.Debug.WriteLine(

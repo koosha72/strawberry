@@ -19,7 +19,11 @@ public class StorageManager : IStorage
 
     public Stream Open(string path)
     {
-        return assetManager.Open(path);
+        var stream = assetManager.Open(path);
+        MemoryStream ms = new MemoryStream();
+        stream.CopyTo(ms);
+        ms.Seek(0, SeekOrigin.Begin);
+        return ms;
     }
 
     public byte[] ReadAllBytes(string path)

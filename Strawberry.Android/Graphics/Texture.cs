@@ -110,12 +110,22 @@ internal class Texture : Strawberry.Graphics.Texture
                 internalFormat = GLES30.GlAlpha;
                 break;
         }
-        byte[] colorsBytes = MemoryMarshal.AsBytes<Color>(data).ToArray();
+        int pixelCount = width * height;
+        byte[] colorsBytes = new byte[pixelCount * 4]; // 4 bytes per pixel (RGBA)
+
+        for (int i = 0; i < pixelCount; i++)
+        {
+            // Convert float (0.0 - 1.0) to byte (0 - 255)
+            colorsBytes[i * 4 + 0] = (byte)(data[i].R * 255f);
+            colorsBytes[i * 4 + 1] = (byte)(data[i].G * 255f);
+            colorsBytes[i * 4 + 2] = (byte)(data[i].B * 255f);
+            colorsBytes[i * 4 + 3] = (byte)(data[i].A * 255f);
+        }
 
         ByteBuffer colorsBuffer = ByteBuffer.Wrap(colorsBytes);
 
         GLES30.GlTexImage2D(GLES30.GlTexture2d, 0, internalFormat,
-            width, height, 0, pformat, GLES30.GlFloat, colorsBuffer);
+            width, height, 0, pformat, GLES30.GlUnsignedByte, colorsBuffer);
         format = pformat;
         Width = width;
         Height = height;
