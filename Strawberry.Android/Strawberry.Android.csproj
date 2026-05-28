@@ -19,6 +19,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="android\**\*.so"
+      Pack="true"
+      PackagePath="android/" />
+
+    <None Include="buildTransitive\Strawberry.OpenAL.targets"
+      Pack="true"
+      PackagePath="buildTransitive/" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Strawberry.OpenAL\Strawberry.OpenAL.csproj" />
     <ProjectReference Include="..\Strawberry\Strawberry.csproj" />
   </ItemGroup>
