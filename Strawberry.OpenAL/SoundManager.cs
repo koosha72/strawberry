@@ -20,7 +20,7 @@ namespace Strawberry.OpenAL
 
         object mutex = new object();
 
-        public bool IsEnabled { get; set; }
+        public bool IsEnabled { get; set; } = true;
 
         Strawberry.Sound.Sound3DListener sound3DListener;
 
@@ -53,36 +53,79 @@ namespace Strawberry.OpenAL
             streamBuffersThread.Start(); */
         }
 
+        public void Suspend()
+        {
+            lock (mutex)
+            {
+                IsEnabled = false;
+
+                foreach (var v in sources)
+                {
+                    v.Pause();
+                }
+                foreach (var s in streams)
+                {
+                    s.Pause();
+                }
+                ALC.MakeContextCurrent(0);
+            }
+        }
+
+        public void RestoreState()
+        {
+            lock (mutex)
+            {
+                IsEnabled = true;
+                ALC.MakeContextCurrent(context);
+                foreach (var v in sources)
+                {
+                    v.Resume();
+                }
+                foreach (var s in streams)
+                {
+                    s.Resume();
+                }
+            }
+        }
+
         public void Update()
         {
-            long now = System.Diagnostics.Stopwatch.GetTimestamp();
-
-            if ((double)(now - lastStreamUpdate) / System.Diagnostics.Stopwatch.Frequency < 0.1)
+            lock (mutex)
             {
-                return;
-            }
+                if (!IsEnabled)
+                    return;
+                long now = System.Diagnostics.Stopwatch.GetTimestamp();
 
-
-            for (int i = 0; i < streams.Count; i++)
-            {
-                if (!streams[i].Update())
+                if ((double)(now - lastStreamUpdate) / System.Diagnostics.Stopwatch.Frequency < 0.1)
                 {
-                    streams[i].Dispose();
-                    streams.Remove(streams[i]);
-                    i--;
+                    return;
                 }
-            }
-            for (int i = 0; i < sources.Count; i++)
-            {
-                if (!sources[i].IsPlaying() && !sources[i].IsPaused())
-                {
-                    sources[i].Dispose();
-                    sources.RemoveAt(i);
-                    i--;
-                }
-            }
 
-            lastStreamUpdate = now;
+
+                for (int i = 0; i < streams.Count; i++)
+                {
+                    if (!streams[i].Update())
+                    {
+                        streams[i].Dispose();
+                        streams.Remove(streams[i]);
+                        i--;
+                    }
+                }
+                for (int i = 0; i < sources.Count; i++)
+                {
+                    if (!sources[i].IsPlaying() && !sources[i].IsPaused())
+                    {
+                        if (!IsEnabled)
+                        {
+                            sources[i].Dispose();
+                            sources.RemoveAt(i);
+                            i--;
+                        }
+                    }
+                }
+
+                lastStreamUpdate = now;
+            }
         }
 
         public Strawberry.Sound.SoundBuffer CreateSoundBuffer(ISoundReader soundReader)

@@ -9,6 +9,11 @@ public interface IVoice : IDisposable
 
     void SetBuffer(SoundBuffer soundBuffer);
 
+    public void Pause();
+    public void Resume();
+    public void Stop();
+
+
     bool IsPlaying();
     bool IsPaused();
 }
