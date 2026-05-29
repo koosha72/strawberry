@@ -32,6 +32,7 @@ public class GameLauncher : Activity, IGameLauncher
     StrawberrySurfaceView surfaceView;
 
     bool running = true;
+    bool firstStart = true;
     int w, h;
 
     protected override void OnCreate(Bundle savedInstanceState)
@@ -52,11 +53,33 @@ public class GameLauncher : Activity, IGameLauncher
         gameLoop = new Thread(GameLoopThread);
     }
 
+    protected override void OnPause()
+    {
+        if (SoundManager != null)
+        {
+            (SoundManager as SoundManager).Suspend();
+        }
+        base.OnPause();
+    }
+
+    protected override void OnResume()
+    {
+        if (SoundManager != null)
+        {
+            (SoundManager as SoundManager).RestoreState();
+        }
+        base.OnResume();
+    }
+
     private void surfaceView_SurfaceCreated(ISurfaceHolder holder)
     {
         eglHelper = new EGLHelper();
         eglHelper.Init(holder.Surface);
-
+        if (!running && gameLoop.ThreadState == System.Threading.ThreadState.Stopped)
+        {
+            gameLoop = new Thread(GameLoopThread);
+            running = true;
+        }
         gameLoop.Start();
     }
 
@@ -77,12 +100,20 @@ public class GameLauncher : Activity, IGameLauncher
     private void GameLoopThread(object obj)
     {
         eglHelper.MakeCurrent();
-        GraphicsContext = new GraphicsContext();
-        GraphicsContext.Initialize(eglHelper, w, h, true);
-        InputManager = new InputManager();
-        SoundManager = new OpenAL.SoundManager();
-        Storage = new StorageManager();
-        Initialized?.Invoke();
+        if (firstStart)
+        {
+            GraphicsContext = new GraphicsContext();
+            GraphicsContext.Initialize(eglHelper, w, h, true);
+            InputManager = new InputManager();
+            SoundManager = new OpenAL.SoundManager();
+            Storage = new StorageManager();
+            Initialized?.Invoke();
+            firstStart = false;
+        }
+        else
+        {
+            GraphicsContext.Initialize(eglHelper, w, h, true);
+        }
 
         while (running)
         {
