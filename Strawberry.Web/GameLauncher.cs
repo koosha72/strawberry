@@ -24,13 +24,14 @@ public class GameLauncher : IGameLauncher
 
     public event Action Initialized;
     public event Action GameLoop;
+    bool paused = false;
 
     string rootUrl = null;
 
     [UnmanagedCallersOnly]
     public static int JSGameLoop(double time, nint userData)
     {
-        if (instance.GraphicsContext != null)
+        if (instance.GraphicsContext != null && !instance.paused)
             instance.GameLoop?.Invoke();
         return 1;
     }
@@ -38,7 +39,7 @@ public class GameLauncher : IGameLauncher
     {
         instance = this;
         Storage = new StorageManager();
-        
+
         SetRootUrl(Interop.RequestRootURL());
         Console.WriteLine("Root URL: " + rootUrl);
     }
@@ -125,9 +126,23 @@ public class GameLauncher : IGameLauncher
     public void Run()
     {
         Interop.Initialize();
+        Interop.Paused += OnPause;
+        Interop.Resumed += OnResume;
         unsafe
         {
             Emscripten.RequestAnimationFrameLoop((delegate* unmanaged<double, nint, int>)&JSGameLoop, nint.Zero);
         }
+    }
+
+    void OnPause()
+    {
+        (SoundManager as SoundManager).Suspend();
+        paused = true;
+    }
+
+    void OnResume()
+    {
+        (SoundManager as SoundManager).RestoreState();
+        paused = false;
     }
 }

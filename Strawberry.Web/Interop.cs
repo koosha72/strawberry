@@ -18,6 +18,9 @@ public static partial class Interop
     public static event Action<PointerButtons, int, bool, bool, bool> PointerUp;
     public static event Action<int, float, float> PointerMove;
 
+    public static event Action Paused;
+    public static event Action Resumed;
+
     public static string RootUrl = "";
 
     [JSExport]
@@ -81,6 +84,20 @@ public static partial class Interop
     [JSExport]
     public static void OnCanvasResize(float width, float height, float devicePixelRatio)
     {
+    }
+
+
+    [JSExport]
+    public static void OnPause()
+    {
+        Paused?.Invoke();
+    }
+
+
+    [JSExport]
+    public static void OnResume()
+    {
+        Resumed?.Invoke();
     }
 
 }
