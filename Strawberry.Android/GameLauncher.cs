@@ -39,6 +39,7 @@ public class GameLauncher : Activity, IGameLauncher
     bool firstStart = true;
     bool isFinishing = false;
     int w, h;
+    object mutex = new object();
 
     protected override void OnCreate(Bundle savedInstanceState)
     {
@@ -106,21 +107,27 @@ public class GameLauncher : Activity, IGameLauncher
     {
         // Store the new surface for the game loop thread to consume
         eglHelper.NotifySurfaceCreated(holder.Surface);
-        surfaceAvailable = true;
-        needsEGLSetup = true;
+        lock (mutex)
+        {
+            surfaceAvailable = true;
+            needsEGLSetup = true;
+        }
     }
 
     private void surfaceView_SurfaceDestroyed(ISurfaceHolder holder)
     {
-        // Signal that the surface is gone
-        surfaceAvailable = false;
+        lock (mutex)
+        {
+            // Signal that the surface is gone
+            surfaceAvailable = false;
 
-        // Tell the EGL helper (doesn't touch EGL, just clears flag)
-        eglHelper.NotifySurfaceDestroyed();
+            // Tell the EGL helper (doesn't touch EGL, just clears flag)
+            eglHelper.NotifySurfaceDestroyed();
+        }
 
         // Give the game loop thread time to stop rendering
         // so Android can safely destroy the surface
-        Thread.Sleep(100);
+        // Thread.Sleep(100);
     }
 
     // ── Game Loop Thread ─────────────────────────────────────────
@@ -194,9 +201,12 @@ public class GameLauncher : Activity, IGameLauncher
             }
 
             // ── Normal frame ──
-            if (eglReady && GraphicsContext != null)
+            lock (mutex)
             {
-                GameLoop?.Invoke();
+                if (eglReady && GraphicsContext != null && surfaceAvailable)
+                {
+                    GameLoop?.Invoke();
+                }
             }
         }
 
