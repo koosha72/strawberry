@@ -45,7 +45,7 @@ public class GraphicsContext : Base, IGraphicsContext
 
         ActivateBlendMode("Default");
 
-        PixelTexture = CreateTexture(1, 1, new Color[] { Color.White });
+        PixelTexture = CreateTexture(1, 1, [Color.White]);
     }
 
     public void ActivateBlendMode(string name)
@@ -238,5 +238,15 @@ public class GraphicsContext : Base, IGraphicsContext
         }
 
         return result;
+    }
+
+
+    public void RestoreContext()
+    {
+        if (!PixelTexture.IsDisposed)
+        {
+            PixelTexture.Dispose();
+            PixelTexture = CreateTexture(1, 1, [Color.White]);
+        }
     }
 }
