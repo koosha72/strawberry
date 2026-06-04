@@ -10,67 +10,91 @@ public static class EventManager
     private static Dictionary<EventCallTime, PriorityQueue<IQueuedEvent, int>> callbackQueue = new();
     private static readonly ConcurrentDictionary<(Type target, Type arg), ConstructorInfo> _weakActionCtors = new();
 
+    // The single lock object for all state mutations and reads
+    private static readonly object _lock = new();
+
     public static SubscriptionToken Subscribe<T>(Action<T> callback, int priority = 0) where T : IStrawberryEvent
     {
+        // Create the weak action OUTSIDE the lock to minimize lock duration
+        var weakAction = CreateWeakAction(callback);
         var eventType = typeof(T);
         var token = new SubscriptionToken(eventType, isGlobal: true);
-        if (!globalEvents.ContainsKey(eventType))
-            globalEvents.Add(eventType, new List<StrawberryEventObject>());
 
-        globalEvents[eventType].Add(new()
+        lock (_lock)
         {
-            Callback = CreateWeakAction(callback),
-            Priority = priority,
-            Token = token
-        });
+            if (!globalEvents.TryGetValue(eventType, out var list))
+            {
+                list = new List<StrawberryEventObject>();
+                globalEvents[eventType] = list;
+            }
+
+            list.Add(new()
+            {
+                Callback = weakAction,
+                Priority = priority,
+                Token = token
+            });
+        }
 
         return token;
     }
 
     public static SubscriptionToken Subscribe<T>(object sender, Action<T> callback, int priority = 0) where T : IStrawberryEvent
     {
+        // Create the weak action OUTSIDE the lock
+        var weakAction = CreateWeakAction(callback);
         var eventType = typeof(T);
         var token = new SubscriptionToken(eventType, isGlobal: false, sender);
-        if (!instanceEvents.ContainsKey(eventType))
-            instanceEvents.Add(eventType, new Dictionary<WeakReference, List<StrawberryEventObject>>());
 
-        List<WeakReference> removeList = new();
-        bool added = false;
-        foreach (var (reference, callbacks) in instanceEvents[eventType])
+        lock (_lock)
         {
-            if (!reference.IsAlive)
+            if (!instanceEvents.TryGetValue(eventType, out var dict))
             {
-                removeList.Add(reference);
-                continue;
+                dict = new Dictionary<WeakReference, List<StrawberryEventObject>>();
+                instanceEvents[eventType] = dict;
             }
-            if (reference.Target == sender)
+
+            List<WeakReference> removeList = new();
+            bool added = false;
+            
+            foreach (var (reference, callbacks) in dict)
             {
-                instanceEvents[eventType][reference].Add(new()
+                if (!reference.IsAlive)
                 {
-                    Callback = CreateWeakAction(callback),
-                    Priority = priority,
-                    Token = token
-                });
-                added = true;
-                break;
+                    removeList.Add(reference);
+                    continue;
+                }
+                if (reference.Target == sender)
+                {
+                    callbacks.Add(new()
+                    {
+                        Callback = weakAction,
+                        Priority = priority,
+                        Token = token
+                    });
+                    added = true;
+                    break;
+                }
             }
-        }
 
-        foreach (var r in removeList)
-        {
-            instanceEvents[eventType].Remove(r);
-        }
-
-        if (!added)
-        {
-            var lst = new List<StrawberryEventObject>();
-            lst.Add(new()
+            foreach (var r in removeList)
             {
-                Callback = CreateWeakAction(callback),
-                Priority = priority,
-                Token = token
-            });
-            instanceEvents[eventType].Add(new WeakReference(sender), lst);
+                dict.Remove(r);
+            }
+
+            if (!added)
+            {
+                var lst = new List<StrawberryEventObject>
+                {
+                    new()
+                    {
+                        Callback = weakAction,
+                        Priority = priority,
+                        Token = token
+                    }
+                };
+                dict.Add(new WeakReference(sender), lst);
+            }
         }
 
         return token;
@@ -78,42 +102,45 @@ public static class EventManager
 
     public static void Unsubscribe(SubscriptionToken token)
     {
-        var eventType = token.EventType;
-
-        if (token.IsGlobal)
+        lock (_lock)
         {
-            if (globalEvents.TryGetValue(eventType, out var list))
-            {
-                list.RemoveAll(e => e.Token.Id == token.Id);
-                if (list.Count == 0)
-                    globalEvents.Remove(eventType);
-            }
-        }
-        else
-        {
-            if (instanceEvents.TryGetValue(eventType, out var dict))
-            {
-                List<WeakReference> toRemove = new();
+            var eventType = token.EventType;
 
-                foreach (var (weakRef, callbacks) in dict)
+            if (token.IsGlobal)
+            {
+                if (globalEvents.TryGetValue(eventType, out var list))
                 {
-                    if (!weakRef.IsAlive)
+                    list.RemoveAll(e => e.Token.Id == token.Id);
+                    if (list.Count == 0)
+                        globalEvents.Remove(eventType);
+                }
+            }
+            else
+            {
+                if (instanceEvents.TryGetValue(eventType, out var dict))
+                {
+                    List<WeakReference> toRemove = new();
+
+                    foreach (var (weakRef, callbacks) in dict)
                     {
-                        toRemove.Add(weakRef);
-                        continue;
+                        if (!weakRef.IsAlive)
+                        {
+                            toRemove.Add(weakRef);
+                            continue;
+                        }
+
+                        callbacks.RemoveAll(e => e.Token.Id == token.Id);
+
+                        if (callbacks.Count == 0)
+                            toRemove.Add(weakRef);
                     }
 
-                    callbacks.RemoveAll(e => e.Token.Id == token.Id);
+                    foreach (var r in toRemove)
+                        dict.Remove(r);
 
-                    if (callbacks.Count == 0)
-                        toRemove.Add(weakRef);
+                    if (dict.Count == 0)
+                        instanceEvents.Remove(eventType);
                 }
-
-                foreach (var r in toRemove)
-                    dict.Remove(r);
-
-                if (dict.Count == 0)
-                    instanceEvents.Remove(eventType);
             }
         }
     }
@@ -122,63 +149,96 @@ public static class EventManager
     {
         if (args == null) return;
 
-        var eventCallTime = args.EventCallTime;  // or T's default if not set
+        var eventCallTime = args.EventCallTime;
 
-        // Ensure queue exists
-        if (!callbackQueue.ContainsKey(eventCallTime))
-            callbackQueue[eventCallTime] = new PriorityQueue<IQueuedEvent, int>();
-
-        var queue = callbackQueue[eventCallTime];
-
-        // Global events
-        if (globalEvents.TryGetValue(typeof(T), out var globalList))
+        lock (_lock)
         {
-            foreach (var obj in globalList)
+            if (!callbackQueue.TryGetValue(eventCallTime, out var queue))
             {
-                queue.Enqueue(
-                    new QueuedEvent<T>(obj.Callback, args, obj.Priority),
-                    obj.Priority
-                );
+                queue = new PriorityQueue<IQueuedEvent, int>();
+                callbackQueue[eventCallTime] = queue;
             }
-        }
 
-        // Instance events
-        if (instanceEvents.TryGetValue(typeof(T), out var instanceDict))
-        {
-            List<WeakReference> removeList = new();
-
-            foreach (var (reference, callbacks) in instanceDict)
+            // Global events
+            if (globalEvents.TryGetValue(typeof(T), out var globalList))
             {
-                if (!reference.IsAlive)
+                // Prune dead callbacks while we are iterating
+                globalList.RemoveAll(obj => !obj.Callback.IsAlive);
+
+                foreach (var obj in globalList)
                 {
-                    removeList.Add(reference);
-                    continue;
+                    queue.Enqueue(
+                        new QueuedEvent<T>(obj.Callback, args, obj.Priority),
+                        obj.Priority
+                    );
                 }
 
-                if (reference.Target == sender)
+                if (globalList.Count == 0)
+                    globalEvents.Remove(typeof(T));
+            }
+
+            // Instance events
+            if (instanceEvents.TryGetValue(typeof(T), out var instanceDict))
+            {
+                List<WeakReference> removeList = new();
+
+                foreach (var (reference, callbacks) in instanceDict)
                 {
-                    foreach (var obj in callbacks)
+                    if (!reference.IsAlive)
                     {
-                        queue.Enqueue(
-                            new QueuedEvent<T>(obj.Callback, args, obj.Priority),
-                            obj.Priority
-                        );
+                        removeList.Add(reference);
+                        continue;
+                    }
+
+                    if (reference.Target == sender)
+                    {
+                        // Prune dead callbacks
+                        callbacks.RemoveAll(obj => !obj.Callback.IsAlive);
+
+                        foreach (var obj in callbacks)
+                        {
+                            queue.Enqueue(
+                                new QueuedEvent<T>(obj.Callback, args, obj.Priority),
+                                obj.Priority
+                            );
+                        }
+
+                        if (callbacks.Count == 0)
+                            removeList.Add(reference);
                     }
                 }
-            }
 
-            foreach (var r in removeList)
-                instanceDict.Remove(r);
+                foreach (var r in removeList)
+                    instanceDict.Remove(r);
+
+                if (instanceDict.Count == 0)
+                    instanceEvents.Remove(typeof(T));
+            }
         }
     }
 
     // === EXECUTE ===
     public static void Execute(EventCallTime eventCallTime)
     {
-        if (!callbackQueue.TryGetValue(eventCallTime, out var queue))
-            return;
+        List<IQueuedEvent> eventsToExecute;
 
-        while (queue.TryDequeue(out var queuedEvent, out _))
+        lock (_lock)
+        {
+            if (!callbackQueue.TryGetValue(eventCallTime, out var queue))
+                return;
+
+            // Dequeue everything into a local list quickly, so we release the lock
+            // before actually invoking the events. This prevents deadlocks if an
+            // event handler calls Subscribe/Unsubscribe/Invoke.
+            eventsToExecute = new List<IQueuedEvent>(queue.Count);
+            while (queue.TryDequeue(out var queuedEvent, out _))
+            {
+                eventsToExecute.Add(queuedEvent);
+            }
+        }
+
+        // Execute outside the lock!
+        foreach (var queuedEvent in eventsToExecute)
         {
             queuedEvent.Invoke();
         }
@@ -192,19 +252,14 @@ public static class EventManager
         var senderType = action.Target.GetType();
         var key = (senderType, typeof(T));
 
-        // Get or create the cached ConstructorInfo
         var ctor = _weakActionCtors.GetOrAdd(key, static k =>
         {
-            // 1. Construct the generic type (only happens once per unique target/arg pair)
             var weakActionType = typeof(WeakAction<,>).MakeGenericType(k.target, k.arg);
-
-            // 2. Find the constructor that takes Action<T>
             var actionType = typeof(Action<>).MakeGenericType(k.arg);
             return weakActionType.GetConstructor(new[] { actionType })
                 ?? throw new InvalidOperationException($"Constructor not found for {weakActionType}");
         });
 
-        // 3. Invoke the cached constructor directly
         return (IWeakAction)ctor.Invoke(new object[] { action })!;
     }
 }
