@@ -90,14 +90,13 @@ namespace Strawberry.Components
             this.Layer = layer;
         }
 
-        public void Begin()
+        public override void OnBegin()
         {
             if (Transform == null)
                 Transform = Owner.GetComponent<TransformComponent>();
-            Owner.RegisterEvent<Action>("AnimationEnd");
         }
 
-        public void ComponentAdded(BaseComponent component)
+        public override void OnComponentAdded(BaseComponent component)
         {
             if (Transform == null)
                 Transform = Owner.GetComponent<TransformComponent>();
@@ -124,7 +123,6 @@ namespace Strawberry.Components
                         imageIndex = Sprite.ImageCount - 1;
                     }
 
-                    Owner.InvokeEvents("AnimationEnd");
                     EventManager.Invoke<AnimationEndEvent>(this, new AnimationEndEvent()
                     {
                         Sprite = this

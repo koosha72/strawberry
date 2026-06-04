@@ -13,10 +13,6 @@ namespace Strawberry.Components
 
         public float Direction { get; set; }
 
-        public void Begin()
-        {
-        }
-
         public override void OnUpdate()
         {
             if (Transform != null)

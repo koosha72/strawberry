@@ -214,7 +214,7 @@ namespace Strawberry.Core
         /// </summary>
         /// <param name="component">The component instance to add.</param>
         /// <param name="init">If set to <c>true</c>, the component is initialized immediately.</param>
-        internal void AddComponent(BaseComponent component, bool init)
+        /*internal void AddComponent(BaseComponent component, bool init)
         {
             Components.Add(component);
             component.Owner = this;
@@ -228,7 +228,7 @@ namespace Strawberry.Core
                     if (begin.ReturnType == typeof(void))
                         begin.Invoke(component, null);
                 }
-                InvokeEvents("Enabled");
+                //InvokeEvents("Enabled");
             }
 
             MethodInfo loaded = component.GetType().GetMethod("Loaded", BindingFlags.Instance | BindingFlags.Public,
@@ -238,7 +238,7 @@ namespace Strawberry.Core
                 if (loaded.ReturnType == typeof(void))
                     loaded.Invoke(component, null);
             }
-        }
+        }*/
 
         /// <summary>
         /// Creates and adds a new component of type <typeparamref name="T"/> to the entity.
@@ -262,10 +262,13 @@ namespace Strawberry.Core
             Components.Add(component);
             component.Owner = this;
             component.Initialize(this);
-            RegisterEventsForComponent(component);
-            InvokeEvent(component, "Begin");
-            InvokeEvent(component, "Enabled");
-            InvokeEvents("ComponentAdded", component);
+            component.OnBegin();
+            component.OnEnabled();
+            foreach(var cmp in Components)
+            {
+                cmp.OnComponentAdded(component);
+            }
+
 
             return component;
         }
@@ -364,9 +367,8 @@ namespace Strawberry.Core
             Type t = typeof(T);
             T c = (T)(from cmp in Components where cmp.GetType() == t select cmp).First();
             //RemoveEvents(c);
-            InvokeEvent(c, "Disabled");
-            InvokeEvent(c, "Finished");
-            UnRegisterEventsForComponent(c);
+            c.OnDisabled();
+            c.OnFinished();
             Components.Remove(c);
             c.Destroy();
         }
@@ -380,9 +382,8 @@ namespace Strawberry.Core
             Type t = component.GetType();
             BaseComponent c = (BaseComponent)(from cmp in Components where cmp.GetType() == t select cmp).First();
             //RemoveEvents(c);
-            InvokeEvent(c, "Disabled");
-            InvokeEvent(c, "Finished");
-            UnRegisterEventsForComponent(c);
+            c.OnDisabled();
+            c.OnFinished();
             Components.Remove(c);
             c.Destroy();
         }
@@ -395,9 +396,8 @@ namespace Strawberry.Core
             for (int i = 0; i < Components.Count; i++)
             {
                 var c = Components[i];
-                InvokeEvent(c, "Disabled");
-                InvokeEvent(c, "Finished");
-                UnRegisterEventsForComponent(c);
+                c.OnDisabled();
+                c.OnFinished();
                 c.Destroy();
             }
             Components.Clear();
@@ -453,58 +453,6 @@ namespace Strawberry.Core
             return tags.Contains(tag);
         }
 
-        /// <summary>
-        /// Registers a named event type for entity components.
-        /// </summary>
-        /// <typeparam name="T">The delegate type for the event.</typeparam>
-        /// <param name="name">The event name.</param>
-        public void RegisterEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(string name) where T : class
-        {
-            Type delegateType = typeof(T);
-            if (delegateType.IsSubclassOf(typeof(Delegate)))
-            {
-                if (!registeredEvents.ContainsKey(name))
-                {
-                    MethodInfo signature = delegateType.GetMethod("Invoke");
-                    registeredEvents.Add(name, new EventHolder() { DelegateType = delegateType, Signature = signature });
-                }
-            }
-            else
-                throw new NotSupportedException("T should be delegate");
-            RegisterEventsForComponents();
-        }
-
-        /// <summary>
-        /// Invokes the named event on all registered component listeners.
-        /// </summary>
-        /// <param name="name">The event name.</param>
-        /// <param name="args">The event arguments.</param>
-        public void InvokeEvents(string name, params object[] args)
-        {
-            foreach (var ev in componentEvents)
-            {
-                if (ev.Value.ContainsKey(name))
-                    ev.Value[name].Method.Invoke(ev.Key, args);
-
-            }
-        }
-
-        /// <summary>
-        /// Invokes a named event on the specified component.
-        /// </summary>
-        /// <param name="component">The component that should receive the event.</param>
-        /// <param name="name">The event name.</param>
-        /// <param name="args">The event arguments.</param>
-        public void InvokeEvent(BaseComponent component, string name, params object[] args)
-        {
-            if (componentEvents.ContainsKey(component))
-            {
-                var ev = componentEvents[component];
-                if (ev.ContainsKey(name))
-                    ev[name].Method.Invoke(component, args);
-            }
-        }
-
         #endregion
 
         #region On...
@@ -515,18 +463,16 @@ namespace Strawberry.Core
         /// <param name="owner">The owning scene.</param>
         public virtual void OnInitialize(string id, Scene owner)
         {
-            RegisterEvent<Action>("Begin");
-            RegisterEvent<Action>("Enabled");
-            RegisterEvent<Action>("Disabled");
-            RegisterEvent<Action>("Finished");
-            RegisterEvent<Action<BaseComponent>>("ComponentAdded");
             //RegisterEvent<Action<SpriteRenderer>>("EditorRender");
 
             foreach (BaseComponent c in Components)
             {
-                InvokeEvent(c, "Begin");
-                InvokeEvent(c, "Enabled");
-                InvokeEvents("ComponentAdded", c);
+                c.OnBegin();
+                c.OnEnabled();
+                foreach (BaseComponent c2 in Components)
+                {
+                    c2.OnComponentAdded(c);
+                }
             }
         }
 
@@ -535,11 +481,9 @@ namespace Strawberry.Core
         /// </summary>
         public void OnDestroy()
         {
-            InvokeEvents("Disabled");
-            InvokeEvents("Finished");
-
             for (int i = 0; i < Components.Count; i++)
             {
+                Components[i].OnDisabled();
                 Components[i].OnFinished();
             }
             foreach (BaseComponent c in Components)
@@ -678,56 +622,6 @@ namespace Strawberry.Core
                     child.OnRender();
                 }
             }
-        }
-        #endregion
-
-        #region private
-
-        void RegisterEventsForComponents()
-        {
-            foreach (BaseComponent component in Components)
-                RegisterEventsForComponent(component);
-        }
-
-        void RegisterEventsForComponent(BaseComponent component)
-        {
-            Type t = component.GetType();
-            foreach (KeyValuePair<string, EventHolder> ev in registeredEvents)
-            {
-                MethodInfo[] methods = GetMethodInfo(t, ev.Key);
-
-                for (int i = 0; i < methods.Length; i++)
-                {
-                    object del = Delegate.CreateDelegate(ev.Value.DelegateType, component, methods[i], false);
-                    if (del != null)
-                    {
-                        if (!componentEvents.ContainsKey(component))
-                            componentEvents.Add(component, new Dictionary<string, Delegate>());
-                        else
-                        {
-                            if (componentEvents[component].ContainsKey(ev.Key))
-                                break;
-                        }
-                        componentEvents[component].Add(ev.Key, del as Delegate);
-                        break;
-                    }
-                }
-            }
-        }
-
-        void UnRegisterEventsForComponent(BaseComponent component)
-        {
-            componentEvents.Remove(component);
-        }
-
-        MethodInfo[] GetMethodInfo([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] Type t, string methodName)
-        {
-
-            MethodInfo[] method = (from m in t.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic)
-                                   where m.Name == methodName
-                                   select m).ToArray();
-
-            return method;
         }
         #endregion
     }

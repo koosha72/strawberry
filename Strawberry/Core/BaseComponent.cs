@@ -35,6 +35,27 @@
         {
         }
 
+        public virtual void OnBegin()
+        {
+            
+        }
+
+        public virtual void OnEnabled()
+        {
+            
+        }
+
+
+        public virtual void OnComponentAdded(BaseComponent component)
+        {
+            
+        }
+
+        public virtual void OnDisabled()
+        {
+            
+        }
+
         /// <summary>
         /// Called when the component or its owning entity is finishing its lifecycle. 
         /// Override to perform cleanup or final actions.

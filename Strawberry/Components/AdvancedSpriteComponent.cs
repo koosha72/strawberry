@@ -3,11 +3,17 @@ using Strawberry.Graphics.Layers;
 using Strawberry.Graphics;
 using Strawberry.Serialization;
 using Strawberry.Math;
+using Strawberry.EventSystem;
 
 namespace Strawberry.Components
 {
     public class AdvancedSpriteComponent : BaseComponent
     {
+        public struct AdvancedAnimationEndEvent : IStrawberryEvent
+        {
+            public AdvancedSpriteComponent Sprite;
+        }
+
         private class AnimationInfo
         {
             public Sprite Sprite;
@@ -73,7 +79,6 @@ namespace Strawberry.Components
             if (!isInitialized)
             {
                 Transform = Owner.GetComponent<TransformComponent>();
-                Owner.RegisterEvent<Action>("AnimationEnd");
                 isInitialized = true;
             }
         }
@@ -97,7 +102,10 @@ namespace Strawberry.Components
                 else
                 {
                     currentAnimation.ImageIndex = currentAnimation.ImageCount - 1;
-                    Owner.InvokeEvents("AnimationEnd");
+                    EventManager.Invoke<AdvancedAnimationEndEvent>(this, new AdvancedAnimationEndEvent()
+                    {
+                        Sprite = this
+                    });
                 }
             }
 
