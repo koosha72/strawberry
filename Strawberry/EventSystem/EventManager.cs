@@ -1,3 +1,6 @@
+using System.Collections.Concurrent;
+using System.Reflection;
+
 namespace Strawberry.EventSystem;
 
 public static class EventManager
@@ -5,6 +8,8 @@ public static class EventManager
     private static Dictionary<Type, List<StrawberryEventObject>> globalEvents = new();
     private static Dictionary<Type, Dictionary<WeakReference, List<StrawberryEventObject>>> instanceEvents = new();
     private static Dictionary<EventCallTime, PriorityQueue<IQueuedEvent, int>> callbackQueue = new();
+    private static readonly ConcurrentDictionary<(Type target, Type arg), ConstructorInfo> _weakActionCtors = new();
+
     public static SubscriptionToken Subscribe<T>(Action<T> callback, int priority = 0) where T : IStrawberryEvent
     {
         var eventType = typeof(T);
@@ -14,7 +19,7 @@ public static class EventManager
 
         globalEvents[eventType].Add(new()
         {
-            Callback = new WeakAction<T>(callback),
+            Callback = CreateWeakAction(callback),
             Priority = priority,
             Token = token
         });
@@ -42,7 +47,7 @@ public static class EventManager
             {
                 instanceEvents[eventType][reference].Add(new()
                 {
-                    Callback = new WeakAction<T>(callback),
+                    Callback = CreateWeakAction(callback),
                     Priority = priority,
                     Token = token
                 });
@@ -61,7 +66,7 @@ public static class EventManager
             var lst = new List<StrawberryEventObject>();
             lst.Add(new()
             {
-                Callback = new WeakAction<T>(callback),
+                Callback = CreateWeakAction(callback),
                 Priority = priority,
                 Token = token
             });
@@ -131,7 +136,7 @@ public static class EventManager
             foreach (var obj in globalList)
             {
                 queue.Enqueue(
-                    new QueuedEvent<T>((WeakAction<T>)obj.Callback, args, obj.Priority),
+                    new QueuedEvent<T>(obj.Callback, args, obj.Priority),
                     obj.Priority
                 );
             }
@@ -155,7 +160,7 @@ public static class EventManager
                     foreach (var obj in callbacks)
                     {
                         queue.Enqueue(
-                            new QueuedEvent<T>((WeakAction<T>)obj.Callback, args, obj.Priority),
+                            new QueuedEvent<T>(obj.Callback, args, obj.Priority),
                             obj.Priority
                         );
                     }
@@ -177,5 +182,29 @@ public static class EventManager
         {
             queuedEvent.Invoke();
         }
+    }
+
+    private static IWeakAction CreateWeakAction<T>(Action<T> action) where T : IStrawberryEvent
+    {
+        if (action.Target == null)
+            throw new Exception("Static methods are not supported");
+
+        var senderType = action.Target.GetType();
+        var key = (senderType, typeof(T));
+
+        // Get or create the cached ConstructorInfo
+        var ctor = _weakActionCtors.GetOrAdd(key, static k =>
+        {
+            // 1. Construct the generic type (only happens once per unique target/arg pair)
+            var weakActionType = typeof(WeakAction<,>).MakeGenericType(k.target, k.arg);
+
+            // 2. Find the constructor that takes Action<T>
+            var actionType = typeof(Action<>).MakeGenericType(k.arg);
+            return weakActionType.GetConstructor(new[] { actionType })
+                ?? throw new InvalidOperationException($"Constructor not found for {weakActionType}");
+        });
+
+        // 3. Invoke the cached constructor directly
+        return (IWeakAction)ctor.Invoke(new object[] { action })!;
     }
 }

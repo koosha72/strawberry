@@ -1,10 +1,13 @@
+using System.Diagnostics;
+
 namespace Strawberry.EventSystem;
 
 public interface IWeakAction
 {
+    public void Invoke(object arg);
 }
 
-public class WeakAction<T> : IWeakAction
+public class WeakAction<TTarget, T> : IWeakAction
 {
     private readonly WeakReference<object?> _weakTarget;
     private readonly Action<T> _invokeAction;   // This is the final callable action
@@ -29,18 +32,18 @@ public class WeakAction<T> : IWeakAction
 
             // Create open delegate safely
             var openDelegate = Delegate.CreateDelegate(
-                typeof(Action<object?, T>),
+                typeof(Action<TTarget, T>),
                 null,
                 method,
                 false);   // throwOnBindFailure = false
 
-            if (openDelegate is Action<object?, T> openAction)
+            if (openDelegate is Action<TTarget, T> openAction)
             {
                 _invokeAction = arg =>
                 {
                     if (_weakTarget.TryGetTarget(out var target))
                     {
-                        openAction(target, arg);
+                        openAction((TTarget)target, arg);
                     }
                 };
             }
@@ -51,6 +54,7 @@ public class WeakAction<T> : IWeakAction
                 {
                     if (_weakTarget.TryGetTarget(out var target))
                     {
+                        Debug.WriteLine("Reflection call!");
                         method.Invoke(target, new object?[] { arg });
                     }
                 };
@@ -60,8 +64,8 @@ public class WeakAction<T> : IWeakAction
 
     public bool IsAlive => _weakTarget.TryGetTarget(out _);
 
-    public void Invoke(T arg)
+    public void Invoke(object arg)
     {
-        _invokeAction(arg);
+        _invokeAction((T)arg);
     }
 }

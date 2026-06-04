@@ -8,11 +8,11 @@ internal interface IQueuedEvent
 
 internal class QueuedEvent<T> : IQueuedEvent where T : IStrawberryEvent
 {
-    public WeakAction<T> Callback { get; }
+    public IWeakAction Callback { get; }
     public T Args { get; }
     public int Priority { get; }
 
-    public QueuedEvent(WeakAction<T> callback, T args, int priority)
+    public QueuedEvent(IWeakAction callback, T args, int priority)
     {
         Callback = callback;
         Args = args;
