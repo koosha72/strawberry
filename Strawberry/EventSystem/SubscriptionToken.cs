@@ -1,10 +1,14 @@
 namespace Strawberry.EventSystem;
+
+/// <summary>
+/// A token that can be used to unsubscribe from an event.
+/// </summary>
 public readonly record struct SubscriptionToken
 {
     internal readonly Guid Id;
     internal readonly Type EventType;
     internal readonly bool IsGlobal;
-    internal readonly WeakReference? Target; // for instance events
+    internal readonly WeakReference? Target;
 
     internal SubscriptionToken(Type eventType, bool isGlobal, object? target = null)
     {

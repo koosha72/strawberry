@@ -8,13 +8,21 @@ namespace Strawberry.Sound
         /// The SoundManager using which the buffer is created.
         /// </summary>
         public abstract ISoundManager SoundManager { get; }
-
+        /// <summary>
+        /// The bits per sample of the audio
+        /// </summary>
         public abstract int BitsPerSample { get; }
-
+        /// <summary>
+        /// The sample rate of the audio
+        /// </summary>
         public abstract int SampleRate { get; }
-
+        /// <summary>
+        /// The number of channels in the audio. 1 for mono, 2 for stereo
+        /// </summary>
         public abstract int Channels { get; }
-
+        /// <summary>
+        /// The time in seconds of the audio
+        /// </summary>
         public abstract float Seconds { get; }
 
         /// <summary>

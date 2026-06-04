@@ -3,20 +3,19 @@ using System.Reflection;
 
 namespace Strawberry.EventSystem;
 
-public interface IWeakAction
+internal interface IWeakAction
 {
     public void Invoke(object arg);
     public bool IsAlive { get; }
 }
 
-public class WeakAction<TTarget, T> : IWeakAction
+internal class WeakAction<TTarget, T> : IWeakAction
 {
     private readonly WeakReference<object?> _weakTarget;
-    private readonly Action<T> _invokeAction;   // This is the final callable action
+    private readonly Action<T> _invokeAction;
 
-    // Reflection fallback fields
     private readonly MethodInfo? _method;
-    private readonly object?[]? _argBuffer;     // Cached array to prevent allocations!
+    private readonly object?[]? _argBuffer;
 
     public WeakAction(Action<T> originalAction)
     {
@@ -35,7 +34,7 @@ public class WeakAction<TTarget, T> : IWeakAction
             // Instance method - create a wrapper that does the weak check
             var method = originalAction.Method;
 
-            // Create open delegate safely
+            // Create open delegate
             var openDelegate = Delegate.CreateDelegate(
                 typeof(Action<TTarget, T>),
                 null,
@@ -55,8 +54,7 @@ public class WeakAction<TTarget, T> : IWeakAction
             }
             else
             {
-                // Fallback (should rarely happen)
-                // Cache the MethodInfo and allocate the argument buffer ONCE
+                // Fallback to reflection
                 _method = method;
                 _argBuffer = new object?[1];
 
@@ -64,9 +62,9 @@ public class WeakAction<TTarget, T> : IWeakAction
                 {
                     if (_weakTarget.TryGetTarget(out var target))
                     {
-                        _argBuffer[0] = arg;                         // Reuse buffer
-                        _method.Invoke(target, _argBuffer);          // Invoke
-                        _argBuffer[0] = null;                        // Clear to allow GC of 'arg' if it's a reference type
+                        _argBuffer[0] = arg;
+                        _method.Invoke(target, _argBuffer);
+                        _argBuffer[0] = null;
                         Console.WriteLine("Reflection Called!");
                     }
                 };

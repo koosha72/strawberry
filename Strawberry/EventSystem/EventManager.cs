@@ -10,9 +10,15 @@ public static class EventManager
     private static Dictionary<EventCallTime, PriorityQueue<IQueuedEvent, int>> callbackQueue = new();
     private static readonly ConcurrentDictionary<(Type target, Type arg), ConstructorInfo> _weakActionCtors = new();
 
-    // The single lock object for all state mutations and reads
     private static readonly object _lock = new();
 
+    /// <summary>
+    /// Subscribe to an event globally.
+    /// </summary>
+    /// <typeparam name="T">Event type</typeparam>
+    /// <param name="callback">The callback to be called when the event is fired.</param>
+    /// <param name="priority">The priority of the callback. Higher priority means it will be called first. Default is 0.</param>
+    /// <returns>A token used to unsubscribe from the event.</returns>
     public static SubscriptionToken Subscribe<T>(Action<T> callback, int priority = 0) where T : IStrawberryEvent
     {
         // Create the weak action OUTSIDE the lock to minimize lock duration
@@ -38,7 +44,14 @@ public static class EventManager
 
         return token;
     }
-
+    /// <summary>
+    /// Subscribes to an event for a specific instance of the object.
+    /// </summary>
+    /// <typeparam name="T">Event type</typeparam>
+    /// <param name="sender">The object to subscribe to (source)</param>
+    /// <param name="callback">The callback to invoke when the event is raised</param>
+    /// <param name="priority">The priority of the callback.  Higher priority means it will be called first. Default is 0.</param>
+    /// <returns>A token used to unsubscribe from the event.</returns>
     public static SubscriptionToken Subscribe<T>(object sender, Action<T> callback, int priority = 0) where T : IStrawberryEvent
     {
         // Create the weak action OUTSIDE the lock
@@ -56,7 +69,7 @@ public static class EventManager
 
             List<WeakReference> removeList = new();
             bool added = false;
-            
+
             foreach (var (reference, callbacks) in dict)
             {
                 if (!reference.IsAlive)
@@ -99,7 +112,10 @@ public static class EventManager
 
         return token;
     }
-
+    /// <summary>
+    /// Unsubscribe from an event by token
+    /// </summary>
+    /// <param name="token">The token returned from the Subscribe method</param>
     public static void Unsubscribe(SubscriptionToken token)
     {
         lock (_lock)
@@ -145,6 +161,13 @@ public static class EventManager
         }
     }
 
+    /// <summary>
+    /// Invokes an event. The method is not invoked instantly but rather queued for the next frame.
+    /// The invoke time is determined by the <see cref="IStrawberryEvent.EventCallTime"/> property of the event object.
+    /// </summary>
+    /// <typeparam name="T">Event type</typeparam>
+    /// <param name="sender">The object invoking the event</param>
+    /// <param name="args">The event object</param>
     public static void Invoke<T>(object sender, T args) where T : IStrawberryEvent
     {
         if (args == null) return;
@@ -162,7 +185,6 @@ public static class EventManager
             // Global events
             if (globalEvents.TryGetValue(typeof(T), out var globalList))
             {
-                // Prune dead callbacks while we are iterating
                 globalList.RemoveAll(obj => !obj.Callback.IsAlive);
 
                 foreach (var obj in globalList)
@@ -192,7 +214,6 @@ public static class EventManager
 
                     if (reference.Target == sender)
                     {
-                        // Prune dead callbacks
                         callbacks.RemoveAll(obj => !obj.Callback.IsAlive);
 
                         foreach (var obj in callbacks)
@@ -217,7 +238,10 @@ public static class EventManager
         }
     }
 
-    // === EXECUTE ===
+    /// <summary>
+    /// This is called by Game class
+    /// </summary>
+    /// <param name="eventCallTime">The event group to execute</param>
     public static void Execute(EventCallTime eventCallTime)
     {
         List<IQueuedEvent> eventsToExecute;
