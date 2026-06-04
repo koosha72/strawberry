@@ -1,4 +1,5 @@
 ﻿using Strawberry.Core;
+using Strawberry.EventSystem;
 
 
 namespace Strawberry
@@ -76,6 +77,7 @@ namespace Strawberry
                 GameContext.OnFixedUpdate();
                 frameInfoProvider.FixedUpdate();
             }
+            EventManager.Execute(EventCallTime.OnFixedUpdate);
         }
         /// <summary>
         /// Calls the OnUpdate method of the game context if OnBeginUpdate returns true and OnEndUpdate is called after the update method has been called
@@ -85,8 +87,11 @@ namespace Strawberry
         {
             if (GameContext.OnBeginUpdate())
             {
+                EventManager.Execute(EventCallTime.OnBeginUpdate);
                 GameContext.OnUpdate();
+                EventManager.Execute(EventCallTime.OnUpdate);
                 GameContext.OnEndUpdate();
+                EventManager.Execute(EventCallTime.OnEndUpdate);
                 launcher.InputManager?.Update();
             }
         }
@@ -98,8 +103,11 @@ namespace Strawberry
         {
             if (GameContext.OnBeginRender())
             {
+                EventManager.Execute(EventCallTime.OnBeginRender);
                 GameContext.OnRender();
+                EventManager.Execute(EventCallTime.OnRender);
                 GameContext.OnEndRender();
+                EventManager.Execute(EventCallTime.OnEndRender);
             }
         }
 

@@ -3,9 +3,15 @@ using Strawberry.Graphics.Layers;
 using Strawberry.Graphics;
 using Strawberry.Serialization;
 using Strawberry.Math;
+using Strawberry.EventSystem;
 
 namespace Strawberry.Components
 {
+    public struct AnimationEndEvent : IStrawberryEvent
+    {
+        public SpriteComponent Sprite;
+    }
+
     public class SpriteComponent : BaseComponent
     {
         float imageIndex = 0f;
@@ -119,6 +125,10 @@ namespace Strawberry.Components
                     }
 
                     Owner.InvokeEvents("AnimationEnd");
+                    EventManager.Invoke<AnimationEndEvent>(this, new AnimationEndEvent()
+                    {
+                        Sprite = this
+                    });
                 }
 
                 realImageIndex = (int)(imageIndex);
