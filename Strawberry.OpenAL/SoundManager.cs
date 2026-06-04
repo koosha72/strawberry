@@ -115,12 +115,9 @@ namespace Strawberry.OpenAL
                 {
                     if (!sources[i].IsPlaying() && !sources[i].IsPaused())
                     {
-                        if (!IsEnabled)
-                        {
-                            sources[i].Dispose();
-                            sources.RemoveAt(i);
-                            i--;
-                        }
+                        sources[i].Dispose();
+                        sources.RemoveAt(i);
+                        i--;
                     }
                 }
 
@@ -193,6 +190,7 @@ namespace Strawberry.OpenAL
                 source = sources[ind].SourceInd;
                 if (sources[ind] is not Voice)
                 {
+                    sources[ind].MarkRecycled();
                     sources[ind] = new Voice(buffer, source);
                 }
                 sources[ind].SetBuffer(buffer);
@@ -225,6 +223,7 @@ namespace Strawberry.OpenAL
                 source = sources[ind].SourceInd;
                 if (sources[ind] is not Voice3D)
                 {
+                    sources[ind].MarkRecycled();
                     sources[ind] = new Voice3D(buffer, settings, source);
                 }
                 sources[ind].SetBuffer(buffer);

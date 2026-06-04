@@ -43,6 +43,9 @@ namespace Strawberry.OpenAL
         SoundBuffer buffer;
         public override Strawberry.Sound.SoundBuffer Buffer { get { return buffer; } }
 
+        private bool isRecycled = false;
+        public void MarkRecycled() { isRecycled = true; }
+
         public int SourceInd { get; set; }
 
         public override float CurrentPlayTime
@@ -133,14 +136,17 @@ namespace Strawberry.OpenAL
         {
             if (AL.IsSource(SourceInd))
             {
-                AL.SourceStop(SourceInd);
-                AL.DeleteSource(SourceInd);
+                if (!isRecycled)
+                {
+                    AL.SourceStop(SourceInd);
+                    AL.DeleteSource(SourceInd);
+                }
                 SourceInd = 0;
                 buffer = null;
             }
             base.CleanUnmanaged();
         }
-        
+
         public void SetBuffer(SoundBuffer soundBuffer)
         {
             buffer = soundBuffer as SoundBuffer;

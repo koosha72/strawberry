@@ -7,6 +7,9 @@ public interface IVoice : IDisposable
     int SourceInd { get; set; }
     Strawberry.Sound.SoundBuffer Buffer { get; }
 
+    public void MarkRecycled();
+
+
     void SetBuffer(SoundBuffer soundBuffer);
 
     public void Pause();
