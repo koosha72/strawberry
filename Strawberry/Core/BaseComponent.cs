@@ -45,7 +45,10 @@
             
         }
 
-
+        /// <summary>
+        /// Called when a new component is added to the owning entity.
+        /// </summary>
+        /// <param name="component">The newly added component.</param>
         public virtual void OnComponentAdded(BaseComponent component)
         {
             
