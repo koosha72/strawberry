@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://sb-engine.ir/images/sb-icon.png" alt="StrawBerry Game Engine"/>
+  <img src="https://docs.sb-engine.ir/sb-icon.png" alt="StrawBerry Game Engine"/>
 </p>
 <h1 align="center" text-decoration="none">
 موتر بازی سازی توت فرنگی
@@ -23,9 +23,9 @@
 پروژه راه اندازی به پروژه اصلی بازی وابسته است و آن را اجرا می کند.
 برای مثال کد راه اندازی سکوی رایانه رومیزی (Desktop) به شرح زیر می باشد:
 ```csharp
-using Strawberry.Test;
+using MyGame;
 
-namespace Strawberry.Desktop.Test
+namespace MyGame.Desktop
 {
     internal static class Program
     {
@@ -35,9 +35,9 @@ namespace Strawberry.Desktop.Test
         [STAThread]
         static void Main()
         {
-            MyGameContext stdGameContext = new MyGameContext();
-            Game game = new Game();
-            game.Run(stdGameContext, new OpenGL.GameLauncher(true));
+            MyGameContext gameContext = new MyGameContext();
+            Strawberry.Game game = new Strawberry.Game();
+            game.Run(gameContext, new Strawberry.Desktop.GameLauncher(true));
         }
     }
 }
@@ -45,19 +45,19 @@ namespace Strawberry.Desktop.Test
 در کد بالا MyGameContext زمینه اصلی بازی است که از پروژه چند سکویی فراخوانی شده است. بازی با استفاده از یک GameLauncher مخصوص سکوی رومیزی (Desktop) اجرا می شود.
 راه اندازی و اجرا در سایر سکو ها کمی متفاوت است که می توانید در راهنمای توت فرنگی مشاهده نمایید.
 
-[راه اندازی و اجرای بازی](https://docs.sb-engine.ir/manual/setup)
+[راه اندازی و اجرای بازی](https://docs.sb-engine.ir/docs/v.2026.1.1/fa/Documentation/Getting-Started)
 
 ## راهنما
 راهنمای موتور توت فرنگی دو بخش دارد:
 ### کتابچه راهنما
 این راهنما به صورت آموزشی نگاشته شده و شما را قدم به قدم در انجام کار های مختلف با موتور راهنمایی می نماید.
 
-[کتابچه راهنما](https://docs.sb-engine.ir/manual/)
+[کتابچه راهنما](https://docs.sb-engine.ir/docs/v.2026.1.1/fa/Documentation/)
 
 ### فهرست مستندات
 این بخش به طور کامل تمام ساختارها و توابع موتور را لیست نموده و شرح مختصری از کارکرد هر کدام داده است.
 
-[فهرست مستندات](https://docs.sb-engine.ir/reference/)
+[فهرست مستندات](https://docs.sb-engine.ir/docs/v.2026.1.1/fa/API/)
 
 ## حمایت
 
@@ -65,4 +65,4 @@ namespace Strawberry.Desktop.Test
 یکی از کمک های بزرگی که می توانید به ما در امر ساخت این موتور انجام دهید، استفاده از موتور و گزارش خطا ها و یا حتی پیشنهاد تغییرات در ساختار آن می باشد.
 
 با استفاده از لینک زیر ما را در توسعۀ هر چه بهتر توت فرنگی یاری نمایید
-[گزارش خطا و پیشنها](https://github.com/koosha72/strawberry/issues)
+[گزارش خطا و پیشنها](https://git.sb-engine.ir/koosha_ab/strawberry-main/issues)

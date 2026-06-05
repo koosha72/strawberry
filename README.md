@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://sb-engine.ir/images/sb-icon.png" alt="StrawBerry Game Engine"/>
+  <img src="https://docs.sb-engine.ir/sb-icon.png" alt="StrawBerry Game Engine"/>
 </p>
 <h1 align="center" text-decoration="none">
 Strawberry Game Engine
@@ -24,9 +24,9 @@ The launcher project depends on the main game project and runs it.
 
 For example, the desktop platform launcher code is as follows:
 ```csharp
-using Strawberry.Test;
+using MyGame;
 
-namespace Strawberry.Desktop.Test
+namespace MyGame.Desktop
 {
     internal static class Program
     {
@@ -36,9 +36,9 @@ namespace Strawberry.Desktop.Test
         [STAThread]
         static void Main()
         {
-            MyGameContext stdGameContext = new MyGameContext();
-            Game game = new Game();
-            game.Run(stdGameContext, new OpenGL.GameLauncher(true));
+            MyGameContext gameContext = new MyGameContext();
+            Strawberry.Game game = new Strawberry.Game();
+            game.Run(gameContext, new Strawberry.Desktop.GameLauncher(true));
         }
     }
 }
@@ -46,19 +46,19 @@ namespace Strawberry.Desktop.Test
 In the code above, `MyGameContext` is the main game context called from the multi-platform project. The game is executed using a `GameLauncher` specific to the desktop platform.
 Launching and running on other platforms is slightly different, which you can refer to in the Strawberry guide.
 
-[Setup and Running the Game](https://docs.sb-engine.ir/manual/setup)
+[Setup and Running the Game](https://docs.sb-engine.ir/docs/v.2026.1.1/en/Documentation/Getting-Started)
 
 ## Guide
 The Strawberry Engine guide consists of two parts:
 ### User Manual
 This guide is written in an educational style and guides you step by step through performing various tasks with the engine.
 
-[User Manual](https://docs.sb-engine.ir/manual/)
+[User Manual](https://docs.sb-engine.ir/docs/v.2026.1.1/en/Documentation/)
 
 ### API Reference
 This section fully lists all structures and functions of the engine and provides a brief description of each one's functionality.
 
-[API Reference](https://docs.sb-engine.ir/reference/)
+[API Reference](https://docs.sb-engine.ir/docs/v.2026.1.1/en/API/)
 
 ## Support
 
@@ -66,4 +66,4 @@ This section fully lists all structures and functions of the engine and provides
 One of the biggest ways you can help us build this engine is by using it and reporting bugs or even suggesting structural changes.
 
 Help us develop Strawberry better by using the link below:
-[Report Bugs and Suggestions](https://github.com/koosha72/strawberry/issues)
+[Report Bugs and Suggestions](https://git.sb-engine.ir/koosha_ab/strawberry-main/issues)
