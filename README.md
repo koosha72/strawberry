@@ -2,26 +2,27 @@
   <img src="https://sb-engine.ir/images/sb-icon.png" alt="StrawBerry Game Engine"/>
 </p>
 <h1 align="center" text-decoration="none">
-موتر بازی سازی توت فرنگی
+Strawberry Game Engine
 </h1>
 
-## شرح
-موتور بازی سازی توت فرنگی یک موتور بازی سازی چند سکوی دو بعدی است که به طور کامل بر مبنای .NET ساخته شده است.
-هستۀ مرکزی این موتور به صورت کاملا باز در اختیار کاربران قرار می گیرد.
-جهت استفاده از هسته مرکزی موتور باید به زبان برنامه نویسی C# کاملاً مسلط باشید.
+## Description
+The Strawberry Game Engine is a multi-platform 2D game engine built entirely on .NET.
+The core of this engine is provided completely open source to users.
+To use the engine core, you must be fully proficient in the C# programming language.
 
-## محیط بصری و ویرایشگر
-البته محیط بصری این موتور در دست ساخت می باشد که شما می توانید در نسخه اولیه خصوصی (Private Alpha Version) ثبت نام نمایید.
-تایید ثبت نام بر مبنای رزومه ارسالی شما انجام خواهد شد.
+## Visual Environment and Editor
+Of course, the visual environment of this engine is under construction. You can register for the initial private version (Private Alpha Version).
+Registration approval is based on the resume you submit.
 
-## راه اندازی اولیه
-راه اندازی یک پروژه برای سکوهای مختلف تفاوتهایی دارد. در حالت عادی شما باید چندین پروژه داشته باشید.
-### 1- پروژه اصلی بازی (به صورت چند سکویی)
-در این پروژه تا حد ممکن نباید از کد اختصاصی سکوها استفاده نمود، کد به صورت اشتراکی است وبازی روی تمام سکو ها از یک کد استفاده می نماید.
-### 2- راه انداز سکوها
-برای هر سکو باید یک پروژه راه انداز ساخته شود. کد پروژه راه انداز عموماً بسیار ساده است.
-پروژه راه اندازی به پروژه اصلی بازی وابسته است و آن را اجرا می کند.
-برای مثال کد راه اندازی سکوی رایانه رومیزی (Desktop) به شرح زیر می باشد:
+## Initial Setup
+Setting up a project for different platforms has some differences. Normally, you should have multiple projects.
+### 1- Main Game Project (Multi-platform)
+In this project, you should avoid using platform-specific code as much as possible. The code is shared, and the game uses the same code across all platforms.
+### 2- Platform Launchers
+For each platform, a launcher project must be created. The launcher project code is generally very simple.
+The launcher project depends on the main game project and runs it.
+
+For example, the desktop platform launcher code is as follows:
 ```csharp
 using Strawberry.Test;
 
@@ -42,27 +43,27 @@ namespace Strawberry.Desktop.Test
     }
 }
 ```
-در کد بالا MyGameContext زمینه اصلی بازی است که از پروژه چند سکویی فراخوانی شده است. بازی با استفاده از یک GameLauncher مخصوص سکوی رومیزی (Desktop) اجرا می شود.
-راه اندازی و اجرا در سایر سکو ها کمی متفاوت است که می توانید در راهنمای توت فرنگی مشاهده نمایید.
+In the code above, `MyGameContext` is the main game context called from the multi-platform project. The game is executed using a `GameLauncher` specific to the desktop platform.
+Launching and running on other platforms is slightly different, which you can refer to in the Strawberry guide.
 
-[راه اندازی و اجرای بازی](https://docs.sb-engine.ir/manual/setup)
+[Setup and Running the Game](https://docs.sb-engine.ir/manual/setup)
 
-## راهنما
-راهنمای موتور توت فرنگی دو بخش دارد:
-### کتابچه راهنما
-این راهنما به صورت آموزشی نگاشته شده و شما را قدم به قدم در انجام کار های مختلف با موتور راهنمایی می نماید.
+## Guide
+The Strawberry Engine guide consists of two parts:
+### User Manual
+This guide is written in an educational style and guides you step by step through performing various tasks with the engine.
 
-[کتابچه راهنما](https://docs.sb-engine.ir/manual/)
+[User Manual](https://docs.sb-engine.ir/manual/)
 
-### فهرست مستندات
-این بخش به طور کامل تمام ساختارها و توابع موتور را لیست نموده و شرح مختصری از کارکرد هر کدام داده است.
+### API Reference
+This section fully lists all structures and functions of the engine and provides a brief description of each one's functionality.
 
-[فهرست مستندات](https://docs.sb-engine.ir/reference/)
+[API Reference](https://docs.sb-engine.ir/reference/)
 
-## حمایت
+## Support
 
-## گزارش خطا
-یکی از کمک های بزرگی که می توانید به ما در امر ساخت این موتور انجام دهید، استفاده از موتور و گزارش خطا ها و یا حتی پیشنهاد تغییرات در ساختار آن می باشد.
+## Bug Reports
+One of the biggest ways you can help us build this engine is by using it and reporting bugs or even suggesting structural changes.
 
-با استفاده از لینک زیر ما را در توسعۀ هر چه بهتر توت فرنگی یاری نمایید
-[گزارش خطا و پیشنها](https://github.com/koosha72/strawberry/issues)
+Help us develop Strawberry better by using the link below:
+[Report Bugs and Suggestions](https://github.com/koosha72/strawberry/issues)
