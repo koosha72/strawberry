@@ -1,4 +1,12 @@
-﻿namespace Strawberry
+﻿/*
+ * Strawberry Game Engine
+ * File: IBase.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Interface defining disposable base behavior.
+ */
+
+namespace Strawberry
 {
     public interface IBase : IDisposable
     {

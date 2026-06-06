@@ -1,8 +1,20 @@
+/*
+ * Strawberry Game Engine
+ * File: EventManager.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Event manager responsible for subscribing, queuing and executing
+ * game events.
+ */
+
 using System.Collections.Concurrent;
 using System.Reflection;
 
 namespace Strawberry.EventSystem;
 
+/// <summary>
+/// This is a static class that manages events in the game.
+/// </summary>
 public static class EventManager
 {
     private static Dictionary<Type, List<StrawberryEventObject>> globalEvents = new();

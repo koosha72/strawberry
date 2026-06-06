@@ -1,5 +1,16 @@
+/*
+ * Strawberry Game Engine
+ * File: RotationAffector.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Affector that modifies particle rotation over time.
+ */
+
 namespace Strawberry.Graphics.ParticleSystem
 {
+    /// <summary>
+    /// Affector that modifies particle rotation over time
+    /// </summary>
     public class RotationAffector : IParticleAffector
     {
         public InterpolationCurve AngularVelocityCurve = new InterpolationCurve();

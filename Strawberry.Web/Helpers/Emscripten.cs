@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Strawberry.Web.Helpers;
 
-internal static class Emscripten
+public static class Emscripten
 {
     [DllImport("emscripten", EntryPoint = "emscripten_request_animation_frame_loop")]
     [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]

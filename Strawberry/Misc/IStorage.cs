@@ -1,5 +1,7 @@
 namespace Strawberry.Misc;
-
+/// <summary>
+/// The storage manager that handles file storage on different platforms and allows you to read data from a file system.
+/// </summary>
 public interface IStorage
 {
     /// <summary>

@@ -4,6 +4,9 @@ using App = Android.App;
 
 namespace Strawberry.Android;
 
+/// <summary>
+/// The storage manager for android platform.
+/// </summary>
 public class StorageManager : IStorage
 {
     AssetManager assetManager;

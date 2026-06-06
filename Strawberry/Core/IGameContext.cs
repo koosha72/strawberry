@@ -1,4 +1,12 @@
-﻿using Strawberry.Graphics;
+﻿/*
+ * Strawberry Game Engine
+ * File: IGameContext.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Interface representing the main game context and lifecycle hooks.
+ */
+
+using Strawberry.Graphics;
 using Strawberry.Input;
 using Strawberry.Misc;
 using Strawberry.Sound;

@@ -1,9 +1,20 @@
-﻿using Strawberry.Common;
+﻿/*
+ * Strawberry Game Engine
+ * File: BackgroundLayer.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Background layer rendering for tiled and scrolling scene backdrops.
+ */
+
+using Strawberry.Common;
 using Strawberry.Core;
 using Strawberry.Math;
 
 namespace Strawberry.Graphics.Layers
 {
+    /// <summary>
+    /// Background layer. Renders a single sprite as background.
+    /// </summary>
     public class BackgroundLayer : Layer
     {
         int maxBatchCount = 2048;
@@ -24,18 +35,28 @@ namespace Strawberry.Graphics.Layers
 
         string blendName = "Default";
 
+
         public IGraphicsContext GraphicsContext { get { return Scene.GameContext.GraphicsContext; } }
 
         public float HalfTexel = 0.5f;
 
+        /// <summary>
+        /// The sprite to render as background.
+        /// </summary>
         public Sprite Sprite { get; set; }
 
+        /// <summary>
+        /// Current frame of the sprite.
+        /// </summary>
         public int ImageIndex
         {
             get { return this.realImageIndex; }
             set { realImageIndex = value; imageIndex = value; }
         }
 
+        /// <summary>
+        /// The speed of the animation in frames (1 = a cycle of animation per second).
+        /// </summary>
         public int ImageSpeed { get; set; }
 
         public int DrawCalls { get; set; }
@@ -43,17 +64,29 @@ namespace Strawberry.Graphics.Layers
         float imageIndex = 0f;
 
         int realImageIndex = 0;
-
+        /// <summary>
+        /// The top left position of the background layer.
+        /// </summary>
         public Vector2 Position { get; set; }
-
+        /// <summary>
+        /// The scale of the sprite rendered by background layer.
+        /// </summary>
         public Vector2 Scale { get; set; } = Vector2.One;
-
+        /// <summary>
+        /// The number of repeats in the x direction.
+        /// </summary>
         public int TileH { get; set; } = 1;
-
+        /// <summary>
+        /// The number of repeats in the y direction.
+        /// </summary>
         public int TileV { get; set; } = 1;
-
+        /// <summary>
+        /// The size of the background layer.
+        /// </summary>
         public Vector2 Size { get; set; }
-
+        /// <summary>
+        /// The color used to render the background layer.
+        /// </summary>
         public Color Color { get; set; } = Color.White;
 
         public BackgroundLayer()

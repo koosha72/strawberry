@@ -1,4 +1,12 @@
-﻿using Strawberry.Core;
+﻿/*
+ * Strawberry Game Engine
+ * File: TransformComponent.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Handles entity transform state for position, rotation, scaling, and parent-relative movement.
+ */
+
+using Strawberry.Core;
 using Strawberry.Math;
 using Strawberry.Serialization;
 

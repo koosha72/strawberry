@@ -1,4 +1,12 @@
-﻿using Strawberry.Core;
+﻿/*
+ * Strawberry Game Engine
+ * File: Game.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Main game controller that coordinates the update and render loop.
+ */
+
+using Strawberry.Core;
 using Strawberry.EventSystem;
 
 
@@ -9,6 +17,9 @@ namespace Strawberry
     /// </summary>
     public class Game
     {
+        /// <summary>
+        /// Gets the current Game Context
+        /// </summary>
         public IGameContext GameContext { get; private set; }
 
         IGameLauncher launcher;

@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Sound
+﻿/*
+ * Strawberry Game Engine
+ * File: Voice.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Abstract playback voice representing a playing instance of a buffer.
+ */
+
+namespace Strawberry.Sound
 {
     public abstract class Voice : DisposableReferenceObject
 

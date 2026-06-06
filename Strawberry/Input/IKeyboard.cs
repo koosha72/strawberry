@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Input
+﻿/*
+ * Strawberry Game Engine
+ * File: IKeyboard.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Keyboard input interface for querying and simulating key states.
+ */
+
+namespace Strawberry.Input
 {
     /// <summary>
     /// Defines an interface for keyboard input handling, providing access to key states 

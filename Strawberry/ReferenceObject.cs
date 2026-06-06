@@ -1,7 +1,15 @@
-﻿namespace Strawberry
+﻿/*
+ * Strawberry Game Engine
+ * File: ReferenceObject.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Base class for reference-tracked objects used by the engine.
+ */
+
+namespace Strawberry
 {
     /// <summary>
-    /// Base class of all refernce objects. All entities or components are derrived from this class. It is used for serilization and deserialization.
+    /// Base class of all reference objects. All entities or components are derived from this class. It is used for serialization and deserialization.
     /// </summary>
     public class ReferenceObject
     {

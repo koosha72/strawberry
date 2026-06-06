@@ -1,17 +1,42 @@
+/*
+ * Strawberry Game Engine
+ * File: Font.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Font resource and glyph atlas used by the text renderer.
+ */
+
+
 namespace Strawberry.Graphics.Text;
 
+/// <summary>
+/// Font resource and glyph atlas used by the text renderer.
+/// </summary>
 public class Font
 {
+    /// <summary>
+    /// Gets the native size of the font
+    /// </summary>
     public byte Size { get; private set; }
-
+    /// <summary>
+    /// Gets the character map of the font
+    /// </summary>
     public Dictionary<ushort, Character> Characters { get; private set; }
-
+    /// <summary>
+    /// Gets the texture atlas of the font
+    /// </summary>
     public Texture Texture { get; private set; }
-
+    /// <summary>
+    /// Gets the minor version of the font
+    /// </summary>
     public byte Minor { get; private set; }
-
+    /// <summary>
+    /// Gets the major version of the font file
+    /// </summary>
     public byte Major { get; private set; }
-
+    /// <summary>
+    /// Gets whether this font uses signed-distance field rendering or not
+    /// </summary>
     public bool UseSDF { get; private set; }
 
     public Font(IGraphicsContext graphicsContext, byte[] data)
@@ -85,6 +110,11 @@ public class Font
         Texture = graphicsContext.CreateTexture(width, height, colors);
     }
 
+    /// <summary>
+    /// Get character info
+    /// </summary>
+    /// <param name="chr">Code of the requested character</param>
+    /// <returns></returns>
     public Character GetCharacterInfo(ushort chr)
     {
         if (!Characters.ContainsKey(chr))
@@ -98,6 +128,11 @@ public class Font
         return Characters[chr];
     }
 
+    /// <summary>
+    /// Measures the width of the given text using font's native size
+    /// </summary>
+    /// <param name="text">The text to be measured</param>
+    /// <returns>The width of the given string in pixels</returns>
     public double GetWidth(string text)
     {
         double w = 0;
@@ -114,6 +149,12 @@ public class Font
         return w;
     }
 
+    /// <summary>
+    /// Measures the width of the given text using the specified size
+    /// </summary>
+    /// <param name="text">The text to be measured</param>
+    /// <param name="size">Size of the font</param>
+    /// <returns>The width of the given string in pixels</returns>
     public double GetWidth(string text, float size)
     {
         float m = size / (float)this.Size;

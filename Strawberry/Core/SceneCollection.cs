@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Core
+﻿/*
+ * Strawberry Game Engine
+ * File: SceneCollection.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * List-based collection for scene objects.
+ */
+
+namespace Strawberry.Core
 {
     /// <summary>
     /// A collection of scenes

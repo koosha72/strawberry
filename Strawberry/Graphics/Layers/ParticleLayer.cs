@@ -1,11 +1,20 @@
-﻿using System.Collections.Generic;
-using Strawberry.Common;
+﻿/*
+ * Strawberry Game Engine
+ * File: ParticleLayer.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Layer that manages particle emitters and updates/renders particles.
+ */
+
 using Strawberry.Core;
 using Strawberry.Graphics.ParticleSystem;
 using Strawberry.Math;
 
 namespace Strawberry.Graphics.Layers
 {
+    /// <summary>
+    /// A layer responsible for managing and rendering particle emitters within a scene.
+    /// </summary>
     public class ParticleLayer : Layer
     {
         int maxBatchCount = 2048;
@@ -26,16 +35,35 @@ namespace Strawberry.Graphics.Layers
         BasicShader shader;
         string blendName = "Default";
 
+        /// <summary>
+        /// Gets the graphics context associated with the current scene.
+        /// </summary>
         public IGraphicsContext GraphicsContext { get { return Scene.GameContext.GraphicsContext; } }
 
+        /// <summary>
+        /// Gets or sets the number of draw calls performed during the last render.
+        /// </summary>
         public int DrawCalls { get; set; }
 
+        /// <summary>
+        /// Gets the number of live particles currently active in the layer.
+        /// </summary>
         public int AliveParticleCount => aliveCount;
 
+        /// <summary>
+        /// Gets the number of particle emitters attached to this layer.
+        /// </summary>
         public int EmitterCount => emitters.Count;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParticleLayer"/> class.
+        /// </summary>
         public ParticleLayer() { }
 
+        /// <summary>
+        /// Initializes the particle layer, allocates buffers, and prepares the geometry.
+        /// </summary>
+        /// <param name="scene">The scene that owns the layer.</param>
         public override void Initialize(Scene scene)
         {
             base.Initialize(scene);
@@ -65,6 +93,13 @@ namespace Strawberry.Graphics.Layers
 
         // ── Emitter Management ─────────────────────────────────────
 
+        /// <summary>
+        /// Creates and adds a new particle emitter to the layer.
+        /// </summary>
+        /// <param name="sprite">The sprite used by the emitter.</param>
+        /// <param name="initiator">The particle initiator that generates particles.</param>
+        /// <param name="timeline">The particle timeline that updates particle properties.</param>
+        /// <returns>The created emitter.</returns>
         public ParticleEmitter AddEmitter(Sprite sprite, ParticleInitiator initiator, ParticleTimeline timeline)
         {
             var emitter = new ParticleEmitter(sprite, initiator, timeline)
@@ -75,6 +110,11 @@ namespace Strawberry.Graphics.Layers
             return emitter;
         }
 
+        /// <summary>
+        /// Adds an existing particle emitter to the layer.
+        /// </summary>
+        /// <param name="emitter">The emitter to add.</param>
+        /// <returns>The emitter that was added.</returns>
         public ParticleEmitter AddEmitter(ParticleEmitter emitter)
         {
             emitter.EmitterIndex = emitters.Count;
@@ -82,6 +122,11 @@ namespace Strawberry.Graphics.Layers
             return emitter;
         }
 
+        /// <summary>
+        /// Removes a particle emitter from the layer.
+        /// </summary>
+        /// <param name="emitter">The emitter to remove.</param>
+        /// <returns>True if the emitter was removed; otherwise false.</returns>
         public bool RemoveEmitter(ParticleEmitter emitter)
         {
             bool removed = emitters.Remove(emitter);
@@ -90,6 +135,11 @@ namespace Strawberry.Graphics.Layers
             return removed;
         }
 
+        /// <summary>
+        /// Gets the particle emitter at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the emitter.</param>
+        /// <returns>The emitter if found; otherwise null.</returns>
         public ParticleEmitter GetEmitter(int index)
         {
             if (index >= 0 && index < emitters.Count)
@@ -97,6 +147,9 @@ namespace Strawberry.Graphics.Layers
             return null;
         }
 
+        /// <summary>
+        /// Removes all emitters and deactivates all live particles.
+        /// </summary>
         public void ClearEmitters()
         {
             emitters.Clear();
@@ -124,6 +177,10 @@ namespace Strawberry.Graphics.Layers
 
         // ── Blend Mode ──────────────────────────────────────────────
 
+        /// <summary>
+        /// Sets the blend mode name used when rendering particles.
+        /// </summary>
+        /// <param name="name">The blend mode identifier.</param>
         public void SetBlendMode(string name)
         {
             blendName = name;
@@ -131,6 +188,9 @@ namespace Strawberry.Graphics.Layers
 
         // ── Update ──────────────────────────────────────────────────
 
+        /// <summary>
+        /// Updates all particle emitters and active particles.
+        /// </summary>
         public override void Update()
         {
             if (!Enabled)
@@ -196,6 +256,9 @@ namespace Strawberry.Graphics.Layers
 
         // ── Render ──────────────────────────────────────────────────
 
+        /// <summary>
+        /// Renders all active particles in the layer.
+        /// </summary>
         public override void Render()
         {
             if (!Enabled)

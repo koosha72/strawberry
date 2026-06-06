@@ -6,7 +6,7 @@ using Strawberry.Graphics;
 
 namespace Strawberry.Android.Graphics;
 
-internal class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
+public class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
 {
     int vbo;
     int ibo;

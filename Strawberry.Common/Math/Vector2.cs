@@ -1,4 +1,12 @@
-﻿using Strawberry.Serialization;
+﻿/*
+ * Strawberry Game Engine
+ * File: Vector2.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * 2D vector struct used throughout the engine.
+ */
+
+using Strawberry.Serialization;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;

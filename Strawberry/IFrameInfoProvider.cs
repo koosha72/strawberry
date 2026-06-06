@@ -1,9 +1,20 @@
+/*
+ * Strawberry Game Engine
+ * File: IFrameInfoProvider.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Interface for providing frame timing and update statistics.
+ */
+
 namespace Strawberry;
 
+/// <summary>
+/// Provides information about the FPS and other frame related information
+/// </summary>
 public interface IFrameInfoProvider
 {
     /// <summary>
-    /// The speed on based on which the game is running
+    /// Gets the speed on based on which the game is running
     /// </summary>
     int GameSpeed { get; set; }
 
@@ -32,16 +43,20 @@ public interface IFrameInfoProvider
     /// </summary>
     float LastTime { get; }
     /// <summary>
-    /// Time difference between two frames
+    /// Gets the time difference between two frames
     /// </summary>
     float DeltaTime { get; }
     /// <summary>
-    /// Time difference between two frames. This should always be based on GameSpeed
+    /// Gets the fixed time difference between two frames. This should always be based on GameSpeed
     /// </summary>
     float FixedDeltaTime { get; }
-
+    /// <summary>
+    /// Gets the time elapsed since the game started.
+    /// </summary>
     TimeSpan ElapsedTime { get; }
-
+    /// <summary>
+    /// Gets a value indicating whether the game should run a fixed update.
+    /// </summary>
     bool ShouldFixedUpdate { get; }
 
     void Initialize();

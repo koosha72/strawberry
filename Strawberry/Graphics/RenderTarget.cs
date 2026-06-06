@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Graphics
+﻿/*
+ * Strawberry Game Engine
+ * File: RenderTarget.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Abstract render target resource for render-to-texture operations.
+ */
+
+namespace Strawberry.Graphics
 {
     public abstract class RenderTarget : DisposableReferenceObject
     {

@@ -1,3 +1,11 @@
+/*
+ * Strawberry Game Engine
+ * File: MathHelper.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Common math helper functions and constants.
+ */
+
 namespace Strawberry.Math
 {
     public static class MathHelper

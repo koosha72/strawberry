@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/*
+ * Strawberry Game Engine
+ * File: EntityCollection.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Strongly-typed dictionary collection for game entities.
+ */
+
+using System.Collections;
 
 namespace Strawberry.Core
 {

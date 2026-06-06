@@ -1,4 +1,12 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: IGraphicsContext.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Defines the graphics context interface used for rendering operations.
+ */
+
+using Strawberry.Math;
 
 namespace Strawberry.Graphics
 {

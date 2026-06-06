@@ -1,3 +1,11 @@
+/*
+ * Strawberry Game Engine
+ * File: ActionComponent.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Component that supports registering actions for update, render, and fixed update callbacks.
+ */
+
 using Strawberry.Core;
 
 namespace Strawberry.Components

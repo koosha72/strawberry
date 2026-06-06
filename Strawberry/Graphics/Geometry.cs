@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Graphics
+﻿/*
+ * Strawberry Game Engine
+ * File: Geometry.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Abstract geometry resource representing vertex and index buffers.
+ */
+
+namespace Strawberry.Graphics
 {
     /// <summary>
     /// Represents a renderable geometric mesh composed of vertices and optional indices.

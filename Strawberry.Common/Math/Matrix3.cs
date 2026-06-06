@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Math
+﻿/*
+ * Strawberry Game Engine
+ * File: Matrix3.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * 3x3 matrix implementation used by engine math routines.
+ */
+
+namespace Strawberry.Math
 {
     public struct Matrix3
     {

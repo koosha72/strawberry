@@ -1,8 +1,18 @@
+/*
+ * Strawberry Game Engine
+ * File: GameTimer.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Default frame timing provider for game update loops.
+ */
+
 using System.Diagnostics;
 
 namespace Strawberry
 {
-
+    /// <summary>
+    /// The default implementation for IFrameInfoProvider
+    /// </summary>
     public class GameTimer : IFrameInfoProvider
     {
         int gameSpeed;
@@ -15,7 +25,9 @@ namespace Strawberry
         int second;
         long msSkip;
         int loop = 0;
-
+        /// <summary>
+        /// Gets the total time elapsed since the start of the game in milliseconds.
+        /// </summary>
         public TimeSpan ElapsedTime
         {
             get
@@ -72,7 +84,7 @@ namespace Strawberry
         public float LastTime { get; private set; }
 
         /// <summary>
-        /// The fraction of seconds by which the scene is rendered. 
+        /// Gets the fraction of seconds by which the scene is rendered. 
         /// You can use this in your Update or Render events to fix your movements, animations, etc. to real seconds.
         /// </summary>
         public float DeltaTime
@@ -81,7 +93,7 @@ namespace Strawberry
         }
 
         /// <summary>
-        /// The fraction of seconds by which the scene is rendered. This is completely bound to GameSpeed.
+        /// Gets the fraction of seconds by which the scene is rendered. This is completely bound to GameSpeed.
         /// You can use this in your FixedUpdate events to fix your movements, animations, etc. to real seconds.
         /// </summary>
         public float FixedDeltaTime

@@ -1,10 +1,21 @@
-﻿using Strawberry.Common;
+﻿/*
+ * Strawberry Game Engine
+ * File: SpriteLayer.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Layer implementation that batches and renders sprites efficiently.
+ */
+
+using Strawberry.Common;
 using Strawberry.Core;
 using Strawberry.Graphics.Text;
 using Strawberry.Math;
 
 namespace Strawberry.Graphics.Layers
 {
+    /// <summary>
+    /// A layer responsible for batching and rendering sprites within a scene.
+    /// </summary>
     public class SpriteLayer : Layer
     {
         int maxBatchCount = 2048;
@@ -17,6 +28,9 @@ namespace Strawberry.Graphics.Layers
 
         uint[] indices;
 
+        /// <summary>
+        /// Gets the currently active shader used for sprite rendering.
+        /// </summary>
         public BasicShader ActiveShader { get; private set; }
 
         //TextShader TextShader { get; set; }
@@ -26,16 +40,26 @@ namespace Strawberry.Graphics.Layers
 
         string blendName = "Default";
 
+        /// <summary>
+        /// Gets the graphics context for the current scene.
+        /// </summary>
         public IGraphicsContext GraphicsContext { get { return Scene.GameContext.GraphicsContext; } }
 
         Sprite pixelSprite;
 
+        /// <summary>
+        /// Gets or sets the number of draw calls performed during the most recent render pass.
+        /// </summary>
         public int DrawCalls { get; set; }
 
         public SpriteLayer()
         {
         }
 
+        /// <summary>
+        /// Initializes the sprite layer and allocates rendering resources.
+        /// </summary>
+        /// <param name="scene">The scene that owns the layer.</param>
         public override void Initialize(Scene scene)
         {
             base.Initialize(scene);
@@ -69,21 +93,43 @@ namespace Strawberry.Graphics.Layers
                 new Vector2(1f, 1f), new Vector2());
         }
 
+        /// <summary>
+        /// Sets the active shader used when rendering sprites.
+        /// </summary>
+        /// <param name="shader">The shader to activate.</param>
         public void SetShader(BasicShader shader)
         {
             this.ActiveShader = shader;
         }
 
+        /// <summary>
+        /// Sets the blend mode name used for subsequent sprite draws.
+        /// </summary>
+        /// <param name="name">The blend mode identifier.</param>
         public void SetBlendMode(string name)
         {
             blendName = name;
         }
 
+        /// <summary>
+        /// Resets the active shader to the default sprite shader.
+        /// </summary>
         public void ResetShader()
         {
             this.ActiveShader = shader;
         }
 
+        /// <summary>
+        /// Creates a sprite quad for the given sprite and transform parameters.
+        /// </summary>
+        /// <param name="sprite">The sprite to render.</param>
+        /// <param name="position">The screen position of the sprite.</param>
+        /// <param name="origin">The origin used for rotation and scaling.</param>
+        /// <param name="scale">The scaling factor for the sprite.</param>
+        /// <param name="color">The color tint to apply.</param>
+        /// <param name="imageIndex">The frame index within the sprite texture.</param>
+        /// <param name="angle">The rotation angle in degrees.</param>
+        /// <returns>A configured sprite quad ready for batching.</returns>
         public SpriteQuad GetQuad(Sprite sprite, Vector2 position, Vector2 origin, Vector2 scale, Color color, int imageIndex, float angle)
         {
             Vector2 halfPixel = new Vector2(0f, 0f);
@@ -170,12 +216,31 @@ namespace Strawberry.Graphics.Layers
             return spr;
         }
 
+        /// <summary>
+        /// Adds a transformed sprite quad to the current batch.
+        /// </summary>
+        /// <param name="sprite">The sprite to draw.</param>
+        /// <param name="position">The position in scene coordinates.</param>
+        /// <param name="origin">The origin offset for rotation and scaling.</param>
+        /// <param name="scale">The scale for the sprite.</param>
+        /// <param name="color">The tint color.</param>
+        /// <param name="imageIndex">The frame index in the sprite sheet.</param>
+        /// <param name="angle">The rotation angle in degrees.</param>
         public void Push(Sprite sprite, Vector2 position, Vector2 origin, Vector2 scale, Color color, int imageIndex, float angle)
         {
             quadList.Add(GetQuad(sprite, position, origin, scale, color, imageIndex, angle));
         }
 
 
+        /// <summary>
+        /// Adds a textured quad to the current batch.
+        /// </summary>
+        /// <param name="texture">The texture to draw.</param>
+        /// <param name="position">The position in scene coordinates.</param>
+        /// <param name="texSize">The size of the source region in texture space.</param>
+        /// <param name="size">The destination size in scene coordinates.</param>
+        /// <param name="topLeft">The texture coordinates of the top-left corner.</param>
+        /// <param name="color">The tint color.</param>
         public void Push(Texture texture, Vector2 position, Vector2 texSize, Vector2 size, Vector2 topLeft, Color color)
         {
             float x = (float)System.Math.Round(position.X);
@@ -202,6 +267,9 @@ namespace Strawberry.Graphics.Layers
             quadList.Add(spr);
         }
 
+        /// <summary>
+        /// Renders all batched sprite quads for the current frame.
+        /// </summary>
         public override void Render()
         {
             if (!Enabled)
@@ -295,6 +363,11 @@ namespace Strawberry.Graphics.Layers
             GraphicsContext.ActivateBlendMode("Default");
         }
 
+        /// <summary>
+        /// Draws the outline of a rotated rectangle using pixel sprites.
+        /// </summary>
+        /// <param name="rect">The rotated rectangle to outline.</param>
+        /// <param name="color">The color of the outline.</param>
         public void DrawOutlineRectangle(RotatedRectangle rect, Color color)
         {
             Push(pixelSprite, rect.Vertex1, new Vector2(),
@@ -310,6 +383,11 @@ namespace Strawberry.Graphics.Layers
                 new Vector2(1f, -(int)rect.Height), color, 0, rect.Angle);
         }
 
+        /// <summary>
+        /// Draws a filled rotated rectangle using a pixel sprite.
+        /// </summary>
+        /// <param name="rect">The rectangle to draw.</param>
+        /// <param name="color">The fill color.</param>
         public void DrawRectangle(RotatedRectangle rect, Color color)
         {
             Vector2 origin = new Vector2((float)(rect.Origin.X / rect.Width), (float)(rect.Origin.Y / rect.Height));
@@ -317,18 +395,39 @@ namespace Strawberry.Graphics.Layers
                     new Vector2(rect.Width, rect.Height), color, 0, rect.Angle);
         }
 
+        /// <summary>
+        /// Draws a horizontal line using a pixel sprite.
+        /// </summary>
+        /// <param name="start">The starting position.</param>
+        /// <param name="length">The length of the line.</param>
+        /// <param name="color">The line color.</param>
         public void DrawHorizontalLine(Vector2 start, float length, Color color)
         {
             Push(pixelSprite, new Vector2(start.X, start.Y), Vector2.Zero,
                     new Vector2(length, 1), color, 0, 0);
         }
 
+        /// <summary>
+        /// Draws a vertical line using a pixel sprite.
+        /// </summary>
+        /// <param name="start">The starting position.</param>
+        /// <param name="length">The length of the line.</param>
+        /// <param name="color">The line color.</param>
         public void DrawVerticalLine(Vector2 start, float length, Color color)
         {
             Push(pixelSprite, new Vector2(start.X, start.Y), Vector2.Zero,
                     new Vector2(1, length), color, 0, 0);
         }
 
+        /// <summary>
+        /// Pushes a line of text into the sprite batch using the font's native size.
+        /// </summary>
+        /// <param name="text">The text to render.</param>
+        /// <param name="font">The font to use.</param>
+        /// <param name="position">The starting position in scene coordinates.</param>
+        /// <param name="color">The text color.</param>
+        /// <param name="direction">The text direction.</param>
+        /// <returns>The final draw position after rendering the text.</returns>
         public Vector2 PushString(string text, Font font, Vector2 position, Color color, TextDirection direction)
         {
             if (font.UseSDF)
@@ -379,6 +478,16 @@ namespace Strawberry.Graphics.Layers
             return new Vector2((float)x, (float)y);
         }
 
+        /// <summary>
+        /// Pushes a line of text into the sprite batch at a custom size.
+        /// </summary>
+        /// <param name="text">The text to render.</param>
+        /// <param name="font">The font to use.</param>
+        /// <param name="position">The starting position in scene coordinates.</param>
+        /// <param name="color">The text color.</param>
+        /// <param name="direction">The text direction.</param>
+        /// <param name="size">The target size of the text.</param>
+        /// <returns>The final draw position after rendering the text.</returns>
         public Vector2 PushString(string text, Font font, Vector2 position, Color color, TextDirection direction, float size)
         {
             if (font.UseSDF)

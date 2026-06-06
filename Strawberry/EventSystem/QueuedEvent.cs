@@ -1,3 +1,11 @@
+/*
+ * Strawberry Game Engine
+ * File: QueuedEvent.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Internal queued event types used by the event manager.
+ */
+
 namespace Strawberry.EventSystem;
 
 internal interface IQueuedEvent

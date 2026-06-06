@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Graphics
+﻿/*
+ * Strawberry Game Engine
+ * File: BlendMode.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Blend factor and mode enumerations used by the graphics system.
+ */
+
+namespace Strawberry.Graphics
 {
     /// <summary>
     /// Specifies the blend factor used in blending operations,

@@ -1,4 +1,12 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: IPointingDevice.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Pointing device interface for pointer position and button state handling.
+ */
+
+using Strawberry.Math;
 
 namespace Strawberry.Input
 {

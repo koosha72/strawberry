@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/*
+ * Strawberry Game Engine
+ * File: OrderedDictionary.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Generic ordered dictionary wrapper around System.Collections.Specialized.OrderedDictionary.
+ */
+
+using System.Collections;
 using System.Collections.Specialized;
 
 namespace Strawberry.Collection

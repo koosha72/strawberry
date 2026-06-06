@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Strawberry.Web.Helpers;
 
-internal static class EGL
+public static class EGL
 {
     public const string LibEgl = "libEGL";
     public const int EGL_NONE = 0x3038;

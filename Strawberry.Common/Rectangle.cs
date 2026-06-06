@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Common
+﻿/*
+ * Strawberry Game Engine
+ * File: Rectangle.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Floating-point rectangle structure used across the engine.
+ */
+
+namespace Strawberry.Common
 {
     /// <summary>
     /// Represents a floating-point rectangle defined by its X, Y, Width, and Height coordinates.

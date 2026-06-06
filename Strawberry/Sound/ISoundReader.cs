@@ -1,4 +1,10 @@
-using System;
+/*
+ * Strawberry Game Engine
+ * File: ISoundReader.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Sound reader interface for decoding and streaming audio data.
+ */
 
 namespace Strawberry.Sound;
 

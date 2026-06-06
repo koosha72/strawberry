@@ -1,4 +1,12 @@
-﻿using Strawberry.Graphics;
+﻿/*
+ * Strawberry Game Engine
+ * File: IGameLauncher.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Interface for platform-specific game launch and loop control.
+ */
+
+using Strawberry.Graphics;
 using Strawberry.Input;
 using Strawberry.Misc;
 using Strawberry.Sound;
@@ -12,29 +20,31 @@ namespace Strawberry
     public interface IGameLauncher
     {
         /// <summary>
-        /// Underlining GraphicsContext by which the rendering is handled.
+        /// Gets the nderlining GraphicsContext by which the rendering is handled.
         /// </summary>
         IGraphicsContext GraphicsContext { get; }
 
         /// <summary>
-        /// The object that handles platform specific input.
+        /// Gets the object that handles platform specific input.
         /// </summary>
         IInputManager InputManager { get; }
 
         /// <summary>
-        /// The platform specific object responsible for playing and managing sounds.
+        /// Gets the platform specific object responsible for playing and managing sounds.
         /// </summary>
         ISoundManager SoundManager { get; }
-
+        /// <summary>
+        /// Gets the platform specific object responsible for retrieving data from a storage device (e.g. file system).
+        /// </summary>
         IStorage Storage { get; }
 
         /// <summary>
-        /// Happens when the platform independent initializations (opening window, etc.) is finished.
+        /// Occurs when the platform independent initializations (opening window, etc.) is finished.
         /// </summary>
         event Action Initialized;
 
         /// <summary>
-        /// Occurs everystep of the game. It is not a fixed step. fixed steps are handled by the game class. This should happen as fast as possible.
+        /// Occurs every step of the game. It is not a fixed step. fixed steps are handled by the game class. This should happen as fast as possible.
         /// </summary>
         event Action GameLoop;
 

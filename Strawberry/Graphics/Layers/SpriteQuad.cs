@@ -1,4 +1,12 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: SpriteQuad.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Data structure representing a batched sprite quad for rendering.
+ */
+
+using Strawberry.Math;
 
 namespace Strawberry.Graphics.Layers
 {

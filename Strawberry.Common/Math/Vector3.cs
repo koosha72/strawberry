@@ -1,4 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿/*
+ * Strawberry Game Engine
+ * File: Vector3.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * 3D vector struct used throughout the engine.
+ */
+
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 

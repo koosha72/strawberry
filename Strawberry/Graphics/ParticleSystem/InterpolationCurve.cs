@@ -1,7 +1,18 @@
+/*
+ * Strawberry Game Engine
+ * File: InterpolationCurve.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Keyframe-based interpolation curve used by particle timelines.
+ */
+
 using System.Collections.Generic;
 
 namespace Strawberry.Graphics.ParticleSystem
 {
+    /// <summary>
+    /// A float-based keyframe used by the interpolation curve.
+    /// </summary>
     public struct FloatKeyframe
     {
         public float Time;
@@ -13,7 +24,9 @@ namespace Strawberry.Graphics.ParticleSystem
             Value = value;
         }
     }
-
+    /// <summary>
+    /// Keyframe-based interpolation curve used by particle timelines.
+    /// </summary>
     public class InterpolationCurve
     {
         List<FloatKeyframe> keyframes = new List<FloatKeyframe>();

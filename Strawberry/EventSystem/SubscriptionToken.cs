@@ -1,3 +1,11 @@
+/*
+ * Strawberry Game Engine
+ * File: SubscriptionToken.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Lightweight token used to identify subscriptions for unsubscription.
+ */
+
 namespace Strawberry.EventSystem;
 
 /// <summary>

@@ -1,3 +1,11 @@
+/*
+ * Strawberry Game Engine
+ * File: DisposableReferenceObject.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Reference object with disposable support for managed and unmanaged cleanup.
+ */
+
 using System;
 
 namespace Strawberry;

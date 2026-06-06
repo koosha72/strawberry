@@ -10,6 +10,9 @@ using Strawberry.Web.Input;
 
 namespace Strawberry.Web;
 
+/// <summary>
+/// The game launcher for web assembly platform.
+/// </summary>
 public class GameLauncher : IGameLauncher
 {
     static GameLauncher instance = null;

@@ -1,5 +1,16 @@
+/*
+ * Strawberry Game Engine
+ * File: ColorAffector.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Affector that modifies particle color using gradients over lifetime.
+ */
+
 namespace Strawberry.Graphics.ParticleSystem
 {
+    /// <summary>
+    /// An affector that modifies particle color using gradients over lifetime.
+    /// </summary>
     public class ColorAffector : IParticleAffector
     {
         public ColorGradient Gradient = new ColorGradient();

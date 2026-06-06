@@ -3,7 +3,7 @@ using Strawberry.Graphics;
 
 namespace Strawberry.Android.Graphics;
 
-internal class InputLayout
+public class InputLayout
 {
     VertexElementContainer elements;
     public InputLayout(VertexElementContainer elements)

@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Strawberry.OpenAL;
 
-public class ALC
+internal class ALC
 {
     internal const string Lib = "libopenal";
 

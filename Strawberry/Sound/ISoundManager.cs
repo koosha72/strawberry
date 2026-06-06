@@ -1,7 +1,18 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: ISoundManager.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Interface for the engine's sound manager.
+ */
+
+using Strawberry.Math;
 
 namespace Strawberry.Sound
 {
+    /// <summary>
+    /// Manages all sounds in the game
+    /// </summary>
     public interface ISoundManager : IBase
     {
         bool IsEnabled { get; set; }

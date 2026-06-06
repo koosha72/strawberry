@@ -1,5 +1,16 @@
-﻿namespace Strawberry.Input
+﻿/*
+ * Strawberry Game Engine
+ * File: IInputManager.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Input manager interface for keyboard and pointing device handling.
+ */
+
+namespace Strawberry.Input
 {
+    /// <summary>
+    /// The manager that handles all user input in the game
+    /// </summary>
     public interface IInputManager
     {
         /// <summary>

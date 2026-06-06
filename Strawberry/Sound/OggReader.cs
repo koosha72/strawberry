@@ -1,5 +1,11 @@
-using System;
-using System.IO;
+/*
+ * Strawberry Game Engine
+ * File: OggReader.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * OGG Vorbis reader implementation used for streaming audio.
+ */
+
 using Math = System.Math;
 using NVorbis;
 

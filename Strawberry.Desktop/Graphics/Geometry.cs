@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Strawberry.Desktop.Graphics
 {
-    internal class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
+    public class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
     {
         int vbo;
         int ibo;

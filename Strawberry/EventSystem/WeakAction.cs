@@ -1,3 +1,12 @@
+/*
+ * Strawberry Game Engine
+ * File: WeakAction.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Implements weak-referenced action wrappers to avoid preventing
+ * target objects from being garbage collected.
+ */
+
 using System.Diagnostics;
 using System.Reflection;
 

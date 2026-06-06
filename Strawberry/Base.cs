@@ -1,7 +1,15 @@
-﻿namespace Strawberry
+﻿/*
+ * Strawberry Game Engine
+ * File: Base.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Base disposable class for objects that manage unmanaged resources.
+ */
+
+namespace Strawberry
 {
     /// <summary>
-    /// The Base Class for any object containing unmanged references.
+    /// The Base Class for any object containing unmanaged references.
     /// </summary>
     public class Base : IDisposable
     {

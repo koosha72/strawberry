@@ -1,5 +1,16 @@
-﻿namespace Strawberry.Graphics
+﻿/*
+ * Strawberry Game Engine
+ * File: VertexElementContainer.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Container describing vertex element layouts used by shaders.
+ */
+
+namespace Strawberry.Graphics
 {
+    /// <summary>
+    /// Represents a container for vertex element layouts used by shaders.
+    /// </summary>
     public class VertexElementContainer
     {
         Dictionary<string, ElementFormats> elements;
@@ -13,7 +24,11 @@
             elements = new Dictionary<string, ElementFormats>();
             Size = 0;
         }
-
+        /// <summary>
+        /// Adds a vertex element to the container.
+        /// </summary>
+        /// <param name="name">The name of the vertex element</param>
+        /// <param name="format">The format of the vertex element</param>
         public void Add(string name, ElementFormats format)
         {
             elements.Add(name, format);

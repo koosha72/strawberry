@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Graphics
+﻿/*
+ * Strawberry Game Engine
+ * File: Shader.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Base shader abstraction for GPU programs and parameter setting.
+ */
+
+namespace Strawberry.Graphics
 {
     /// <summary>
     /// Represents a texture.
@@ -6,7 +14,7 @@
     public abstract class Shader : DisposableReferenceObject
     {
         /// <summary>
-        /// The graphics context by which the resource is created
+        /// Gets the graphics context by which the resource is created
         /// </summary>
         public abstract IGraphicsContext GraphicsContext { get; }
 

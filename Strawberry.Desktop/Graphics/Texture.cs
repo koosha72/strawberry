@@ -4,7 +4,7 @@ using Strawberry.Math;
 
 namespace Strawberry.Desktop.Graphics
 {
-    internal class Texture : Strawberry.Graphics.Texture
+    public class Texture : Strawberry.Graphics.Texture
     {
         public override int Width { get; }
 

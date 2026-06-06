@@ -1,11 +1,19 @@
-﻿using Strawberry.Serialization;
+﻿/*
+ * Strawberry Game Engine
+ * File: Entity.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Core entity type that owns components, children, and tags.
+ */
+
+using Strawberry.Serialization;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Strawberry.Core
 {
     /// <summary>
-    /// Represents a game entity that can contain components, children, tags, and event handlers.
+    /// Represents a game entity that can contain components, children and tags.
     /// </summary>
     public class Entity : ReferenceObject
     {
@@ -21,11 +29,6 @@ namespace Strawberry.Core
         {
             get { return Components; }
         }
-
-        Dictionary<string, EventHolder> registeredEvents = new Dictionary<string, EventHolder>();
-
-        Dictionary<BaseComponent, Dictionary<string, Delegate>> componentEvents =
-            new Dictionary<BaseComponent, Dictionary<string, Delegate>>();
 
         /// <summary>
         /// Gets the scene that owns this entity.
@@ -366,7 +369,6 @@ namespace Strawberry.Core
         {
             Type t = typeof(T);
             T c = (T)(from cmp in Components where cmp.GetType() == t select cmp).First();
-            //RemoveEvents(c);
             c.OnDisabled();
             c.OnFinished();
             Components.Remove(c);
@@ -381,7 +383,6 @@ namespace Strawberry.Core
         {
             Type t = component.GetType();
             BaseComponent c = (BaseComponent)(from cmp in Components where cmp.GetType() == t select cmp).First();
-            //RemoveEvents(c);
             c.OnDisabled();
             c.OnFinished();
             Components.Remove(c);
@@ -457,14 +458,12 @@ namespace Strawberry.Core
 
         #region On...
         /// <summary>
-        /// Initializes the entity event registrations and triggers component startup events.
+        /// Initializes the entity and triggers component startup callbacks.
         /// </summary>
         /// <param name="id">The entity identifier.</param>
         /// <param name="owner">The owning scene.</param>
         public virtual void OnInitialize(string id, Scene owner)
         {
-            //RegisterEvent<Action<SpriteRenderer>>("EditorRender");
-
             foreach (BaseComponent c in Components)
             {
                 c.OnBegin();
@@ -477,7 +476,7 @@ namespace Strawberry.Core
         }
 
         /// <summary>
-        /// Handles entity cleanup by invoking disable and finish events on attached components.
+        /// Handles entity cleanup by invoking disable and finish callbacks on attached components.
         /// </summary>
         public void OnDestroy()
         {

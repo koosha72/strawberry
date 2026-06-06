@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Sound
+﻿/*
+ * Strawberry Game Engine
+ * File: Enums.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Enumerations used by the audio subsystem.
+ */
+
+namespace Strawberry.Sound
 {
     /// <summary>
     /// Specifies the attenuation (fall-off) model used for 3D spatialized sounds, 

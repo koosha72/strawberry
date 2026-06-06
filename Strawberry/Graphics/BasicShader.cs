@@ -1,5 +1,16 @@
-﻿namespace Strawberry.Graphics
+﻿/*
+ * Strawberry Game Engine
+ * File: BasicShader.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Provides a basic default shader implementation for sprites and simple geometry.
+ */
+
+namespace Strawberry.Graphics
 {
+    /// <summary>
+    /// Represents a basic shader that can be used for sprites and simple geometry. It only supports position, texture coordinates and colors as inputs
+    /// </summary>
     public class BasicShader : StrawberryShader
     {
         string vs = @"<HLSL>struct VOut
@@ -83,6 +94,9 @@
         }
 
         Math.Matrix4 projection;
+        /// <summary>
+        /// Gets or sets the projection matrix
+        /// </summary>
         public Math.Matrix4 Projection
         {
             get
@@ -95,7 +109,10 @@
                 BaseShader.SetMatrixParameterByName("", "projection", projection, false);
             }
         }
-
+        /// <summary>
+        /// Sets the texture used by the shader
+        /// </summary>
+        /// <param name="tex">The texture</param>
         public void SetTexture(Texture tex)
         {
             tex.Activate(this.BaseShader, "tex0");

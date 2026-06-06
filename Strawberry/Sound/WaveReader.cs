@@ -1,7 +1,17 @@
+/*
+ * Strawberry Game Engine
+ * File: WaveReader.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Wave file reader implementation for PCM WAV audio.
+ */
+
 using System.Text;
 
 namespace Strawberry.Sound;
-
+/// <summary>
+/// A wave file reader used to read and stream .wav files.
+/// </summary>
 public class WaveReader : ISoundReader
 {
     public Stream Stream { get; private set; }

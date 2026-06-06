@@ -1,5 +1,18 @@
-﻿namespace Strawberry.Input
+﻿/*
+ * Strawberry Game Engine
+ * File: Enums.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Input-related enums for pointer buttons and keyboard keys.
+ */
+
+namespace Strawberry.Input
 {
+    /// <summary>
+    /// The possible pointer buttons of a pointing device
+    /// For a mouse this is the left, right and middle button
+    /// This enumeration supports a bitwise combination of its member values.
+    /// </summary>
     [Flags]
     public enum PointerButtons : byte
     {
@@ -9,15 +22,17 @@
         /// </summary>
         Primary = 2,
         /// <summary>
-        /// Right mouse button
+        /// Right mouse button. Should be implemented using Gestures for touch devices
         /// </summary>
         Secondary = 4,
         /// <summary>
-        /// Middle mouse button
+        /// Middle mouse button. Should be implemented using Gestures for touch devices
         /// </summary>
         Alternative = 8
     }
-
+    /// <summary>
+    /// Specifies key codes and modifiers.
+    /// </summary>
     public enum Keys
     {
         //

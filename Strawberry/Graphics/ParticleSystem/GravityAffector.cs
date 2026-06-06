@@ -1,7 +1,18 @@
+/*
+ * Strawberry Game Engine
+ * File: GravityAffector.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Particle affector applying constant gravity to particle velocity.
+ */
+
 using Strawberry.Math;
 
 namespace Strawberry.Graphics.ParticleSystem
 {
+    /// <summary>
+    /// Particle affector applying constant gravity to particle velocity.
+    /// </summary>
     public class GravityAffector : IParticleAffector
     {
         public Vector2 Gravity = new Vector2(0f, 200f);

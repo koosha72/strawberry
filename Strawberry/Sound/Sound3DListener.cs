@@ -1,7 +1,18 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: Sound3DListener.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Abstract 3D sound listener used by the sound system.
+ */
+
+using Strawberry.Math;
 
 namespace Strawberry.Sound
 {
+    /// <summary>
+    /// A 3D sound listener that can be used to control the position, direction and up vector of a sound listener.
+    /// </summary>
     public abstract class Sound3DListener : DisposableReferenceObject
     {
         /// <summary>

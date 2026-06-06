@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Math
+﻿/*
+ * Strawberry Game Engine
+ * File: Matrix2.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * 2x2 matrix implementation used by engine math routines.
+ */
+
+namespace Strawberry.Math
 {
     public struct Matrix2
     {

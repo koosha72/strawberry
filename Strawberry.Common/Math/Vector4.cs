@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Math
+﻿/*
+ * Strawberry Game Engine
+ * File: Vector4.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * 4D vector struct used by the engine math utilities.
+ */
+
+namespace Strawberry.Math
 {
     public struct Vector4
     {

@@ -3,7 +3,7 @@ using Strawberry.Web.Helpers;
 
 namespace Strawberry.Web.Graphics;
 
-internal class RenderTarget : Strawberry.Graphics.RenderTarget
+public class RenderTarget : Strawberry.Graphics.RenderTarget
 {
     Texture texture;
 

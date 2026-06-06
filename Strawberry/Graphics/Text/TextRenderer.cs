@@ -1,6 +1,14 @@
-using System;
+/*
+ * Strawberry Game Engine
+ * File: TextRenderer.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * High-level text layouting and shaping utilities for rendering Persian/RTL text.
+ */
+
 using Strawberry.Graphics.Layers;
 using Strawberry.Math;
+
 
 namespace Strawberry.Graphics.Text;
 

@@ -1,4 +1,12 @@
-﻿using System.Runtime.InteropServices;
+﻿/*
+ * Strawberry Game Engine
+ * File: Color.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Represents a color value with RGBA channels and helpers.
+ */
+
+using System.Runtime.InteropServices;
 
 namespace Strawberry.Graphics
 {

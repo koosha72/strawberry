@@ -3,7 +3,7 @@ using Strawberry.Math;
 
 namespace Strawberry.OpenAL;
 
-public class AL
+internal class AL
 {
     [DllImport(ALC.Lib, EntryPoint = "alListener3f", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Listener3f(ALListener3f param, float value1, float value2, float value3);

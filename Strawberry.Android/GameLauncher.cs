@@ -14,6 +14,9 @@ using Strawberry.Misc;
 
 namespace Strawberry.Android;
 
+/// <summary>
+/// The game launcher for android platform. It represents the main activity.
+/// </summary>
 public class GameLauncher : Activity, IGameLauncher
 {
     EGLHelper eglHelper;

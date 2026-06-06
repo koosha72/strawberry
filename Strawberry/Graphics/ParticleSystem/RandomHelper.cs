@@ -1,6 +1,14 @@
 using System;
 using Strawberry.Math;
 
+/*
+ * Strawberry Game Engine
+ * File: RandomHelper.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Utility functions for random ranges and sampling used by particles.
+ */
+
 namespace Strawberry.Graphics.ParticleSystem
 {
     using Math = System.Math;

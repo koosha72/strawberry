@@ -1,7 +1,18 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * Strawberry Game Engine
+ * File: ParticleTimeline.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Timeline that updates particles using a sequence of affectors.
+ */
+
+using System.Collections.Generic;
 
 namespace Strawberry.Graphics.ParticleSystem
 {
+    /// <summary>
+    /// Timeline that updates particles using a sequence of affectors
+    /// </summary>
     public class ParticleTimeline
     {
         List<IParticleAffector> affectors = new List<IParticleAffector>();

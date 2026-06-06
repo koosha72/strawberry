@@ -1,5 +1,16 @@
+/*
+ * Strawberry Game Engine
+ * File: TextShader.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Specialized shader for rendering signed-distance field text.
+ */
+
 namespace Strawberry.Graphics.Text;
 
+/// <summary>
+/// A specialized shader for rendering signed-distance field text.
+/// </summary>
 public class TextShader : BasicShader
 {
     string vs = @"<HLSL>struct VOut

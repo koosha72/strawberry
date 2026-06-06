@@ -1,4 +1,13 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: Viewport.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Represents a rendering viewport including scene/world coordinates and screen mapping.
+ */
+
+using Strawberry.Math;
+
 
 namespace Strawberry.Graphics
 {
@@ -13,42 +22,42 @@ namespace Strawberry.Graphics
     public class Viewport
     {
         /// <summary>
-        /// Position on the screen in pixel coordinates.
+        /// Gets or sets position on the screen in pixel coordinates.
         /// </summary>
         public Vector2 ScreenPos { get; set; }
 
         /// <summary>
-        /// Size of the viewport area on the screen in pixel units.
+        /// Gets or sets the size of the viewport area on the screen in pixel units.
         /// </summary>
         public Vector2 ScreenSize { get; set; }
 
         /// <summary>
-        /// Position in scene/world coordinates (e.g., for camera targets).
+        /// Gets or sets the position in scene/world coordinates (e.g., for camera targets).
         /// </summary>
         public Vector2 ScenePos { get; set; }
 
         /// <summary>
-        /// Size of the viewport area in scene/world units.
+        /// Gets or sets the size of the viewport area in scene/world units.
         /// </summary>
         public Vector2 SceneSize { get; set; }
 
         /// <summary>
-        /// Indicates whether percent-based positioning should be used instead of absolute pixels.
+        /// Gets or sets whether to use percent-based positioning should be used instead of absolute pixels.
         /// </summary>
         public bool UsePercent { get; set; } = false;
 
         /// <summary>
-        /// Position offset when using percent-based coordinates (0-100% of the screen).
+        /// Gets or sets the position offset when using percent-based coordinates (0-100% of the screen).
         /// </summary>
         public Vector2 PercentPos { get; set; } = new Vector2();
 
         /// <summary>
-        /// Size percentage when using percent-based coordinates (0-100% of the screen).
+        /// Gets or sets the size percentage when using percent-based coordinates (0-100% of the screen).
         /// </summary>
         public Vector2 PercentSize { get; set; } = new Vector2(100);
 
         /// <summary>
-        /// Unique identifier name for this viewport.
+        /// Gets or sets the unique identifier name for this viewport.
         /// </summary>
         public string Name { get; set; }
 

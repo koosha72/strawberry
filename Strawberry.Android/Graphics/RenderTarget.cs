@@ -3,7 +3,7 @@ using Strawberry.Graphics;
 
 namespace Strawberry.Android.Graphics;
 
-internal class RenderTarget : Strawberry.Graphics.RenderTarget
+public class RenderTarget : Strawberry.Graphics.RenderTarget
 {
     Texture texture;
 

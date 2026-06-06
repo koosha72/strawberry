@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Core
+﻿/*
+ * Strawberry Game Engine
+ * File: BaseComponent.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Base class for game components in the entity-component system.
+ */
+
+namespace Strawberry.Core
 {
     /// <summary>
     /// Base class for all components in the Strawberry engine.
@@ -34,12 +42,16 @@
         public virtual void Initialize(Entity owner)
         {
         }
-
+        /// <summary>
+        /// Called when the component is added to an entity.
+        /// </summary>
         public virtual void OnBegin()
         {
             
         }
-
+        /// <summary>
+        /// Called when the component is enabled
+        /// </summary>
         public virtual void OnEnabled()
         {
             
@@ -53,7 +65,9 @@
         {
             
         }
-
+        /// <summary>
+        /// Called when the component is disabled.
+        /// </summary>
         public virtual void OnDisabled()
         {
             

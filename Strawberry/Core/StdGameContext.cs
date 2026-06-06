@@ -1,4 +1,12 @@
-﻿using Strawberry.Graphics;
+﻿/*
+ * Strawberry Game Engine
+ * File: StdGameContext.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Standard game context implementation with scene management.
+ */
+
+using Strawberry.Graphics;
 using Strawberry.Input;
 using Strawberry.Misc;
 using Strawberry.Sound;

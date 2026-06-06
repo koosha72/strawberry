@@ -3,7 +3,7 @@ using Strawberry.Web.Helpers;
 
 namespace Strawberry.Web.Graphics;
 
-internal class InputLayout
+public class InputLayout
 {
     VertexElementContainer elements;
     public InputLayout(VertexElementContainer elements)

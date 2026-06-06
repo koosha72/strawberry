@@ -5,7 +5,7 @@ using Strawberry.Web.Helpers;
 
 namespace Strawberry.Web.Graphics;
 
-internal class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
+public class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
 {
     int vbo;
     int ibo;

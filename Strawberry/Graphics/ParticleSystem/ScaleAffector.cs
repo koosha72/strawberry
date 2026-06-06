@@ -1,5 +1,16 @@
+/*
+ * Strawberry Game Engine
+ * File: ScaleAffector.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Affector that scales particle size over their lifetime.
+ */
+
 namespace Strawberry.Graphics.ParticleSystem
 {
+    /// <summary>
+    /// Affector that scales particle size over their lifetime
+    /// </summary>
     public class ScaleAffector : IParticleAffector
     {
         public InterpolationCurve ScaleCurve = new InterpolationCurve();

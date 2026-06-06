@@ -1,8 +1,20 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: StrawberryShader.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Helper for compiling and managing platform shaders and shader helpers.
+ * It will soon be modified heavily
+ */
+
+using Strawberry.Math;
 using System.Text.RegularExpressions;
 
 namespace Strawberry.Graphics
 {
+    /// <summary>
+    /// A helper class for compiling and managing platform shaders
+    /// </summary>
     public class StrawberryShader : Base, IDisposable
     {
         public Shader BaseShader { get; private set; }
@@ -17,7 +29,15 @@ namespace Strawberry.Graphics
         {
             this.GraphicsContext = context;
         }
-
+        /// <summary>
+        /// Initialize the shader with a vertex and pixel shader code
+        /// </summary>
+        /// <param name="vsCode">Vertex shader code</param>
+        /// <param name="psCode">Pixel shader code</param>
+        /// <param name="vsEntryPoint">Entry point for the vertex shader</param>
+        /// <param name="psEntryPoint">Entry point for the pixel shader</param>
+        /// <param name="elements">Shader input elements</param>
+        /// <param name="lang">Shader language. HLSL is not supported right now.</param>
         public void Initialize(string vsCode, string psCode,
             string vsEntryPoint, string psEntryPoint, VertexElementContainer elements, ShaderLanguage lang = ShaderLanguage.GLSL)
         {
@@ -53,6 +73,9 @@ namespace Strawberry.Graphics
             BaseShader = GraphicsContext.CreateShader(vs, ps, vsEntryPoint, psEntryPoint, elements);
         }
 
+        /// <summary>
+        /// Activates the shader for rendering
+        /// </summary>
         public virtual void Activate()
         {
             BaseShader.Activate();
@@ -64,6 +87,9 @@ namespace Strawberry.Graphics
         }
     }
 
+    /// <summary>
+    /// Represents a simple vertex with 2-dimensional position and 4-byte color data.
+    /// </summary>
     public struct VertexPositionColor
     {
         public Vector2 Position { get; set; }
@@ -79,6 +105,9 @@ namespace Strawberry.Graphics
         }
     }
 
+    /// <summary>
+    /// Represents a simple vertex with 2-dimensional position and texture coordinates data, and a 4-byte color data.
+    /// </summary>
     public struct VertexPositionTexColor
     {
         public Vector2 Position { get; set; }

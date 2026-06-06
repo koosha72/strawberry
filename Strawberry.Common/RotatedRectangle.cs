@@ -1,22 +1,48 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: RotatedRectangle.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Rectangle with rotation and origin support for collision and rendering.
+ */
+
+using Strawberry.Math;
 
 namespace Strawberry.Common
 {
+    /// <summary>
+    /// Represents a floating-point rectangle defined by its X, Y, Width, and Height coordinates, with a rotation angle and origin point.
+    /// </summary>
     public struct RotatedRectangle
     {
+        /// <summary>
+        /// Gets or sets the X position of the rectangle.
+        /// </summary>
         public float X { get; set; }
-
+        /// <summary>
+        /// Gets or sets the Y position of the rectangle.
+        /// </summary>
         public float Y { get; set; }
-
+        /// <summary>
+        /// Gets or sets the width of the rectangle.
+        /// </summary>
         public float Width { get; set; }
-
+        /// <summary>
+        /// Gets or sets the height of the rectangle.
+        /// </summary>
         public float Height { get; set; }
 
+        /// <summary>
+        /// Gets the position of the rectangle as a vector
+        /// </summary>
         Vector2 Position
         {
             get { return new Vector2(X, Y); }
         }
 
+        /// <summary>
+        /// Gets the upper-left vertex of the rectangle
+        /// </summary>
         public Math.Vector2 Vertex1
         {
             get
@@ -26,7 +52,9 @@ namespace Strawberry.Common
                 return v1 + Position;
             }
         }
-
+        /// <summary>
+        /// Gets the upper-right vertex of the rectangle
+        /// </summary>
         public Math.Vector2 Vertex2
         {
             get
@@ -36,7 +64,9 @@ namespace Strawberry.Common
                 return v1 + Position;
             }
         }
-
+        /// <summary>
+        /// Gets the bottom-right vertex of the rectangle
+        /// </summary>
         public Math.Vector2 Vertex3
         {
             get
@@ -46,7 +76,9 @@ namespace Strawberry.Common
                 return v1 + Position;
             }
         }
-
+        /// <summary>
+        /// Gets the bottom-left vertex of the rectangle
+        /// </summary>
         public Math.Vector2 Vertex4
         {
             get
@@ -56,40 +88,51 @@ namespace Strawberry.Common
                 return v1 + Position;
             }
         }
-
+        /// <summary>
+        /// Gets or sets the left of the rectangle
+        /// </summary>
         public float Left
         {
             get { return this.X - Origin.X; }
             set { this.X = value + Origin.X; }
         }
-
+        /// <summary>
+        /// Gets or sets the top of the rectangle
+        /// </summary>
         public float Top
         {
             get { return this.Y - Origin.Y; }
             set { this.Y = value + Origin.Y; }
         }
-
+        /// <summary>
+        /// Gets the right of the rectangle
+        /// </summary>
         public float Right
         {
             get { return this.X + this.Width - Origin.X; }
         }
-
+        /// <summary>
+        /// Gets the bottom of the rectangle
+        /// </summary>
         public float Bottom
         {
             get { return this.Y + this.Height - Origin.Y; }
         }
-
+        /// <summary>
+        /// Gets or sets the angle of the rectangle
+        /// </summary>
         public float Angle { get; set; }
-
+        /// <summary>
+        /// Gets or sets the origin of the rectangle around which the rectangle is rotated
+        /// </summary>
         public Vector2 Origin { get; set; }
-
         public RotatedRectangle(float x, float y, float width, float height, float angle, Vector2 origin)
         {
             if (width > 0)
                 this.X = x;
             else
                 this.X = x - width;
-            if(height > 0)
+            if (height > 0)
                 this.Y = y;
             else
                 this.Y = y - height;
@@ -97,7 +140,7 @@ namespace Strawberry.Common
                 this.Width = width;
             else
                 this.Width = -width;
-            if(height > 0)
+            if (height > 0)
                 this.Height = height;
             else
                 this.Height = -height;
@@ -158,7 +201,11 @@ namespace Strawberry.Common
         {
 
         }
-
+        /// <summary>
+        /// Checks whether a point is inside the rotated rectangle.
+        /// </summary>
+        /// <param name="point">The position of the point</param>
+        /// <returns>Returns true if the point is inside, false otherwise</returns>
         public bool IsPointInside(Math.Vector2 point)
         {
             Vector2 p = new Vector2(point);
@@ -167,7 +214,12 @@ namespace Strawberry.Common
             p += Position;
             return p.X <= Right && p.X >= Left && p.Y >= Top && p.Y <= Bottom;
         }
-
+        /// <summary>
+        /// Checks whether a point is inside the rotated rectangle.
+        /// </summary>
+        /// <param name="x">The x coordinate of the point</param>
+        /// <param name="y">The y coordinate of the point</param>
+        /// <returns>Returns true if the point is inside, false otherwise</returns>
         public bool IsPointInside(float x, float y)
         {
             return IsPointInside(new Vector2(x, y));

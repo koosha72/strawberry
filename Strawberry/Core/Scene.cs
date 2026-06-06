@@ -1,4 +1,12 @@
-﻿using Strawberry.Common;
+﻿/*
+ * Strawberry Game Engine
+ * File: Scene.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Scene container for entities, layers, viewports, and physics simulation.
+ */
+
+using Strawberry.Common;
 using Strawberry.Graphics;
 using Strawberry.Graphics.Layers;
 using Strawberry.Math;

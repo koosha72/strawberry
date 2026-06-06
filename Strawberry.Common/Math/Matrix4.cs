@@ -1,4 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿/*
+ * Strawberry Game Engine
+ * File: Matrix4.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * 4x4 matrix implementation used for transforms and projections.
+ */
+
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Strawberry.Math

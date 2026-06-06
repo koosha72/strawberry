@@ -4,6 +4,9 @@ using Strawberry.Input;
 
 namespace Strawberry.Web;
 #pragma warning disable CA1416
+/// <summary>
+/// The interop class for web assembly. The main.js file of the game calls callbacks from this class.
+/// </summary>
 public static partial class Interop
 {
     [JSImport("initialize", "main.js")]

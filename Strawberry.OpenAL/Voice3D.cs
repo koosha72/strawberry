@@ -3,7 +3,7 @@ using Strawberry.Sound;
 
 namespace Strawberry.OpenAL
 {
-    internal class Voice3D : Strawberry.Sound.Voice3D, IVoice
+    public class Voice3D : Strawberry.Sound.Voice3D, IVoice
     {
         private Vector3 position;
 

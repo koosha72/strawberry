@@ -1,21 +1,29 @@
-﻿using Strawberry.Math;
+﻿/*
+ * Strawberry Game Engine
+ * File: Voice3DSettings.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Settings container for 3D voice playback.
+ */
+
+using Strawberry.Math;
 
 namespace Strawberry.Sound
 {
     public struct Voice3DSettings
     {
         /// <summary>
-        /// The position of the source sound.
+        /// Gets or sets position of the source sound.
         /// </summary>
         public Vector3 Position { get; set; }
 
         /// <summary>
-        /// The direction to which the sound is projecting
+        /// Ges or sets direction to which the sound is projecting
         /// </summary>
         public Vector3 Direction { get; set; }
 
         /// <summary>
-        /// The velocity of the sound projection
+        /// Gets or sets velocity of the sound projection
         /// </summary>
         public Vector3 Velocity { get; set; }
     }

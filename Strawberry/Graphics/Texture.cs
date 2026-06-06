@@ -1,4 +1,12 @@
-﻿namespace Strawberry.Graphics
+﻿/*
+ * Strawberry Game Engine
+ * File: Texture.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Represents texture resources and operations such as activation and data upload.
+ */
+
+namespace Strawberry.Graphics
 {
     /// <summary>
     /// Represents a texture.
@@ -6,27 +14,28 @@
     public abstract class Texture : DisposableReferenceObject
     {
         /// <summary>
-        /// Width of the texture.
+        /// Gets the width of the texture.
         /// </summary>
         public abstract int Width { get; }
         /// <summary>
-        /// Height of the texture.
+        /// Gets the height of the texture.
         /// </summary>
         public abstract int Height { get; }
 
         /// <summary>
-        /// The actual width of the texture (In Android the texture dimmensions should be a power of 2 so the width and actual width may be different)
+        /// Gets the actual width of the texture (In Android (GLES2) the texture dimensions should be a power of 2 so the width and actual width may be different)
         /// </summary>
         public abstract int ActualWidth { get; }
-        /// The actual width of the texture (In Android the texture dimmensions should be a power of 2 so the height and actual height may be different)
+        /// Gets the actual width of the texture (In Android (GLES2) the texture dimensions should be a power of 2 so the height and actual height may be different)
         public abstract int ActualHeight { get; }
-
         public abstract Math.Vector2 UVFactor { get; }
         /// <summary>
-        /// The graphics context by which the resource is created
+        /// Gets the graphics context by which the resource is created
         /// </summary>
         public abstract IGraphicsContext GraphicsContext { get; }
-
+        /// <summary>
+        /// Gets the settings of the texture
+        /// </summary>
         public abstract TextureSettings TextureSettings { get; }
 
         /// <summary>

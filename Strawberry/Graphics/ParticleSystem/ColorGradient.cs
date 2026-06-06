@@ -1,7 +1,18 @@
 using System.Collections.Generic;
 
+/*
+ * Strawberry Game Engine
+ * File: ColorGradient.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Helper for color gradients used to interpolate particle color over time.
+ */
+
 namespace Strawberry.Graphics.ParticleSystem
 {
+    /// <summary>
+    /// The keyframe for a color gradient at a specific time
+    /// </summary>
     public struct ColorKeyframe
     {
         public float Time;
@@ -14,6 +25,9 @@ namespace Strawberry.Graphics.ParticleSystem
         }
     }
 
+    /// <summary>
+    /// Helper for color gradients used to interpolate particle color over time.
+    /// </summary>
     public class ColorGradient
     {
         List<ColorKeyframe> keyframes = new List<ColorKeyframe>();

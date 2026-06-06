@@ -1,7 +1,18 @@
-﻿using Strawberry.Collection;
+﻿/*
+ * Strawberry Game Engine
+ * File: PostProcessor.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Manages chained post-processing effects applied to render targets.
+ */
+
+using Strawberry.Collection;
 
 namespace Strawberry.Graphics
 {
+    /// <summary>
+    /// Manages chained post-processing effects applied to render targets.
+    /// </summary>
     public class PostProcessor
     {
         OrderedDictionary<string, PostProcessEffect> effects;
@@ -14,7 +25,10 @@ namespace Strawberry.Graphics
 
         uint[] indices;
 
-
+        /// <summary>
+        /// Creates a new post-processor with the specified graphics context.
+        /// </summary>
+        /// <param name="graphicsContext">The graphics context to use for rendering.</param>
         public PostProcessor(IGraphicsContext graphicsContext)
         {
             effects = new OrderedDictionary<string, PostProcessEffect>();
@@ -33,7 +47,9 @@ namespace Strawberry.Graphics
             geometry = GraphicsContext.CreateGeometry<VertexPositionTexColor>(vertices, indices,
                 GeometryType.Static, GeometryType.Static);
         }
-
+        /// <summary>
+        /// Activates the first effect in the post-processor and renders it to the screen.
+        /// </summary>
         public void Activate()
         {
             if (effects.Count == 0)
@@ -44,7 +60,9 @@ namespace Strawberry.Graphics
 
             effects[0].Activate();
         }
-
+        /// <summary>
+        /// Starts the post-processing effect chain.
+        /// </summary>
         public void Render()
         {
             if (effects.Count == 0)
@@ -63,11 +81,19 @@ namespace Strawberry.Graphics
             geometry.Render();
         }
 
+        /// <summary>
+        /// Adds a post process effect to the list of effects
+        /// </summary>
+        /// <param name="name">Name of the post process effect</param>
+        /// <param name="effect">Effect to add</param>
         public void AddPostProcessEffect(string name, PostProcessEffect effect)
         {
             effects.Add(name, effect);
         }
-
+        /// <summary>
+        /// Removes a post process effect from the list of effects
+        /// </summary>
+        /// <param name="name">Name of the post process effect</param>
         public void RemovePostProcessEffect(string name)
         {
             effects.Remove(name);
