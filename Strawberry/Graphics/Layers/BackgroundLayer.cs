@@ -99,6 +99,11 @@ namespace Strawberry.Graphics.Layers
         /// </summary>
         public Vector2 ParallaxFactor { get; set; } = Vector2.One;
 
+        /// <summary>
+        /// Gets or sets the speed at which the background layer scrolls automatically.
+        /// </summary>
+        public Vector2 AutoScrollSpeed { get; set; }
+
         public BackgroundLayer() : this(DefaultMaxBatchCount) { }
 
         public BackgroundLayer(int maxBatchCount)
@@ -153,6 +158,11 @@ namespace Strawberry.Graphics.Layers
             }
 
             realImageIndex = (int)imageIndex;
+
+            if (AutoScrollSpeed != Vector2.Zero)
+            {
+                Position += AutoScrollSpeed * FrameInfo.Information.DeltaTime;
+            }
         }
 
         #region Rendering
