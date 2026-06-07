@@ -1,3 +1,11 @@
+/*
+ * Strawberry Game Engine
+ * File: IStorage.cs
+ * Author: Koosha Aabedini Nassab
+ *
+ * Interface for platform-independent file storage access.
+ */
+
 namespace Strawberry.Misc;
 /// <summary>
 /// The storage manager that handles file storage on different platforms and allows you to read data from a file system.

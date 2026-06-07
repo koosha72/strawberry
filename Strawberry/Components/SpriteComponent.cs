@@ -102,6 +102,15 @@ namespace Strawberry.Components
         {
         }
 
+        public void Setup(Sprite sprite, float imageSpeed, Vector2 origin, Color color, SpriteLayer layer)
+        {
+            this.Sprite = sprite;
+            this.ImageSpeed = imageSpeed;
+            Transform.Origin = origin;
+            this.Color = color;
+            this.Layer = layer;
+        }
+
         public override void OnBegin()
         {
             if (Transform == null)

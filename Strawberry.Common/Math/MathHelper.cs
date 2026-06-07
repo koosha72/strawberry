@@ -84,6 +84,11 @@ namespace Strawberry.Math
             return deg / 180 * System.Math.PI;
         }
 
+        public static float DegToRad(float deg)
+        {
+            return deg / 180 * MathF.PI;
+        }
+
         public static float ToDegrees(float radians)
         {
             // This method uses double precission internally,
