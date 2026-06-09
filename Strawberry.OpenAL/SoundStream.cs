@@ -175,6 +175,15 @@ namespace Strawberry.OpenAL
                 return true;
             }
 
+            var ss = (ALSourceState)AL.GetSourcei(SourceInd, ALGetSourcei.SourceState);
+
+            if (ss == ALSourceState.Stopped && qCount > 0)
+            {
+                AL.SourcePlay(SourceInd);
+                return true;
+            }
+
+
             if (processedCount == 0)
             {
                 ALSourceState state = (ALSourceState)AL.GetSourcei(SourceInd, ALGetSourcei.SourceState);
