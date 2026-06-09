@@ -41,7 +41,7 @@ namespace Strawberry.Sound
         /// </summary>
         /// <param name="loop">Whether to loop the buffer</param>
         /// <returns>The corresponding voice which will be played. You can use this object to stop the playing sound</returns>
-        public abstract Voice Play(bool loop = false);
+        public abstract Voice Play(bool loop = false, int priority = 0);
 
         /// <summary>
         /// Plays the buffer using a frequency ratio
@@ -49,7 +49,7 @@ namespace Strawberry.Sound
         /// <param name="frequencyRatio">The frequency ratio</param>
         /// <param name="loop">Whether to loop the buffer</param>
         /// <returns>The corresponding voice which will be played. You can use this object to stop the playing sound</returns>
-        public abstract Voice Play(float frequencyRatio, bool loop = false);
+        public abstract Voice Play(float frequencyRatio, bool loop = false, int priority = 0);
 
         /// <summary>
         /// Plays the buffer on the specified position
@@ -57,7 +57,7 @@ namespace Strawberry.Sound
         /// <param name="position">The position of the played voice</param>
         /// <param name="loop">Whether to loop the buffer</param>
         /// <returns>The corresponding voice which will be played. You can use this object to stop the playing sound</returns>
-        public abstract Voice3D Play(Vector2 position, bool loop = false);
+        public abstract Voice3D Play(Vector2 position, bool loop = false, int priority = 0);
 
         /// <summary>
         /// Plays the buffer using a frequency ratio on the specified position
@@ -66,7 +66,7 @@ namespace Strawberry.Sound
         /// <param name="frequencyRatio">The frequency ratio</param>
         /// <param name="loop">Whether to loop the buffer</param>
         /// <returns>The corresponding voice which will be played. You can use this object to stop the playing sound</returns>
-        public abstract Voice3D Play(Vector2 position, float frequencyRatio, bool loop = false);
+        public abstract Voice3D Play(Vector2 position, float frequencyRatio, bool loop = false, int priority = 0);
 
         /// <summary>
         /// Plays the buffer using the specified settings
@@ -74,7 +74,7 @@ namespace Strawberry.Sound
         /// <param name="position">The settings to be used by the voice</param>
         /// <param name="loop">Whether to loop the buffer</param>
         /// <returns>The corresponding voice which will be played. You can use this object to stop the playing sound</returns>
-        public abstract Voice3D Play(Voice3DSettings settings, bool loop = false);
+        public abstract Voice3D Play(Voice3DSettings settings, bool loop = false, int priority = 0);
 
         /// <summary>
         /// Plays the buffer using a frequency ratio using the specified settings
@@ -83,7 +83,7 @@ namespace Strawberry.Sound
         /// <param name="frequencyRatio">The frequency ratio</param>
         /// <param name="loop">Whether to loop the buffer</param>
         /// <returns>The corresponding voice which will be played. You can use this object to stop the playing sound</returns>
-        public abstract Voice3D Play(Voice3DSettings settings, float frequencyRatio, bool loop = false);
+        public abstract Voice3D Play(Voice3DSettings settings, float frequencyRatio, bool loop = false, int priority = 0);
 
         /// <summary>
         /// Stops all the voices played using this buffer.

@@ -6,97 +6,148 @@ namespace Strawberry.OpenAL
     public class Voice3D : Strawberry.Sound.Voice3D, IVoice
     {
         private Vector3 position;
-
         public override Vector3 Position
         {
-            get { return position; }
+            get => position;
             set
             {
                 position = value;
-                AL.Source3f(SourceInd, ALSource3f.Position, value.X, value.Y, value.Z);
+                if (!IsVirtual && AL.IsSource(SourceInd))
+                    AL.Source3f(SourceInd, ALSource3f.Position, value.X, value.Y, value.Z);
             }
         }
-        private Vector3 direction;
 
+        private Vector3 direction;
         public override Vector3 Direction
         {
-            get { return direction; }
+            get => direction;
             set
             {
                 direction = value;
-                AL.Source3f(SourceInd, ALSource3f.Direction, value.X, value.Y, value.Z);
+                if (!IsVirtual && AL.IsSource(SourceInd))
+                    AL.Source3f(SourceInd, ALSource3f.Direction, value.X, value.Y, value.Z);
             }
         }
 
         private Vector3 velocity;
-
         public override Vector3 Velocity
         {
-            get { return velocity; }
+            get => velocity;
             set
             {
                 velocity = value;
-                AL.Source3f(SourceInd, ALSource3f.Velocity, value.X, value.Y, value.Z);
+                if (!IsVirtual && AL.IsSource(SourceInd))
+                    AL.Source3f(SourceInd, ALSource3f.Velocity, value.X, value.Y, value.Z);
             }
         }
 
         SoundBuffer buffer;
-        public override Strawberry.Sound.SoundBuffer Buffer { get { return buffer; } }
-
-        private bool isRecycled = false;
-        public void MarkRecycled() { isRecycled = true; }
+        public override Strawberry.Sound.SoundBuffer Buffer => buffer;
 
         public int SourceInd { get; set; }
+
+        public bool IsVirtual => SourceInd == -1;
+
+        // Cache Volume!
+        private float cachedVolume = 1.0f;
+        public override float Volume
+        {
+            get => cachedVolume; // Always return the cache
+            set
+            {
+                cachedVolume = value; // Always update the cache
+                if (!IsVirtual && AL.IsSource(SourceInd))
+                    AL.Sourcef(SourceInd, ALSourcef.Gain, value);
+            }
+        }
+
+        private float cachedFrequencyRatio = 1.0f;
+
+        public override float FrequencyRatio
+        {
+            get => cachedFrequencyRatio;
+            set
+            {
+                cachedFrequencyRatio = value;
+                if (!IsVirtual && AL.IsSource(SourceInd))
+                {
+                    AL.Sourcef(SourceInd, ALSourcef.Gain, value);
+                }
+            }
+        }
+
+        private float maxDistance = 10000.0f;
+        public override float MaxDistance
+        {
+            get => maxDistance;
+            set
+            {
+                maxDistance = value;
+                if (!IsVirtual && AL.IsSource(SourceInd))
+                    AL.Sourcef(SourceInd, ALSourcef.MaxDistance, value);
+            }
+        }
+
+        // Cache and apply ReferenceDistance
+        private float referenceDistance = 100.0f;
+        public override float ReferenceDistance
+        {
+            get => referenceDistance;
+            set
+            {
+                referenceDistance = value;
+                if (!IsVirtual && AL.IsSource(SourceInd))
+                    AL.Sourcef(SourceInd, ALSourcef.ReferenceDistance, value);
+            }
+        }
 
         public override float CurrentPlayTime
         {
             get
             {
+                if (IsVirtual || buffer == null) return 0;
+
                 if (AL.IsSource(SourceInd))
                 {
                     var pos = AL.GetSourcei(SourceInd, ALGetSourcei.ByteOffset);
                     var size = AL.GetBufferi(buffer.ID, ALGetBufferi.Size);
 
-                    if (size == 0)
-                        return 0;
+                    if (size == 0) return 0;
                     return pos / (float)size * buffer.Seconds;
                 }
                 return 0;
             }
             set
             {
-                var size = AL.GetBufferi(buffer.ID, ALGetBufferi.Size);
-                var pos = value / buffer.Seconds;
-                AL.Sourcei(SourceInd, ALSourcei.ByteOffset, (int)(pos * size));
+                if (IsVirtual || buffer == null) return;
+
+                if (AL.IsSource(SourceInd) && buffer.Seconds > 0)
+                {
+                    var size = AL.GetBufferi(buffer.ID, ALGetBufferi.Size);
+                    var pos = value / buffer.Seconds;
+                    AL.Sourcei(SourceInd, ALSourcei.ByteOffset, (int)(pos * size));
+                }
             }
         }
 
-        public override float Volume
-        {
-            get
-            {
-                return AL.GetSourcef(SourceInd, ALSourcef.Gain);
-            }
-            set
-            {
-                AL.Sourcef(SourceInd, ALSourcef.Gain, value);
-            }
-        }
+        int priority = 0;
+        public override int Priority => priority;
 
-        public override float MaxDistance { get; set; }
-        public override float ReferenceDistance { get; set; }
-
-        public Voice3D(SoundBuffer soundBuffer, Voice3DSettings settings, int ind)
+        public Voice3D(SoundBuffer soundBuffer, Voice3DSettings settings, int priority = 0)
         {
-            SourceInd = ind;
+            SourceInd = -1;
             Position = settings.Position;
             Direction = settings.Direction;
             Velocity = settings.Velocity;
+
             buffer = soundBuffer;
+            this.priority = priority;
         }
 
         public override bool IsPlaying()
         {
+            if (IsVirtual) return false;
+
             if (AL.IsSource(SourceInd))
             {
                 ALSourceState state = (ALSourceState)AL.GetSourcei(SourceInd, ALGetSourcei.SourceState);
@@ -107,23 +158,25 @@ namespace Strawberry.OpenAL
 
         public override void Stop()
         {
-            (buffer.SoundManager as SoundManager).Stop(this);
+            (buffer.SoundManager as SoundManager)?.Stop(this);
         }
 
         public override void Pause()
         {
-            if (AL.IsSource(SourceInd))
+            if (!IsVirtual && AL.IsSource(SourceInd))
                 AL.SourcePause(SourceInd);
         }
 
         public override void Resume()
         {
-            if (AL.IsSource(SourceInd))
+            if (!IsVirtual && AL.IsSource(SourceInd))
                 AL.SourcePlay(SourceInd);
         }
 
         public override bool IsPaused()
         {
+            if (IsVirtual) return false;
+
             if (AL.IsSource(SourceInd))
             {
                 ALSourceState state = (ALSourceState)AL.GetSourcei(SourceInd, ALGetSourcei.SourceState);
@@ -132,24 +185,25 @@ namespace Strawberry.OpenAL
             return false;
         }
 
-        protected override void CleanUnmanaged()
+
+        public void ApplyCachedState()
         {
-            if (AL.IsSource(SourceInd))
-            {
-                if (!isRecycled)
-                {
-                    AL.SourceStop(SourceInd);
-                    AL.DeleteSource(SourceInd);
-                }
-                SourceInd = 0;
-                buffer = null;
-            }
-            base.CleanUnmanaged();
+            if (IsVirtual) return;
+
+            AL.Sourcef(SourceInd, ALSourcef.Gain, cachedVolume);
+            AL.Sourcef(SourceInd, ALSourcef.Pitch, cachedFrequencyRatio);
+            AL.Source3f(SourceInd, ALSource3f.Position, position.X, position.Y, position.Z);
+            AL.Source3f(SourceInd, ALSource3f.Direction, direction.X, direction.Y, direction.Z);
+            AL.Source3f(SourceInd, ALSource3f.Velocity, velocity.X, velocity.Y, velocity.Z);
+            AL.Sourcef(SourceInd, ALSourcef.ReferenceDistance, referenceDistance);
+            AL.Sourcef(SourceInd, ALSourcef.MaxDistance, maxDistance);
         }
 
-        public void SetBuffer(SoundBuffer soundBuffer)
+        protected override void CleanUnmanaged()
         {
-            buffer = soundBuffer as SoundBuffer;
+            SourceInd = -1;
+            buffer = null;
+            base.CleanUnmanaged();
         }
     }
 }

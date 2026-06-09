@@ -23,6 +23,10 @@ namespace Strawberry.Sound
         /// </summary>
         public abstract float Volume { get; set; }
 
+        public abstract float FrequencyRatio { get; set; }
+
+        public abstract int Priority { get; }
+
         /// <summary>
         /// Checks whether the voice is beign played.
         /// </summary>

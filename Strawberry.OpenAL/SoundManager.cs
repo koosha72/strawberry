@@ -8,9 +8,15 @@ namespace Strawberry.OpenAL
         nint device;
         nint context;
 
-        List<IVoice> sources = new List<IVoice>();
+        private const int MaxStreamingSources = 4;
+        private const int MaxEffectSources = 28;
 
-        public IEnumerable<IVoice> Sources { get { return sources; } }
+        private Stack<int> availableEffectSources = new Stack<int>();
+        private Stack<int> availableStreamingSources = new Stack<int>();
+
+        List<IVoice> activeVoices = new List<IVoice>();
+
+        public IEnumerable<IVoice> Sources { get { return activeVoices; } }
 
         bool streaming = true;
 
@@ -25,7 +31,6 @@ namespace Strawberry.OpenAL
         Strawberry.Sound.Sound3DListener sound3DListener;
 
         private long lastStreamUpdate;
-        private const long ticksPer100ms = 1000000;
 
         public Strawberry.Sound.Sound3DListener ActiveListener
         {
@@ -48,6 +53,12 @@ namespace Strawberry.OpenAL
             ALC.MakeContextCurrent(context);
             streams = new List<SoundStream>();
 
+            for (int i = 0; i < MaxEffectSources; i++)
+                availableEffectSources.Push(AL.GenSource());
+
+            for (int i = 0; i < MaxStreamingSources; i++)
+                availableStreamingSources.Push(AL.GenSource());
+
             /* streamBuffersThread = new Thread(StreamThread);
             streamBuffersThread.IsBackground = true;
             streamBuffersThread.Start(); */
@@ -59,9 +70,9 @@ namespace Strawberry.OpenAL
             {
                 IsEnabled = false;
 
-                foreach (var v in sources)
+                foreach (var voice in activeVoices)
                 {
-                    v.Pause();
+                    voice.Pause();
                 }
                 foreach (var s in streams)
                 {
@@ -77,9 +88,9 @@ namespace Strawberry.OpenAL
             {
                 IsEnabled = true;
                 ALC.MakeContextCurrent(context);
-                foreach (var v in sources)
+                foreach (var voice in activeVoices)
                 {
-                    v.Resume();
+                    voice.Resume();
                 }
                 foreach (var s in streams)
                 {
@@ -106,18 +117,26 @@ namespace Strawberry.OpenAL
                 {
                     if (!streams[i].Update())
                     {
+                        availableStreamingSources.Push(streams[i].SourceInd);
                         streams[i].Dispose();
                         streams.Remove(streams[i]);
                         i--;
                     }
                 }
-                for (int i = 0; i < sources.Count; i++)
+                for (int i = activeVoices.Count - 1; i >= 0; i--)
                 {
-                    if (!sources[i].IsPlaying() && !sources[i].IsPaused())
+                    var v = activeVoices[i];
+                    if (!v.IsPlaying() && !v.IsPaused() && !v.IsVirtual)
                     {
-                        sources[i].Dispose();
-                        sources.RemoveAt(i);
-                        i--;
+                        AL.Sourcei(v.SourceInd, ALSourcei.Buffer, 0);
+
+                        if (v is SoundStream)
+                            availableStreamingSources.Push(v.SourceInd);
+                        else
+                            availableEffectSources.Push(v.SourceInd);
+
+                        v.SourceInd = -1;
+                        activeVoices.RemoveAt(i);
                     }
                 }
 
@@ -137,7 +156,13 @@ namespace Strawberry.OpenAL
 
         public Strawberry.Sound.SoundStream CreateStream(ISoundReader soundReader)
         {
-            return new SoundStream(this, soundReader);
+            int source = RequestStreamingSource();
+
+            if (source == -1)
+            {
+                throw new Exception(string.Format("No free streaming sources you can stream {0}", MaxStreamingSources));
+            }
+            return new SoundStream(this, soundReader, source);
         }
 
         public Strawberry.Sound.Sound3DListener Create3DListener(Vector3 position, Vector3 velocity, Vector3 lookAt, Vector3 up, bool activate)
@@ -161,75 +186,46 @@ namespace Strawberry.OpenAL
 
         public void StopAll()
         {
-            for (int i = 0; i < sources.Count; i++)
+            foreach (var voice in activeVoices)
             {
-                if (sources[i] != null)
-                {
-                    AL.SourceStop(sources[i].SourceInd);
-                    AL.DeleteSource(sources[i].SourceInd);
-                }
+                voice.Stop();
             }
 
-            sources.Clear();
+            activeVoices.Clear();
         }
 
-        internal Voice Play(SoundBuffer buffer, float frequencyRatio = 1.0f, bool loop = false)
+        internal Voice Play(SoundBuffer buffer, float frequencyRatio = 1.0f, bool loop = false, int priority = 0)
         {
-            int ind = FindIndex();
-            int source = -1;
-            Voice v;
-            if (ind == -1)
-            {
-                source = AL.GenSource();
+            int source = RequestEffectSource(priority);
 
-                v = new Voice(buffer, source);
-                sources.Add(v);
-            }
-            else
+            if (source == -1)
             {
-                source = sources[ind].SourceInd;
-                if (sources[ind] is not Voice)
-                {
-                    sources[ind].MarkRecycled();
-                    sources[ind] = new Voice(buffer, source);
-                }
-                sources[ind].SetBuffer(buffer);
-                v = (Voice)sources[ind];
+                return null;
             }
 
+            Voice v = new Voice(buffer, priority);
+            v.SourceInd = source;
 
             AL.Sourcei(source, ALSourcei.Buffer, buffer.ID);
             AL.Sourcef(source, ALSourcef.Pitch, frequencyRatio);
-            if (loop)
-                AL.Sourceb(source, ALSourceb.Looping, true);
+            if (loop) AL.Sourceb(source, ALSourceb.Looping, true);
             AL.SourcePlay(source);
+
+            activeVoices.Add(v);
             return v;
         }
 
-        internal Voice3D Play(SoundBuffer buffer, Voice3DSettings settings, float frequencyRatio = 1.0f, bool loop = false)
+        internal Voice3D Play(SoundBuffer buffer, Voice3DSettings settings, float frequencyRatio = 1.0f, bool loop = false, int priority = 0)
         {
-            int ind = FindIndex();
-            int source = -1;
-            Voice3D v;
-            if (ind == -1)
-            {
-                source = AL.GenSource();
+            int source = RequestEffectSource(priority);
 
-                v = new Voice3D(buffer, settings, source);
-                sources.Add(v);
-            }
-            else
+            if (source == -1)
             {
-                source = sources[ind].SourceInd;
-                if (sources[ind] is not Voice3D)
-                {
-                    sources[ind].MarkRecycled();
-                    sources[ind] = new Voice3D(buffer, settings, source);
-                }
-                sources[ind].SetBuffer(buffer);
-                v = (Voice3D)sources[ind];
+                return null;
             }
 
+            Voice3D v = new Voice3D(buffer, settings, priority);
+            v.SourceInd = source;
 
             AL.Sourcei(source, ALSourcei.Buffer, buffer.ID);
             AL.Sourcef(source, ALSourcef.Pitch, frequencyRatio);
@@ -240,53 +236,42 @@ namespace Strawberry.OpenAL
             AL.Sourcef(source, ALSourcef.ReferenceDistance, 100.0f);
             AL.Sourcef(source, ALSourcef.RolloffFactor, 1.0f);
             AL.Sourcef(source, ALSourcef.MaxDistance, 10000.0f);
-
-            if (loop)
-                AL.Sourceb(source, ALSourceb.Looping, true);
+            if (loop) AL.Sourceb(source, ALSourceb.Looping, true);
             AL.SourcePlay(source);
+
+            activeVoices.Add(v);
             return v;
         }
 
         internal void Stop(IVoice voice)
         {
+            if (voice.IsVirtual) return;
+
             if (AL.IsSource(voice.SourceInd))
             {
                 AL.SourceStop(voice.SourceInd);
-                AL.DeleteSource(voice.SourceInd);
-                sources.Remove(voice);
+                AL.Sourcei(voice.SourceInd, ALSourcei.Buffer, 0);
+
+                if (voice is SoundStream)
+                    availableStreamingSources.Push(voice.SourceInd);
+                else
+                    availableEffectSources.Push(voice.SourceInd);
             }
+
+            activeVoices.Remove(voice);
         }
 
         internal void Stop(SoundBuffer buffer)
         {
-            for (int i = 0; i < sources.Count; i++)
+            for (int i = activeVoices.Count - 1; i >= 0; i--)
             {
-                IVoice voice = sources[i];
+                IVoice voice = activeVoices[i];
                 if (voice != null)
                 {
-                    if (voice.IsPlaying() && voice.Buffer == buffer)
-                    {
+                    if (voice.Buffer == buffer)
                         Stop(voice);
-                        i--;
-                    }
                 }
             }
-        }
-
-        private int FindIndex()
-        {
-            int ind = -1;
-
-            for (int i = 0; i < sources.Count; i++)
-            {
-                if (!sources[i].IsPlaying() && !sources[i].IsPaused())
-                {
-                    ind = i;
-                    break;
-                }
-            }
-
-            return ind;
         }
 
         internal ALFormat GetSoundFormat(int channels, int bits)
@@ -306,13 +291,68 @@ namespace Strawberry.OpenAL
 
         protected override void CleanUnmanaged()
         {
+            StopAll();
             var device = ALC.GetContextsDevice(context);
             ALC.MakeContextCurrent(0);
             ALC.DestroyContext(context);
             ALC.CloseDevice(device);
             streaming = false;
+            foreach (var source in availableEffectSources)
+            {
+                AL.SourceStop(source);
+                AL.DeleteSource(source);
+            }
+            availableEffectSources.Clear();
+            foreach (var source in availableStreamingSources)
+            {
+                AL.SourceStop(source);
+                AL.DeleteSource(source);
+            }
+            availableStreamingSources.Clear();
             base.CleanUnmanaged();
         }
 
+        private int RequestEffectSource(int requestedPriority)
+        {
+            if (availableEffectSources.Count > 0)
+                return availableEffectSources.Pop();
+
+            IVoice voiceToSteal = null;
+            int lowestPriority = int.MaxValue;
+
+            foreach (var v in activeVoices)
+            {
+                if (v is SoundStream) continue;
+
+                if (v.Priority < lowestPriority && !v.IsPaused())
+                {
+                    lowestPriority = v.Priority;
+                    voiceToSteal = v;
+                }
+            }
+
+            if (voiceToSteal != null && requestedPriority > lowestPriority)
+            {
+                int stolenSource = voiceToSteal.SourceInd;
+
+                AL.SourceStop(stolenSource);
+                AL.Sourcei(stolenSource, ALSourcei.Buffer, 0);
+
+                voiceToSteal.SourceInd = -1;
+                activeVoices.Remove(voiceToSteal);
+
+                return stolenSource;
+            }
+
+            return -1;
+        }
+
+        private int RequestStreamingSource()
+        {
+            if (availableStreamingSources.Count > 0)
+                return availableStreamingSources.Pop();
+
+            return -1;
+        }
     }
 }
