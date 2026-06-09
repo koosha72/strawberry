@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices;
 using Strawberry.Graphics;
 using Strawberry.Input;
-using Strawberry.Misc;
 using Strawberry.OpenAL;
+using Strawberry.Platform;
 using Strawberry.Sound;
 using Strawberry.Web.Graphics;
 using Strawberry.Web.Helpers;
@@ -23,8 +23,6 @@ public class GameLauncher : IGameLauncher
 
     public ISoundManager SoundManager { get; private set; }
 
-    public IStorage Storage { get; private set; }
-
     public event Action Initialized;
     public event Action GameLoop;
     bool paused = false;
@@ -41,8 +39,7 @@ public class GameLauncher : IGameLauncher
     public GameLauncher()
     {
         instance = this;
-        Storage = new StorageManager();
-
+        PlatformServices.RegisterService<IStorage>(new StorageManager());
         SetRootUrl(Interop.RequestRootURL());
         Console.WriteLine("Root URL: " + rootUrl);
     }
@@ -107,8 +104,9 @@ public class GameLauncher : IGameLauncher
     /// <param name="rootUrl">The root url</param>
     public void SetRootUrl(string rootUrl)
     {
-        if (Storage != null)
-            ((StorageManager)Storage).RootUrl = rootUrl;
+        var storage = PlatformServices.GetService<IStorage>() as StorageManager;
+        if (storage != null)
+            storage.RootUrl = rootUrl;
 
         this.rootUrl = rootUrl;
     }
@@ -123,7 +121,11 @@ public class GameLauncher : IGameLauncher
         if (rootUrl == null)
             return;
 
-        await ((StorageManager)Storage).AOTDownload(path);
+        var storage = PlatformServices.GetService<IStorage>() as StorageManager;
+        if (storage != null)
+            ((StorageManager)storage).RootUrl = rootUrl;
+
+        await storage.AOTDownload(path);
     }
 
     public void Run()

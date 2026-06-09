@@ -6,11 +6,11 @@
  * Interface for platform-independent file storage access.
  */
 
-namespace Strawberry.Misc;
+namespace Strawberry.Platform;
 /// <summary>
-/// The storage manager that handles file storage on different platforms and allows you to read data from a file system.
+/// The storage service that handles file storage on different platforms and allows you to read data from a file system.
 /// </summary>
-public interface IStorage
+public interface IStorage : IPlatformService
 {
     /// <summary>
     /// Opens a stream to the specified file.

@@ -8,7 +8,6 @@
 
 using Strawberry.Graphics;
 using Strawberry.Input;
-using Strawberry.Misc;
 using Strawberry.Sound;
 
 namespace Strawberry.Core
@@ -75,8 +74,6 @@ namespace Strawberry.Core
         /// Gets the sound manager associated with this game context.
         /// </summary>
         public ISoundManager SoundManager { get { return launcher.SoundManager; } }
-
-        public IStorage Storage { get { return launcher.Storage; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StdGameContext"/> class with the specified width and height.

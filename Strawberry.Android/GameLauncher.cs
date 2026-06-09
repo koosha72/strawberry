@@ -10,7 +10,7 @@ using Strawberry.Input;
 using Strawberry.Sound;
 using Strawberry.OpenAL;
 using Activity = Android.App.Activity;
-using Strawberry.Misc;
+using Strawberry.Platform;
 
 namespace Strawberry.Android;
 
@@ -25,8 +25,6 @@ public class GameLauncher : Activity, IGameLauncher
     public IInputManager InputManager { get; private set; }
 
     public ISoundManager SoundManager { get; private set; }
-
-    public IStorage Storage { get; private set; }
 
     public event Action Initialized;
     public event Action GameLoop;
@@ -190,7 +188,7 @@ public class GameLauncher : Activity, IGameLauncher
                     GraphicsContext.Initialize(eglHelper, w, h, true);
                     InputManager = new InputManager();
                     SoundManager = new OpenAL.SoundManager();
-                    Storage = new StorageManager();
+                    PlatformServices.RegisterService<IStorage>(new StorageManager());
                     Initialized?.Invoke();
                     firstStart = false;
                 }

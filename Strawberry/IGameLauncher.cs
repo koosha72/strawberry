@@ -8,7 +8,6 @@
 
 using Strawberry.Graphics;
 using Strawberry.Input;
-using Strawberry.Misc;
 using Strawberry.Sound;
 
 namespace Strawberry
@@ -33,10 +32,6 @@ namespace Strawberry
         /// Gets the platform specific object responsible for playing and managing sounds.
         /// </summary>
         ISoundManager SoundManager { get; }
-        /// <summary>
-        /// Gets the platform specific object responsible for retrieving data from a storage device (e.g. file system).
-        /// </summary>
-        IStorage Storage { get; }
 
         /// <summary>
         /// Occurs when the platform independent initializations (opening window, etc.) is finished.

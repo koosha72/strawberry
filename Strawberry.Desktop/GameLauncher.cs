@@ -5,7 +5,7 @@ using Strawberry.Desktop.Graphics;
 using Strawberry.Desktop.Input;
 using Strawberry.Sound;
 using Strawberry.OpenAL;
-using Strawberry.Misc;
+using Strawberry.Platform;
 
 
 namespace Strawberry.Desktop
@@ -20,8 +20,6 @@ namespace Strawberry.Desktop
         public IInputManager InputManager { get; private set; }
 
         public ISoundManager SoundManager { get; private set; }
-
-        public IStorage Storage { get; private set; }
 
         public event Action Initialized;
         public event Action GameLoop;
@@ -57,7 +55,8 @@ namespace Strawberry.Desktop
 
             InputManager = new Input.InputManager();
             SoundManager = new OpenAL.SoundManager();
-            Storage = new StorageManager();
+            PlatformServices.RegisterService<IStorage>(new StorageManager());
+
         }
 
         private void Wnd_Load1()

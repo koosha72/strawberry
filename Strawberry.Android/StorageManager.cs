@@ -1,5 +1,5 @@
 using Android.Content.Res;
-using Strawberry.Misc;
+using Strawberry.Platform;
 using App = Android.App;
 
 namespace Strawberry.Android;
