@@ -1,9 +1,9 @@
-using System;
 using Strawberry.Platform;
+using Strawberry.Platform.Web;
 
 namespace Strawberry.Web;
 
-public class StorageManager : IStorage
+public class StorageManager : IStorage, IAOTDownloader
 {
     public string RootUrl { get; set; }
     Dictionary<string, byte[]> cache = new Dictionary<string, byte[]>();

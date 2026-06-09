@@ -3,6 +3,7 @@ using Strawberry.Graphics;
 using Strawberry.Input;
 using Strawberry.OpenAL;
 using Strawberry.Platform;
+using Strawberry.Platform.Web;
 using Strawberry.Sound;
 using Strawberry.Web.Graphics;
 using Strawberry.Web.Helpers;
@@ -39,7 +40,9 @@ public class GameLauncher : IGameLauncher
     public GameLauncher()
     {
         instance = this;
-        PlatformServices.RegisterService<IStorage>(new StorageManager());
+        var storage = new StorageManager();
+        PlatformServices.RegisterService<IStorage>(storage);
+        PlatformServices.RegisterService<IAOTDownloader>(storage);
         SetRootUrl(Interop.RequestRootURL());
         Console.WriteLine("Root URL: " + rootUrl);
     }
