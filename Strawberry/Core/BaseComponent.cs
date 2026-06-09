@@ -6,6 +6,8 @@
  * Base class for game components in the entity-component system.
  */
 
+using Strawberry.Input;
+
 namespace Strawberry.Core
 {
     /// <summary>
@@ -36,6 +38,17 @@ namespace Strawberry.Core
         public IGameContext GameContext { get { return Owner?.Scene?.GameContext; } }
 
         /// <summary>
+        /// Gets the Keyboard instance of GameContext.InputManager
+        /// </summary>
+        public IKeyboard Keyboard { get { return GameContext?.InputManager?.Keyboard; } }
+
+        /// <summary>
+        /// Gets the PointingDevice instance of GameContext.InputManager
+        /// </summary>
+        public IPointingDevice PointingDevice { get { return GameContext?.InputManager?.PointingDevice; } }
+
+
+        /// <summary>
         /// Called when the component is initialized. Override this method to set up the component's initial state.
         /// </summary>
         /// <param name="owner">The <see cref="Entity"/> that owns this component.</param>
@@ -47,14 +60,14 @@ namespace Strawberry.Core
         /// </summary>
         public virtual void OnBegin()
         {
-            
+
         }
         /// <summary>
         /// Called when the component is enabled
         /// </summary>
         public virtual void OnEnabled()
         {
-            
+
         }
 
         /// <summary>
@@ -63,14 +76,14 @@ namespace Strawberry.Core
         /// <param name="component">The newly added component.</param>
         public virtual void OnComponentAdded(BaseComponent component)
         {
-            
+
         }
         /// <summary>
         /// Called when the component is disabled.
         /// </summary>
         public virtual void OnDisabled()
         {
-            
+
         }
 
         /// <summary>
