@@ -28,6 +28,8 @@ namespace Strawberry
 
         bool initialized = false;
 
+        float cleanUpTimer = 0;
+
 
         //public static Game CurrentGame { get; private set; }
 
@@ -104,6 +106,12 @@ namespace Strawberry
                 GameContext.OnEndUpdate();
                 EventManager.Execute(EventCallTime.OnEndUpdate);
                 launcher.InputManager?.Update();
+            }
+            cleanUpTimer += frameInfoProvider.DeltaTime;
+            if(cleanUpTimer >= 10)
+            {
+                cleanUpTimer -= 10;
+                ReferenceObject.CleanDeadReferences();
             }
         }
         /// <summary>

@@ -6,6 +6,10 @@
  * Base class for reference-tracked objects used by the engine.
  */
 
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
+
 namespace Strawberry
 {
     /// <summary>
@@ -13,15 +17,16 @@ namespace Strawberry
     /// </summary>
     public class ReferenceObject
     {
-        static ulong counter = 1;
+        static long counter = 1;
 
         ulong uniqueId = 0;
-        static Dictionary<ulong, WeakReference<ReferenceObject>> objects = new Dictionary<ulong, WeakReference<ReferenceObject>>();
+        static readonly ConcurrentDictionary<ulong, WeakReference<ReferenceObject>> objects =
+            new ConcurrentDictionary<ulong, WeakReference<ReferenceObject>>();
 
         public ReferenceObject()
         {
-            uniqueId = counter++;
-            objects.Add(uniqueId, new WeakReference<ReferenceObject>(this));
+            uniqueId = (ulong)Interlocked.Increment(ref counter);
+            objects.TryAdd(uniqueId, new WeakReference<ReferenceObject>(this));
         }
 
         /// <summary>
@@ -29,15 +34,20 @@ namespace Strawberry
         /// </summary>
         public ulong UniqueId
         {
-            get
-            {
-                return uniqueId;
-            }
+            get { return Volatile.Read(ref uniqueId); }
             private set
             {
-                uniqueId = value;
-                if (counter < uniqueId)
-                    counter = uniqueId;
+                Volatile.Write(ref uniqueId, value);
+
+                long newValue = (long)value;
+                long currentCounter;
+                do
+                {
+                    currentCounter = Interlocked.Read(ref counter);
+                    if (currentCounter >= newValue)
+                        break;
+                }
+                while (Interlocked.CompareExchange(ref counter, newValue, currentCounter) != currentCounter);
             }
         }
 
@@ -48,10 +58,14 @@ namespace Strawberry
         /// <returns></returns>
         public static ReferenceObject FindObjectById(ulong id)
         {
-            ReferenceObject obj = null;
-            if (objects[id].TryGetTarget(out obj) == false)
-                objects.Remove(id);
-            return obj;
+            if (objects.TryGetValue(id, out var weak))
+            {
+                if (weak.TryGetTarget(out var obj))
+                    return obj;
+                // Reference is dead; remove it
+                objects.TryRemove(id, out _);
+            }
+            return null;
         }
 
         /// <summary>
@@ -59,7 +73,19 @@ namespace Strawberry
         /// </summary>
         public virtual void Destroy()
         {
-            objects.Remove(uniqueId);
+            objects.TryRemove(uniqueId, out _);
+        }
+
+        /// <summary>
+        /// Cleans the objects list of dead references
+        /// </summary>
+        public static void CleanDeadReferences()
+        {
+            foreach (var kvp in objects)
+            {
+                if (!kvp.Value.TryGetTarget(out _))
+                    objects.TryRemove(kvp.Key, out _);
+            }
         }
     }
 }
