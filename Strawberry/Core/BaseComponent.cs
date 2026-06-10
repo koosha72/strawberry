@@ -17,12 +17,12 @@ namespace Strawberry.Core
     public abstract class BaseComponent : ReferenceObject
     {
         /// <summary>
-        /// Gets or sets the <see cref="Entity"/> that owns this component.
+        /// Gets the <see cref="Entity"/> that owns this component.
         /// </summary>
         public Entity Owner
         {
             get;
-            set;
+            internal set;
         }
 
         /// <summary>
