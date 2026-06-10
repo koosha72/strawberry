@@ -135,14 +135,16 @@ namespace Strawberry
                 second = (int)timer.ElapsedMilliseconds / 1000;
                 frame = 0;
             }
-
-            FPS = (int)(((float)Stopwatch.Frequency / LastTime) + 0.5f);
-            if (FPS < MinFPS && FPS > 0 && second > 0)
-                MinFPS = FPS;
-            if (FPS > MaxFPS)
-                MaxFPS = FPS;
-            if (MaxFPS > 1000)
-                MaxFPS = 0;
+            if (LastTime > 0)
+            {
+                FPS = (int)((Stopwatch.Frequency / LastTime) + 0.5f);
+                if (FPS < MinFPS && FPS > 0 && second > 0)
+                    MinFPS = FPS;
+                if (FPS > MaxFPS)
+                    MaxFPS = FPS;
+                if (MaxFPS > 1000)
+                    MaxFPS = 0;
+            }
             loop = 0;
         }
 
