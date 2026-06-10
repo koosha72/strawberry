@@ -38,7 +38,7 @@ namespace Strawberry.Core
         /// <summary>
         /// Gets or sets the identifier for this entity.
         /// </summary>
-        public string ID { get; set; }
+        public string ID { get; internal set; }
 
         /// <summary>
         /// Gets a value indicating whether this entity has been destroyed.
@@ -97,20 +97,18 @@ namespace Strawberry.Core
             get { return parent; }
             set
             {
+                if (value == null)
+                {
+                    parent = value;
+                    return;
+                }
                 if (parent != null)
                     parent.children.Remove(this.ID);
 
-                if (value != null)
+                if (value.Scene == Scene)
                 {
-                    if (value.Scene == Scene)
-                    {
-                        this.parent = value;
-                        parent.children.Add(this.ID, this);
-                    }
-                }
-                else
-                {
-                    parent = value;
+                    this.parent = value;
+                    parent.children.Add(this.ID, this);
                 }
             }
         }
@@ -267,7 +265,7 @@ namespace Strawberry.Core
             component.Initialize(this);
             component.OnBegin();
             component.OnEnabled();
-            foreach(var cmp in Components)
+            foreach (var cmp in Components)
             {
                 cmp.OnComponentAdded(component);
             }
@@ -405,7 +403,7 @@ namespace Strawberry.Core
         }
 
         /// <summary>
-        /// Destroys the entity and all of its children.
+        /// Marks the entity and all of its children for deletion. Entities will be present in the Scene (or int the Children collection of their parent) until the EndUpdate is finished.
         /// </summary>
         public override void Destroy()
         {
@@ -420,7 +418,7 @@ namespace Strawberry.Core
             UpdateEnded = false;
             if (Parent != null)
             {
-                Parent.children.Remove(this.ID);
+                //Parent.children.Remove(this.ID);
                 Parent = null;
             }
             base.Destroy();
@@ -548,6 +546,7 @@ namespace Strawberry.Core
                 Updated = false;
                 UpdateEnded = false;
             }
+            children.Flush();
         }
 
         /// <summary>
@@ -567,6 +566,7 @@ namespace Strawberry.Core
                 UpdateBegan = false;
                 if (!Destroyed)
                 {
+                    var tempVal = new List<Entity>(Children.Values);
                     foreach (Entity child in Children.Values)
                     {
                         if (child.Destroyed)

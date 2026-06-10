@@ -14,20 +14,22 @@ namespace Strawberry.Core
     /// Represents a strongly-typed collection of <see cref="Entity"/> objects, accessible by their string keys.
     /// Wraps a dictionary and implements both mutable and read-only dictionary interfaces.
     /// </summary>
-    public class EntityCollection : IDictionary, IDictionary<string, Entity>,
+    public class EntityCollection : IDictionary<string, Entity>,
                 IReadOnlyDictionary<string, Entity>
     {
-        /// <summary>
-        /// The underlying dictionary that stores the entities.
-        /// </summary>
-        Dictionary<string, Entity> list;
+        List<Entity> data = new List<Entity>();
+        Dictionary<string, int> indexMap = new Dictionary<string, int>();
+
+        List<(string key, Entity entity)> pendingAdds = new();
+        HashSet<string> pendingRemoves = new();
+
+        bool pendingClear = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityCollection"/> class.
         /// </summary>
         public EntityCollection()
         {
-            list = new Dictionary<string, Entity>();
         }
 
         /// <summary>
@@ -40,57 +42,25 @@ namespace Strawberry.Core
         {
             get
             {
-                if (list.ContainsKey(key))
-                    return list[key];
+                return indexMap.TryGetValue(key, out int index) ? data[index] : null;
+            }
+            set
+            {
+                if (indexMap.TryGetValue(key, out int index))
+                {
+                    data[index] = value;
+                }
                 else
-                    return null;
-            }
-
-            set
-            {
-                list[key] = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the element with the specified object key.
-        /// </summary>
-        /// <param name="key">The object key of the element to get or set.</param>
-        /// <returns>The element with the specified key.</returns>
-        object IDictionary.this[object key]
-        {
-            get
-            {
-                return (list as IDictionary)[key];
-            }
-
-            set
-            {
-                (list as IDictionary)[key] = value;
+                {
+                    pendingAdds.Add((key, value));
+                }
             }
         }
 
         /// <summary>
         /// Gets the number of entities contained in the collection.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return list.Count;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="IDictionary"/> object has a fixed size.
-        /// </summary>
-        public bool IsFixedSize
-        {
-            get
-            {
-                return (list as IDictionary).IsFixedSize;
-            }
-        }
+        public int Count => data.Count;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="IDictionary"/> object is read-only.
@@ -99,51 +69,7 @@ namespace Strawberry.Core
         {
             get
             {
-                return (list as IDictionary).IsReadOnly;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether access to the <see cref="ICollection"/> is synchronized (thread safe).
-        /// </summary>
-        public bool IsSynchronized
-        {
-            get
-            {
-                return (list as IDictionary).IsSynchronized;
-            }
-        }
-
-        /// <summary>
-        /// Gets an <see cref="ICollection"/> object containing the keys of the <see cref="IDictionary"/> object.
-        /// </summary>
-        ICollection IDictionary.Keys
-        {
-            get
-            {
-                return (list as IDictionary).Keys;
-            }
-        }
-
-        /// <summary>
-        /// Gets an object that can be used to synchronize access to the <see cref="ICollection"/>.
-        /// </summary>
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                return (list as IDictionary).SyncRoot;
-            }
-        }
-
-        /// <summary>
-        /// Gets an <see cref="ICollection"/> object containing the values in the <see cref="IDictionary"/> object.
-        /// </summary>
-        ICollection IDictionary.Values
-        {
-            get
-            {
-                return (list as IDictionary).Values;
+                return false;
             }
         }
 
@@ -154,7 +80,7 @@ namespace Strawberry.Core
         {
             get
             {
-                return (list as IReadOnlyDictionary<string, Entity>).Keys;
+                return indexMap.Keys;
             }
         }
 
@@ -165,7 +91,7 @@ namespace Strawberry.Core
         {
             get
             {
-                return list.Keys;
+                return indexMap.Keys;
             }
         }
 
@@ -176,7 +102,7 @@ namespace Strawberry.Core
         {
             get
             {
-                return (list as IReadOnlyDictionary<string, Entity>).Values;
+                return data;
             }
         }
 
@@ -187,7 +113,7 @@ namespace Strawberry.Core
         {
             get
             {
-                return list.Values;
+                return data;
             }
         }
 
@@ -197,7 +123,7 @@ namespace Strawberry.Core
         /// </summary>
         public IList<Entity> Values
         {
-            get { return list.Values.ToList(); }
+            get { return data; }
         }
 
         /// <summary>
@@ -206,7 +132,7 @@ namespace Strawberry.Core
         /// </summary>
         public IList<string> Keys
         {
-            get { return list.Keys.ToList(); }
+            get { return indexMap.Keys.ToList(); }
         }
 
         /// <summary>
@@ -215,27 +141,23 @@ namespace Strawberry.Core
         /// <param name="item">The key-value pair to add.</param>
         void ICollection<KeyValuePair<string, Entity>>.Add(KeyValuePair<string, Entity> item)
         {
-            list.Add(item.Key, item.Value);
+            Add(item.Key, item.Value);
         }
 
         /// <summary>
-        /// Adds an entity with the specified key to the collection.
+        /// Adds an entity with the specified key to the collection.  The changes to the collection will not apply until <see cref="Flush"/> is called.
         /// </summary>
         /// <param name="key">The key of the entity to add.</param>
         /// <param name="value">The entity to add.</param>
         public void Add(string key, Entity value)
         {
-            list.Add(key, value);
+            pendingAdds.Add((key, value));
         }
 
-        /// <summary>
-        /// Adds an element with the provided key and value to the <see cref="IDictionary"/> object.
-        /// </summary>
-        /// <param name="key">The object to use as the key of the element to add.</param>
-        /// <param name="value">The object to use as the value of the element to add.</param>
-        void IDictionary.Add(object key, object value)
+        private void ImmediateAdd(string key, Entity value)
         {
-            (list as IDictionary).Add(key, value);
+            indexMap.Add(key, data.Count);
+            data.Add(value);
         }
 
         /// <summary>
@@ -243,7 +165,9 @@ namespace Strawberry.Core
         /// </summary>
         public void Clear()
         {
-            list.Clear();
+            pendingClear = true;
+            pendingAdds.Clear();
+            pendingRemoves.Clear();
         }
 
         /// <summary>
@@ -253,17 +177,7 @@ namespace Strawberry.Core
         /// <returns><c>true</c> if the item is found; otherwise, <c>false</c>.</returns>
         bool ICollection<KeyValuePair<string, Entity>>.Contains(KeyValuePair<string, Entity> item)
         {
-            return (list as IDictionary<string, Entity>).Contains(item);
-        }
-
-        /// <summary>
-        /// Determines whether the <see cref="IDictionary"/> object contains an element with the specified key.
-        /// </summary>
-        /// <param name="key">The key to locate in the <see cref="IDictionary"/> object.</param>
-        /// <returns><c>true</c> if the <see cref="IDictionary"/> contains an element with the key; otherwise, <c>false</c>.</returns>
-        bool IDictionary.Contains(object key)
-        {
-            return (list as IDictionary).Contains(key);
+            return indexMap.ContainsKey(item.Key) && data.Contains(item.Value);
         }
 
         /// <summary>
@@ -273,7 +187,7 @@ namespace Strawberry.Core
         /// <returns><c>true</c> if the collection contains an entity with the key; otherwise, <c>false</c>.</returns>
         public bool ContainsKey(string key)
         {
-            return list.ContainsKey(key);
+            return indexMap.ContainsKey(key);
         }
 
         /// <summary>
@@ -283,26 +197,10 @@ namespace Strawberry.Core
         /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
         void ICollection<KeyValuePair<string, Entity>>.CopyTo(KeyValuePair<string, Entity>[] array, int arrayIndex)
         {
-            (list as IDictionary<string, Entity>).CopyTo(array, arrayIndex);
-        }
-
-        /// <summary>
-        /// Copies the elements of the <see cref="ICollection"/> to an array, starting at the specified array index.
-        /// </summary>
-        /// <param name="array">The one-dimensional array that is the destination of the elements copied from the collection.</param>
-        /// <param name="index">The zero-based index in array at which copying begins.</param>
-        void ICollection.CopyTo(Array array, int index)
-        {
-            (list as IDictionary).CopyTo(array, index);
-        }
-
-        /// <summary>
-        /// Returns an <see cref="IDictionaryEnumerator"/> for the <see cref="IDictionary"/>.
-        /// </summary>
-        /// <returns>An <see cref="IDictionaryEnumerator"/> for the <see cref="IDictionary"/>.</returns>
-        IDictionaryEnumerator IDictionary.GetEnumerator()
-        {
-            return (list as IDictionary).GetEnumerator();
+            foreach (var kvp in indexMap)
+            {
+                array[arrayIndex++] = new KeyValuePair<string, Entity>(kvp.Key, data[kvp.Value]);
+            }
         }
 
         /// <summary>
@@ -312,30 +210,54 @@ namespace Strawberry.Core
         /// <returns><c>true</c> if the item was successfully removed; otherwise, <c>false</c>.</returns>
         bool ICollection<KeyValuePair<string, Entity>>.Remove(KeyValuePair<string, Entity> item)
         {
-            var res = (list as IDictionary<string, Entity>).Remove(item);
+            var res = Remove(item.Key);
 
             return res;
         }
 
         /// <summary>
-        /// Removes the entity with the specified key from the collection.
+        /// Removes the entity with the specified key from the collection. The changes to the collection will not apply until <see cref="Flush"/> is called.
         /// </summary>
         /// <param name="key">The key of the entity to remove.</param>
         /// <returns><c>true</c> if the entity is successfully removed; otherwise, <c>false</c>.</returns>
         public bool Remove(string key)
         {
-            var res = list.Remove(key);
+            for (int i = 0; i < pendingAdds.Count; i++)
+            {
+                if (pendingAdds[i].key == key)
+                {
+                    pendingAdds.RemoveAt(i);
+                    return true;
+                }
+            }
 
-            return res;
+            if (!indexMap.TryGetValue(key, out int index))
+                return false;
+
+            pendingRemoves.Add(key);
+            return true;
         }
 
-        /// <summary>
-        /// Removes the element with the specified key from the <see cref="IDictionary"/> object.
-        /// </summary>
-        /// <param name="key">The key of the element to remove.</param>
-        void IDictionary.Remove(object key)
+        public bool ImmediateRemove(string key)
         {
-            (list as IDictionary).Remove(key);
+            if (!indexMap.TryGetValue(key, out int index))
+                return false;
+
+            int lastIndex = data.Count - 1;
+
+            if (index != lastIndex)
+            {
+                // Swap with last element
+                Entity lastEntity = data[lastIndex];
+                data[index] = lastEntity;
+
+                // Update the swapped entity's index in the map
+                indexMap[lastEntity.ID] = index;
+            }
+
+            data.RemoveAt(lastIndex);  // O(1) — removing from end
+            indexMap.Remove(key);
+            return true;
         }
 
         /// <summary>
@@ -346,26 +268,32 @@ namespace Strawberry.Core
         /// <returns><c>true</c> if the collection contains an entity with the specified key; otherwise, <c>false</c>.</returns>
         public bool TryGetValue(string key, out Entity value)
         {
-            return list.TryGetValue(key, out value);
+            if (indexMap.TryGetValue(key, out int index))
+            {
+                value = data[index];
+                return true;
+            }
+            value = null;
+            return false;
         }
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        IEnumerator<KeyValuePair<string, Entity>> IEnumerable<KeyValuePair<string, Entity>>.GetEnumerator()
+        IEnumerator<KeyValuePair<string, Entity>> IEnumerable<KeyValuePair<string, Entity>>.GetEnumerator() => GetEnumerator();
+
+        public IEnumerator<KeyValuePair<string, Entity>> GetEnumerator()
         {
-            return (list as IEnumerable<KeyValuePair<string, Entity>>).GetEnumerator();
+            foreach (var kvp in indexMap)
+                yield return new KeyValuePair<string, Entity>(kvp.Key, data[kvp.Value]);
         }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
         /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the collection.</returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (list as IEnumerable).GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Changes the key associated with an existing entity in the collection.
@@ -375,10 +303,35 @@ namespace Strawberry.Core
         /// <param name="newKey">The new key to assign to the entity.</param>
         public void ChangeKey(string oldKey, string newKey)
         {
-            Entity val = list[oldKey];
-            list.Remove(oldKey);
-            list.Add(newKey, val);
-            val.ID = newKey;
+            int index = indexMap[oldKey];
+            indexMap.Remove(oldKey);
+            indexMap[newKey] = index;
+            data[index].ID = newKey;
+        }
+
+        /// <summary>
+        /// Applies all the pending changes to the collection.
+        /// </summary>
+        public void Flush()
+        {
+
+            if (pendingClear)
+            {
+                data.Clear();
+                indexMap.Clear();
+                pendingClear = false;
+            }
+            else
+            {
+                foreach (var key in pendingRemoves)
+                    ImmediateRemove(key);
+                pendingRemoves.Clear();
+            }
+
+            // There maybe new adds after the Clear call
+            foreach (var (key, entity) in pendingAdds)
+                ImmediateAdd(key, entity);
+            pendingAdds.Clear();
         }
     }
 }

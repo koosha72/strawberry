@@ -192,15 +192,13 @@ namespace Strawberry.Core
             for (int i = 0; i < Entities.Count; i++)
             {
                 Entity en = Entities.Values[i];
-                if (i < 0)
-                    i = 0;
+
                 if (!en.Destroyed && !en.UpdateEnded && en.Parent == null)
                     Entities.Values[i].OnEndUpdate();
                 if (en.Destroyed)
                     destroyList.Add(en.ID);
             }
-            foreach (string s in destroyList)
-                Entities.Remove(s);
+            Entities.Flush();
             destroyList.Clear();
         }
 
@@ -257,12 +255,7 @@ namespace Strawberry.Core
                     i = 0;
                 if (!Entities.Values[i].Destroyed && !Entities.Values[i].Updated && Entities.Values[i].Parent == null)
                     Entities.Values[i].OnUpdate();
-                //if (Entities.Values[i].Destroyed)
-                //i--;
             }
-            //foreach (string s in destroyList)
-            //Entities.Remove(s);
-            destroyList.Clear();
         }
 
         /// <summary>
