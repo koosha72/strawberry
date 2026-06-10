@@ -32,6 +32,6 @@ public class StorageManager : IStorage, IAOTDownloader
         client.BaseAddress = new Uri(RootUrl);
         var response = await client.GetAsync("Assets/" + path);
         var data = await response.Content.ReadAsByteArrayAsync();
-        cache.Add(path, data);
+        cache[path] = data;
     }
 }
