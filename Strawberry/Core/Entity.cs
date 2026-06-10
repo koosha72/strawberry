@@ -279,11 +279,11 @@ namespace Strawberry.Core
         /// </summary>
         /// <typeparam name="T">The component type.</typeparam>
         /// <param name="components">The list of components to add.</param>
-        public void AddComponents<T>(List<T> components) where T : BaseComponent, new()
+        public void AddComponents<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(List<T> components) where T : BaseComponent, new()
         {
             foreach (T c in components)
             {
-                AddComponent<T>();
+                AddComponent<T>(c);
             }
         }
 
@@ -366,7 +366,9 @@ namespace Strawberry.Core
         public void RemoveComponent<T>() where T : BaseComponent
         {
             Type t = typeof(T);
-            T c = (T)(from cmp in Components where cmp.GetType() == t select cmp).First();
+            T c = (T)(from cmp in Components where cmp.GetType() == t select cmp).FirstOrDefault();
+            if (c == null)
+                return;
             c.OnDisabled();
             c.OnFinished();
             Components.Remove(c);
@@ -379,12 +381,12 @@ namespace Strawberry.Core
         /// <param name="component">The component instance to remove.</param>
         public void RemoveComponent(BaseComponent component)
         {
-            Type t = component.GetType();
-            BaseComponent c = (BaseComponent)(from cmp in Components where cmp.GetType() == t select cmp).First();
-            c.OnDisabled();
-            c.OnFinished();
-            Components.Remove(c);
-            c.Destroy();
+            if (!Components.Contains(component))
+                return;
+            component.OnDisabled();
+            component.OnFinished();
+            Components.Remove(component);
+            component.Destroy();
         }
 
         /// <summary>
