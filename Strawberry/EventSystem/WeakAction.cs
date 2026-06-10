@@ -57,7 +57,6 @@ internal class WeakAction<TTarget, T> : IWeakAction
                     if (_weakTarget.TryGetTarget(out var target))
                     {
                         openAction((TTarget)target, arg);
-                        Console.WriteLine("Open Action Called!");
                     }
                 };
             }
@@ -74,7 +73,6 @@ internal class WeakAction<TTarget, T> : IWeakAction
                         _argBuffer[0] = arg;
                         _method.Invoke(target, _argBuffer);
                         _argBuffer[0] = null;
-                        Console.WriteLine("Reflection Called!");
                     }
                 };
             }
