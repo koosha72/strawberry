@@ -126,7 +126,7 @@ public class GameLauncher : IGameLauncher
 
         var storage = PlatformServices.GetService<IStorage>() as StorageManager;
         if (storage != null)
-            ((StorageManager)storage).RootUrl = rootUrl;
+            storage.RootUrl = rootUrl;
 
         await storage.AOTDownload(path);
     }

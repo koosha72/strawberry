@@ -168,31 +168,6 @@ namespace Strawberry.Core
         }
 
         /// <summary>
-        /// Creates a clone of this entity using a new identifier.
-        /// </summary>
-        /// <param name="newId">The identifier for the cloned entity.</param>
-        /// <returns>The cloned entity.</returns>
-        public Entity Clone(string newId)
-        {
-            Entity en = new Entity();
-            if (Parent != null)
-                en.Initialize(newId, Parent);
-            else
-                en.Initialize(newId, Scene);
-
-            SBSerializer serializer = new SBSerializer();
-            serializer.Serialize(this.AllComponents.ToArray());
-            var newCmps = serializer.Deserialize();
-
-            foreach (BaseComponent component in newCmps)
-            {
-                en.AddComponent(component);
-            }
-
-            return en;
-        }
-
-        /// <summary>
         /// Determines whether this entity is a descendant of the specified parent entity.
         /// </summary>
         /// <param name="parent">The potential ancestor entity.</param>
