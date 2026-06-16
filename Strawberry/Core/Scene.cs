@@ -215,7 +215,7 @@ namespace Strawberry.Core
 
 
             result.X = ((result.X - vp.ScreenPos.X) / ((float)GameContext.Width / vp.SceneSize.X) * (float)GameContext.Width / vp.ScreenSize.X) + vp.ScenePos.X;
-            result.Y = ((result.Y - vp.ScreenPos.Y) / ((float)GameContext.Height / vp.SceneSize.Y) * (float)GameContext.Height / vp.ScreenSize.Y) + vp.ScenePos.Y;
+            result.Y = ((result.Y + vp.ScreenPos.Y) / ((float)GameContext.Height / vp.SceneSize.Y) * (float)GameContext.Height / vp.ScreenSize.Y) + vp.ScenePos.Y;
 
             return result;
         }

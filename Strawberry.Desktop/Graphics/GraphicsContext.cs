@@ -132,12 +132,12 @@ namespace Strawberry.Desktop.Graphics
         {
             if (wnd != null)
             {
-                GL.Viewport((int)viewport.ScreenPos.X, -(int)viewport.ScreenPos.Y,
+                GL.Viewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
                     (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
             }
             else
             {
-                GL.Viewport((int)viewport.ScreenPos.X, -(int)viewport.ScreenPos.Y,
+                GL.Viewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
                     (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
             }
             this.ActiveViewport = viewport;

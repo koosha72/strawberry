@@ -126,7 +126,7 @@ namespace Strawberry.Web.Graphics
 
         public void SetViewport(Viewport viewport)
         {
-            GL.Viewport((int)viewport.ScreenPos.X, -(int)viewport.ScreenPos.Y,
+            GL.Viewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
                 (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
 
             this.ActiveViewport = viewport;

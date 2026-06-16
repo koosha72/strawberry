@@ -200,12 +200,12 @@ public class GraphicsContext : Base, IGraphicsContext
     {
         if (wnd != null)
         {
-            GLES30.GlViewport((int)viewport.ScreenPos.X, -(int)viewport.ScreenPos.Y,
+            GLES30.GlViewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
                 (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
         }
         else
         {
-            GLES30.GlViewport((int)viewport.ScreenPos.X, -(int)viewport.ScreenPos.Y,
+            GLES30.GlViewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
                 (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
         }
         this.ActiveViewport = viewport;

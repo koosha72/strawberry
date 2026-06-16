@@ -78,6 +78,60 @@ namespace Strawberry.Graphics
             SceneSize = sceneSize;
             Name = name;
         }
+
+        /// <summary>
+        /// Centers the viewport on the screen
+        /// </summary>
+        /// <param name="displaySize"></param>
+        public void Center(Vector2 displaySize)
+        {
+            ScreenPos = new Vector2((displaySize.X - ScreenSize.X) / 2, (displaySize.Y - ScreenSize.Y) / 2);
+        }
+
+        /// <summary>
+        /// Converts a screen-space pixel position to scene coordinates.
+        /// </summary>
+        public Vector2 ScreenToScene(Vector2 screenPos)
+        {
+            float relX = (screenPos.X - ScreenPos.X) / ScreenSize.X;
+            float relY = (screenPos.Y - ScreenPos.Y) / ScreenSize.Y;
+            return new Vector2(
+                ScenePos.X + relX * SceneSize.X,
+                ScenePos.Y + relY * SceneSize.Y
+            );
+        }
+
+        /// <summary>
+        /// Converts a scene position to screen-space pixel coordinates.
+        /// </summary>
+        public Vector2 SceneToScreen(Vector2 scenePos)
+        {
+            float relX = (scenePos.X - ScenePos.X) / SceneSize.X;
+            float relY = (scenePos.Y - ScenePos.Y) / SceneSize.Y;
+
+            return new Vector2(
+                ScreenPos.X + relX * ScreenSize.X,
+                ScreenPos.Y + relY * ScreenSize.Y
+            );
+        }
+
+        /// <summary>
+        /// Resolves percent-based positioning into actual pixel coordinates.
+        /// Call this when the display size changes or before rendering.
+        /// </summary>
+        public void ApplyPercent(Vector2 displaySize)
+        {
+            if (!UsePercent) return;
+
+            ScreenPos = new Vector2(
+                displaySize.X * PercentPos.X / 100f,
+                displaySize.Y * PercentPos.Y / 100f
+            );
+            ScreenSize = new Vector2(
+                displaySize.X * PercentSize.X / 100f,
+                displaySize.Y * PercentSize.Y / 100f
+            );
+        }
     }
 }
 
