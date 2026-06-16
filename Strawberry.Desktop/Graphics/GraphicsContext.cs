@@ -130,17 +130,18 @@ namespace Strawberry.Desktop.Graphics
 
         public void SetViewport(Viewport viewport)
         {
-            if (wnd != null)
-            {
-                GL.Viewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
-                    (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
-            }
-            else
-            {
-                GL.Viewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
-                    (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
-            }
+            var s = ToGLViewport(GetScreenSize().Y, viewport);
+            GL.Viewport(s.x, s.y, s.width, s.height);
             this.ActiveViewport = viewport;
+        }
+
+        (int x, int y, int width, int height) ToGLViewport(float displayHeight, Viewport viewport)
+        {
+            int x = (int)viewport.ScreenPos.X;
+            int y = (int)(displayHeight - viewport.ScreenPos.Y - viewport.ScreenSize.Y);
+            int w = (int)viewport.ScreenSize.X;
+            int h = (int)viewport.ScreenSize.Y;
+            return (x, y, w, h);
         }
 
         public Strawberry.Graphics.Texture CreateTexture(int width, int height, Color[] data, TextureFormat format = TextureFormat.R8G8B8A8)

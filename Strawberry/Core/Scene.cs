@@ -210,14 +210,10 @@ namespace Strawberry.Core
         /// <returns>The translated mouse position in scene-space coordinates.</returns>
         public Vector2 GetMousePositionOnViewport(int viewPortIndex, int pointerIndex)
         {
-            Vector2 result = new Vector2(GameContext.InputManager.PointingDevice.GetPosition(pointerIndex));
+            Vector2 mousePosition = new Vector2(GameContext.InputManager.PointingDevice.GetPosition(pointerIndex));
             Viewport vp = Viewports[viewPortIndex];
 
-
-            result.X = ((result.X - vp.ScreenPos.X) / ((float)GameContext.Width / vp.SceneSize.X) * (float)GameContext.Width / vp.ScreenSize.X) + vp.ScenePos.X;
-            result.Y = ((result.Y + vp.ScreenPos.Y) / ((float)GameContext.Height / vp.SceneSize.Y) * (float)GameContext.Height / vp.ScreenSize.Y) + vp.ScenePos.Y;
-
-            return result;
+            return vp.ScreenToScene(mousePosition);
         }
 
         /// <summary>

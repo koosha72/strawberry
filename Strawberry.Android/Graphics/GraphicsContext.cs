@@ -198,19 +198,19 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public void SetViewport(Viewport viewport)
     {
-        if (wnd != null)
-        {
-            GLES30.GlViewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
-                (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
-        }
-        else
-        {
-            GLES30.GlViewport((int)viewport.ScreenPos.X, (int)viewport.ScreenPos.Y,
-                (int)viewport.ScreenSize.X, (int)viewport.ScreenSize.Y);
-        }
+        var s = ToGLViewport(GetScreenSize().Y, viewport);
+        GLES30.GlViewport(s.x, s.y, s.width, s.height);
         this.ActiveViewport = viewport;
     }
 
+    (int x, int y, int width, int height) ToGLViewport(float displayHeight, Viewport viewport)
+    {
+        int x = (int)viewport.ScreenPos.X;
+        int y = (int)(displayHeight - viewport.ScreenPos.Y - viewport.ScreenSize.Y);
+        int w = (int)viewport.ScreenSize.X;
+        int h = (int)viewport.ScreenSize.Y;
+        return (x, y, w, h);
+    }
     int ToGlBlending(BlendFactor factor)
     {
         int result = GLES30.GlOne;
