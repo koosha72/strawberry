@@ -132,6 +132,24 @@ namespace Strawberry.Graphics
                 displaySize.Y * PercentSize.Y / 100f
             );
         }
+
+        /// <summary>
+        /// Fits the viewport to a given width. Keeps the aspect ratio. If your game runs in landscape mode, call this.
+        /// </summary>
+        /// <param name="displaySize"></param>
+        public void FitWidth(Vector2 displaySize)
+        {
+            ScreenSize = new Vector2(displaySize.X, SceneSize.Y / SceneSize.X * displaySize.X);
+        }
+
+        /// <summary>
+        /// Fits the viewport to a given height. Keeps the aspect ratio. If your game runs in portrait mode, call this.
+        /// </summary>
+        /// <param name="displaySize"></param>
+        public void FitHeight(Vector2 displaySize)
+        {
+            ScreenSize = new Vector2(SceneSize.X / SceneSize.Y * displaySize.Y, displaySize.Y);
+        }
     }
 }
 
