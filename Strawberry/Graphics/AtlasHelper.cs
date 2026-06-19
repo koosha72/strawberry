@@ -18,6 +18,10 @@ public class AtlasHelper
         private set;
     }
 
+    public Sprite this[string key]
+    {
+        get => Sprites[key];
+    }
 
     public void LoadSprites(IGameContext gameContext, string texture, string spriteMap)
     {
