@@ -224,4 +224,9 @@ public class GameLauncher : Activity, IGameLauncher
         (this.InputManager.PointingDevice as PointingDevice).OnTouch(surfaceView, e);
         return base.OnTouchEvent(e);
     }
+
+    public void Exit()
+    {
+        Finish();
+    }
 }

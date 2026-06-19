@@ -54,5 +54,10 @@ namespace Strawberry
         /// Runs the game. By default this is called by the game class, do not call it!
         /// </summary>
         void Run();
+
+        /// <summary>
+        /// Exits from the game.
+        /// </summary>
+        void Exit();
     }
 }

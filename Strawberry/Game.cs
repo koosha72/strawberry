@@ -30,6 +30,10 @@ namespace Strawberry
 
         float cleanUpTimer = 0;
 
+        /// <summary>
+        /// The current game instance running
+        /// </summary>
+        public static Game Instance { get; private set; }
 
         //public static Game CurrentGame { get; private set; }
 
@@ -74,6 +78,7 @@ namespace Strawberry
         /// </summary>
         void Initialize()
         {
+            Instance = this;
             launcher.InputManager?.Initialize();
             GameContext.OnInitialize(launcher);
             initialized = true;
@@ -108,7 +113,7 @@ namespace Strawberry
                 launcher.InputManager?.Update();
             }
             cleanUpTimer += frameInfoProvider.DeltaTime;
-            if(cleanUpTimer >= 10)
+            if (cleanUpTimer >= 10)
             {
                 cleanUpTimer -= 10;
                 ReferenceObject.CleanDeadReferences();
@@ -144,6 +149,11 @@ namespace Strawberry
 
             GameContext?.SoundManager?.Update();
             frameInfoProvider.EndUpdate();
+        }
+
+        public void Exit()
+        {
+            launcher.Exit();
         }
     }
 }

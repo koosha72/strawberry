@@ -153,4 +153,9 @@ public class GameLauncher : IGameLauncher
         (SoundManager as SoundManager).RestoreState();
         paused = false;
     }
+
+    public void Exit()
+    {
+        
+    }
 }

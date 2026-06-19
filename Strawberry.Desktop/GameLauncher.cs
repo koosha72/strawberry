@@ -82,5 +82,11 @@ namespace Strawberry.Desktop
         {
             wnd.Run();
         }
+
+        public void Exit()
+        {
+            wnd.UpdateFrame -= Wnd_UpdateFrame;
+            wnd.Close();
+        }
     }
 }
