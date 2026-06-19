@@ -4,7 +4,7 @@ using Strawberry.Graphics;
 using Strawberry.Math;
 using Strawberry.Platform;
 
-namespace SpaceShooter;
+namespace Strawberry.Graphics;
 
 public class AtlasHelper
 {
