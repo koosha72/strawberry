@@ -10,7 +10,7 @@ public class AtlasHelper
 {
     static ushort texVersion = 1;
 
-    public Dictionary<string, Sprite> Sprites { get; } = new Dictionary<string, Sprite>();
+    private Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
 
     public Texture Texture
     {
@@ -20,7 +20,12 @@ public class AtlasHelper
 
     public Sprite this[string key]
     {
-        get => Sprites[key];
+        get => sprites[key];
+    }
+
+    public bool Has(string key)
+    {
+        return sprites.ContainsKey(key);
     }
 
     public void LoadSprites(IGameContext gameContext, string texture, string spriteMap)
@@ -62,7 +67,7 @@ public class AtlasHelper
                 }
 
                 var spr = new Sprite(Texture, frameMap, size, size);
-                Sprites.Add(name, spr);
+                this.sprites.Add(name, spr);
             }
         }
     }
