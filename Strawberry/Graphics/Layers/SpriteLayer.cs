@@ -374,51 +374,7 @@ namespace Strawberry.Graphics.Layers
 
         public Vector2 PushString(string text, Font font, Vector2 position, Color color, TextDirection direction)
         {
-            if (font.UseSDF)
-                SetShader(textShader);
-
-            double x = position.X;
-            double y = position.Y;
-            Texture tex = font.Texture;
-
-            foreach (char c in text)
-            {
-                if (c == ' ')
-                {
-                    Character chr = font.GetCharacterInfo((ushort)c);
-                    x += direction == TextDirection.LeftToRight ? chr.Adwidth : -chr.Adwidth;
-                    continue;
-                }
-
-                if (c == '\n')
-                {
-                    y += font.Size;
-                    x = (int)position.X;
-                    continue;
-                }
-
-                Character info = font.GetCharacterInfo((ushort)c);
-                float hsize = (float)System.Math.Ceiling(info.Bottom);
-                float wsize = (float)System.Math.Ceiling(info.Right);
-                float left = (float)System.Math.Floor(info.Left);
-                float top = (float)System.Math.Ceiling(info.Top);
-
-                var pos = new Vector2((float)x, (float)y);
-                if (direction == TextDirection.RightToLeft)
-                    pos.X -= (float)info.Adwidth;
-
-                float charW = wsize - left;
-                float charH = hsize - top;
-                Push(tex, pos, new Vector2(charW, charH), new Vector2(charW, charH),
-                    new Vector2(left, top), color);
-
-                x += direction == TextDirection.LeftToRight ? info.Adwidth : -info.Adwidth;
-            }
-
-            if (font.UseSDF)
-                ResetShader();
-
-            return new Vector2((float)x, (float)y);
+            return PushString(text, font, position, color, direction, font.Size);
         }
 
         public Vector2 PushString(string text, Font font, Vector2 position, Color color, TextDirection direction, float size)

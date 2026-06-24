@@ -30,7 +30,7 @@ public enum EventCallTime
     /// </summary>
     OnFixedUpdate,
     /// <summary>
-    /// The custom event will fire after all components' OnLateUpdate methods have been called.
+    /// The custom event will fire after all components' OnBeginRender methods have been called.
     /// </summary>
     OnBeginRender,
     /// <summary>

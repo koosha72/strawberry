@@ -338,118 +338,79 @@ public class TextRenderer
     }
 
     public static void Draw(SpriteLayer layer, Font font, string text, Vector2 position,
-        Color color, TextAlign allign, TextDirection direction, bool forcePersianDigits)
+        Color color, TextAlign align, TextDirection direction, bool forcePersianDigits)
     {
-        if (text.Length == 0)
-            return;
-        string formattedText = Format(text, forcePersianDigits);
-        Vector2 spos = new Vector2(position.X, position.Y);
-        float w = 0;
-        w = (float)font.GetWidth(formattedText);
-        if (allign == TextAlign.Center)
-        {
-            if (direction == TextDirection.LeftToRight)
-                spos.X -= (int)System.Math.Round(w / 2);
-            else
-                spos.X += (int)System.Math.Round(w / 2);
-        }
-        if (direction == TextDirection.LeftToRight && allign == TextAlign.Right)
-            spos.X -= w;
-        if (direction == TextDirection.RightToLeft && allign == TextAlign.Left)
-            spos.X += w;
-        TextDirection temp;
-        List<int> indices = new List<int>();
-        temp = chars[formattedText[0]].direction;
-        char[] common = new char[] { ' ', '-', '،', '_', ':' };
-        for (int i = 1; i < formattedText.Length; i++)
-        {
-            if (chars[formattedText[i]].direction != temp && formattedText[i] != ' ' && chars[formattedText[i]].direction != TextDirection.None)
-            {
-                temp = chars[formattedText[i]].direction;
-                indices.Add(i);
-            }
-        }
-        indices.Add(formattedText.Length);
-        int prevIndex = 0;
-        string txt = "";
-        Vector2 pos = spos;
-        foreach (int index in indices)
-        {
-            if (chars[formattedText[prevIndex]].direction == direction)
-            {
-                for (int i = prevIndex; i < index; i++)
-                {
-                    txt += formattedText[i];
-                }
-            }
-            else
-            {
-                for (int i = index - 1; i >= prevIndex; i--)
-                {
-                    txt += formattedText[i];
-                }
-            }
-            pos = layer.PushString(txt, font, pos, color, direction);
-            prevIndex = index;
-            txt = "";
-        }
+        Draw(layer, font, text, position, color, align, direction, forcePersianDigits, font.Size);
     }
 
     public static void Draw(SpriteLayer layer, Font font, string text, Vector2 position,
-        Color color, TextAlign allign, TextDirection direction, bool forcePersianDigits, float size)
+        Color color, TextAlign align, TextDirection direction, bool forcePersianDigits, float size)
     {
         if (text.Length == 0)
             return;
-        string formattedText = Format(text, forcePersianDigits);
-        Vector2 spos = new Vector2(position.X, position.Y);
-        float w = 0;
-        w = (float)font.GetWidth(formattedText, size);
-        if (allign == TextAlign.Center)
+        string[] formattedTexts = Format(text, forcePersianDigits).Split(Environment.NewLine);
+        float max_w = 0;
+
+        foreach (var formattedText in formattedTexts)
         {
-            if (direction == TextDirection.LeftToRight)
-                spos.X -= (int)System.Math.Round(w / 2);
-            else
-                spos.X += (int)System.Math.Round(w / 2);
+            var temp = (float)font.GetWidth(formattedText, size);
+            if (temp > max_w)
+                max_w = temp;
         }
-        if (direction == TextDirection.LeftToRight && allign == TextAlign.Right)
-            spos.X -= w;
-        if (direction == TextDirection.RightToLeft && allign == TextAlign.Left)
-            spos.X += w;
-        TextDirection temp;
-        List<int> indices = new List<int>();
-        temp = chars[formattedText[0]].direction;
-        char[] common = new char[] { ' ', '-', '،', '_', ':' };
-        for (int i = 1; i < formattedText.Length; i++)
+        float y = 0;
+        foreach (var formattedText in formattedTexts)
         {
-            if (chars[formattedText[i]].direction != temp && formattedText[i] != ' ' && chars[formattedText[i]].direction != TextDirection.None)
+            Vector2 spos = new Vector2(position.X, position.Y);
+            float w = (float)font.GetWidth(formattedText, size);
+
+            if (align == TextAlign.Center)
             {
-                temp = chars[formattedText[i]].direction;
-                indices.Add(i);
+                if (direction == TextDirection.LeftToRight)
+                    spos.X -= (int)System.Math.Round(w / 2);
+                else
+                    spos.X += (int)System.Math.Round(w / 2);
             }
-        }
-        indices.Add(formattedText.Length);
-        int prevIndex = 0;
-        string txt = "";
-        Vector2 pos = spos;
-        foreach (int index in indices)
-        {
-            if (chars[formattedText[prevIndex]].direction == direction)
+            if (direction == TextDirection.LeftToRight && align == TextAlign.Right)
+                spos.X -= max_w;
+            if (direction == TextDirection.RightToLeft && align == TextAlign.Left)
+                spos.X += max_w;
+            TextDirection temp;
+            List<int> indices = new List<int>();
+            temp = chars[formattedText[0]].direction;
+            char[] common = new char[] { ' ', '-', '،', '_', ':' };
+            for (int i = 1; i < formattedText.Length; i++)
             {
-                for (int i = prevIndex; i < index; i++)
+                if (chars[formattedText[i]].direction != temp && formattedText[i] != ' ' && chars[formattedText[i]].direction != TextDirection.None)
                 {
-                    txt += formattedText[i];
+                    temp = chars[formattedText[i]].direction;
+                    indices.Add(i);
                 }
             }
-            else
+            indices.Add(formattedText.Length);
+            int prevIndex = 0;
+            string txt = "";
+            Vector2 pos = spos;
+            foreach (int index in indices)
             {
-                for (int i = index - 1; i >= prevIndex; i--)
+                if (chars[formattedText[prevIndex]].direction == direction)
                 {
-                    txt += formattedText[i];
+                    for (int i = prevIndex; i < index; i++)
+                    {
+                        txt += formattedText[i];
+                    }
                 }
+                else
+                {
+                    for (int i = index - 1; i >= prevIndex; i--)
+                    {
+                        txt += formattedText[i];
+                    }
+                }
+                pos = layer.PushString(txt, font, pos + (Vector2.Down() * y), color, direction, size);
+                prevIndex = index;
+                txt = "";
             }
-            pos = layer.PushString(txt, font, pos, color, direction, size);
-            prevIndex = index;
-            txt = "";
+            y += size;
         }
     }
 
