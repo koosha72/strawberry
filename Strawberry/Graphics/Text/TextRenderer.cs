@@ -122,111 +122,114 @@ public class TextRenderer
         }
         jReader.Close();
 
-        Stream unicodeData = typeof(TextRenderer).Assembly.GetManifestResourceStream("Strawberry.Graphics.Text.UnicodeDatabase.txt");
-        StreamReader reader = new StreamReader(unicodeData);
-        while (!reader.EndOfStream)
+        using (var unicodeData = typeof(TextRenderer).Assembly.GetManifestResourceStream("Strawberry.Graphics.Text.UnicodeDatabase.txt"))
         {
-            string str = reader.ReadLine();
-            string[] data = str.Split(';');
-            ushort index = ushort.Parse(data[0], System.Globalization.NumberStyles.HexNumber);
-            if (!chars.ContainsKey(index))
+            using (var reader = new StreamReader(unicodeData))
             {
-                CharacterFormat format = new CharacterFormat();
-                format.joining = JoiningForm.None;
-                format.joiningGroup = "";
-                format.formCodes = new ushort[] { 1 };
-                format.index = index;
-                chars.Add(index, format);
-            }
-            if (data[4] == "AL" || data[4] == "R")
-                chars[index].direction = TextDirection.RightToLeft;
-            else if (data[4] == "CS")
-                chars[index].direction = TextDirection.None;
-            else
-                chars[index].direction = TextDirection.LeftToRight;
+                while (!reader.EndOfStream)
+                {
+                    string str = reader.ReadLine();
+                    string[] data = str.Split(';');
+                    ushort index = ushort.Parse(data[0], System.Globalization.NumberStyles.HexNumber);
+                    if (!chars.ContainsKey(index))
+                    {
+                        CharacterFormat format = new CharacterFormat();
+                        format.joining = JoiningForm.None;
+                        format.joiningGroup = "";
+                        format.formCodes = new ushort[] { 1 };
+                        format.index = index;
+                        chars.Add(index, format);
+                    }
+                    if (data[4] == "AL" || data[4] == "R")
+                        chars[index].direction = TextDirection.RightToLeft;
+                    else if (data[4] == "CS")
+                        chars[index].direction = TextDirection.None;
+                    else
+                        chars[index].direction = TextDirection.LeftToRight;
 
-            if (data[5].Length > 0)
-            {
-                string[] joining = data[5].Split(' ');
-                if (joining.Length < 3)
-                {
-                    if (joining[0] == "<isolated>")
+                    if (data[5].Length > 0)
                     {
-                        ushort temp = ushort.Parse(joining[1],
-                            System.Globalization.NumberStyles.HexNumber);
-                        if (chars.ContainsKey(temp))
-                        {
-                            if (chars[temp].joining != JoiningForm.None)
-                                chars[temp].formCodes[0] = index;
-                        }
-                    }
-                    if (joining[0] == "<final>")
-                    {
-                        ushort temp = ushort.Parse(joining[1],
-                            System.Globalization.NumberStyles.HexNumber);
-                        if (chars.ContainsKey(temp))
-                        {
-                            CharacterFormat frm = chars[temp];
-                            if (frm.joining == JoiningForm.DualJoin || frm.joining == JoiningForm.RightJoin)
-                                frm.formCodes[1] = index;
-                        }
-                    }
-                    if (joining[0] == "<initial>")
-                    {
-                        ushort temp = ushort.Parse(joining[1],
-                            System.Globalization.NumberStyles.HexNumber);
-                        if (chars.ContainsKey(temp))
-                        {
-                            CharacterFormat frm = chars[temp];
-                            if (frm.joining == JoiningForm.DualJoin)
-                                frm.formCodes[2] = index;
-                            else if (frm.joining == JoiningForm.LeftJoin)
-                                frm.formCodes[1] = index;
-                        }
-                    }
-                    if (joining[0] == "<medial>")
-                    {
-                        ushort temp = ushort.Parse(joining[1],
-                            System.Globalization.NumberStyles.HexNumber);
-                        if (chars.ContainsKey(temp))
-                        {
-                            CharacterFormat frm = chars[temp];
-                            if (frm.joining == JoiningForm.DualJoin)
-                                frm.formCodes[3] = index;
-                        }
-                    }
-                }
-                else
-                {
-                    ushort ind1 = ushort.Parse(joining[1], System.Globalization.NumberStyles.HexNumber);
-                    ushort ind2 = ushort.Parse(joining[2], System.Globalization.NumberStyles.HexNumber);
-                    if (chars.ContainsKey(ind1) && chars.ContainsKey(ind2))
-                    {
-                        CharacterFormat frm1 = chars[ind1];
-                        CharacterFormat frm2 = chars[ind2];
-                        if (frm1.joiningGroup == "LAM" && frm2.joiningGroup == "ALEF")
+                        string[] joining = data[5].Split(' ');
+                        if (joining.Length < 3)
                         {
                             if (joining[0] == "<isolated>")
                             {
-                                ushort j1 = frm1.formCodes[2];
-                                ushort j2 = frm2.formCodes[1];
-                                string s = new string(new char[] { (char)j1, (char)j2 });
-                                ligatures.Add(s, index);
+                                ushort temp = ushort.Parse(joining[1],
+                                    System.Globalization.NumberStyles.HexNumber);
+                                if (chars.ContainsKey(temp))
+                                {
+                                    if (chars[temp].joining != JoiningForm.None)
+                                        chars[temp].formCodes[0] = index;
+                                }
                             }
                             if (joining[0] == "<final>")
                             {
-                                ushort j1 = frm1.formCodes[3];
-                                ushort j2 = frm2.formCodes[1];
-                                string s = new string(new char[] { (char)j1, (char)j2 });
-                                ligatures.Add(s, index);
+                                ushort temp = ushort.Parse(joining[1],
+                                    System.Globalization.NumberStyles.HexNumber);
+                                if (chars.ContainsKey(temp))
+                                {
+                                    CharacterFormat frm = chars[temp];
+                                    if (frm.joining == JoiningForm.DualJoin || frm.joining == JoiningForm.RightJoin)
+                                        frm.formCodes[1] = index;
+                                }
+                            }
+                            if (joining[0] == "<initial>")
+                            {
+                                ushort temp = ushort.Parse(joining[1],
+                                    System.Globalization.NumberStyles.HexNumber);
+                                if (chars.ContainsKey(temp))
+                                {
+                                    CharacterFormat frm = chars[temp];
+                                    if (frm.joining == JoiningForm.DualJoin)
+                                        frm.formCodes[2] = index;
+                                    else if (frm.joining == JoiningForm.LeftJoin)
+                                        frm.formCodes[1] = index;
+                                }
+                            }
+                            if (joining[0] == "<medial>")
+                            {
+                                ushort temp = ushort.Parse(joining[1],
+                                    System.Globalization.NumberStyles.HexNumber);
+                                if (chars.ContainsKey(temp))
+                                {
+                                    CharacterFormat frm = chars[temp];
+                                    if (frm.joining == JoiningForm.DualJoin)
+                                        frm.formCodes[3] = index;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ushort ind1 = ushort.Parse(joining[1], System.Globalization.NumberStyles.HexNumber);
+                            ushort ind2 = ushort.Parse(joining[2], System.Globalization.NumberStyles.HexNumber);
+                            if (chars.ContainsKey(ind1) && chars.ContainsKey(ind2))
+                            {
+                                CharacterFormat frm1 = chars[ind1];
+                                CharacterFormat frm2 = chars[ind2];
+                                if (frm1.joiningGroup == "LAM" && frm2.joiningGroup == "ALEF")
+                                {
+                                    if (joining[0] == "<isolated>")
+                                    {
+                                        ushort j1 = frm1.formCodes[2];
+                                        ushort j2 = frm2.formCodes[1];
+                                        string s = new string(new char[] { (char)j1, (char)j2 });
+                                        ligatures.Add(s, index);
+                                    }
+                                    if (joining[0] == "<final>")
+                                    {
+                                        ushort j1 = frm1.formCodes[3];
+                                        ushort j2 = frm2.formCodes[1];
+                                        string s = new string(new char[] { (char)j1, (char)j2 });
+                                        ligatures.Add(s, index);
+                                    }
+                                }
                             }
                         }
                     }
+
                 }
             }
-
         }
-        reader.Close();
     }
 
     static string Format(string text, bool forcePersianDigits)
@@ -348,19 +351,11 @@ public class TextRenderer
     {
         if (text.Length == 0)
             return;
-        string[] formattedTexts = Format(text, forcePersianDigits).Split(Environment.NewLine);
-        float max_w = 0;
-
-        foreach (var formattedText in formattedTexts)
-        {
-            var temp = (float)font.GetWidth(formattedText, size);
-            if (temp > max_w)
-                max_w = temp;
-        }
+        string[] formattedTexts = Format(text, forcePersianDigits).Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
         float y = 0;
         foreach (var formattedText in formattedTexts)
         {
-            Vector2 spos = new Vector2(position.X, position.Y);
+            Vector2 spos = new Vector2(position.X, position.Y + y);
             float w = (float)font.GetWidth(formattedText, size);
 
             if (align == TextAlign.Center)
@@ -371,16 +366,16 @@ public class TextRenderer
                     spos.X += (int)System.Math.Round(w / 2);
             }
             if (direction == TextDirection.LeftToRight && align == TextAlign.Right)
-                spos.X -= max_w;
+                spos.X -= w;
             if (direction == TextDirection.RightToLeft && align == TextAlign.Left)
-                spos.X += max_w;
+                spos.X += w;
             TextDirection temp;
             List<int> indices = new List<int>();
             temp = chars[formattedText[0]].direction;
             char[] common = new char[] { ' ', '-', '،', '_', ':' };
             for (int i = 1; i < formattedText.Length; i++)
             {
-                if (chars[formattedText[i]].direction != temp && formattedText[i] != ' ' && chars[formattedText[i]].direction != TextDirection.None)
+                if (chars[formattedText[i]].direction != temp && !common.Contains(formattedText[i]) && chars[formattedText[i]].direction != TextDirection.None)
                 {
                     temp = chars[formattedText[i]].direction;
                     indices.Add(i);
@@ -406,11 +401,11 @@ public class TextRenderer
                         txt += formattedText[i];
                     }
                 }
-                pos = layer.PushString(txt, font, pos + (Vector2.Down() * y), color, direction, size);
+                pos = layer.PushString(txt, font, pos, color, direction, size);
                 prevIndex = index;
                 txt = "";
             }
-            y += size;
+            y += size + 1;
         }
     }
 
