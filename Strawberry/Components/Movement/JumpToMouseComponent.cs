@@ -8,17 +8,24 @@
 
 using Strawberry.Core;
 
-namespace Strawberry.Components
+namespace Strawberry.Components.Movement
 {
     /// <summary>
     /// A simple component that jumps the owner to the mouse position
     /// </summary>
-    public class MoveToMouseComponent : BaseComponent
+    public class JumpToMouseComponent : BaseComponent
     {
         /// <summary>
         /// Gets the transform of the owner
         /// </summary>
-        public TransformComponent Transform { get { return Owner.GetComponent<TransformComponent>(); } }
+        public TransformComponent Transform { get; private set; }
+
+        public override void OnComponentAdded(BaseComponent component)
+        {
+            base.OnComponentAdded(component);
+            if (component is TransformComponent transform && Transform == null)
+                Transform = transform;
+        }
 
         public override void OnUpdate()
         {

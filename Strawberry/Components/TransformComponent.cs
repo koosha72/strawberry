@@ -46,7 +46,7 @@ namespace Strawberry.Components
         {
             set
             {
-                LocalPosition = new Vector2(value.X, value.Y);
+                LocalPosition = value;
             }
             get
             {
@@ -139,7 +139,7 @@ namespace Strawberry.Components
         /// Gets or sets the coordinate space used for this transform's position.
         /// Defaults to <see cref="PositionType.Global"/> upon construction.
         /// </summary>
-        public PositionType PositionType { get; set; } = PositionType.RelativeToParent;
+        public PositionType PositionType { get; set; }
 
         /// <summary>
         /// Gets or sets the origin point (pivot) for rotation and scaling.

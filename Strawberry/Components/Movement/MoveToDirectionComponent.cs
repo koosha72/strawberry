@@ -9,7 +9,7 @@
 using Strawberry.Core;
 using Strawberry.Math;
 
-namespace Strawberry.Components
+namespace Strawberry.Components.Movement
 {
     /// <summary>
     /// A simple component that moves the owner to a direction at a given speed.
@@ -27,11 +27,18 @@ namespace Strawberry.Components
         /// <summary>
         /// Gets the transform of the owner
         /// </summary>
-        public TransformComponent Transform { get { return Owner.GetComponent<TransformComponent>(); } }
+        public TransformComponent Transform { get; private set; }
         /// <summary>
         /// Gets or sets the direction of movement in degrees.
         /// </summary>
         public float Direction { get; set; }
+
+        public override void OnComponentAdded(BaseComponent component)
+        {
+            base.OnComponentAdded(component);
+            if (component is TransformComponent transform && Transform == null)
+                Transform = transform;
+        }
 
         public override void OnUpdate()
         {
@@ -41,7 +48,7 @@ namespace Strawberry.Components
                 towards.Direction = Direction;
                 Transform.Position += towards * Speed * FrameInfo.Information.DeltaTime;
                 if (HeadToGoal)
-                    Transform.Angle = (float)towards.Direction;
+                    Transform.Angle = Direction;
             }
         }
     }
