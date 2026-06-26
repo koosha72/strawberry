@@ -6,6 +6,7 @@
  * Component that integrates text rendering into a scene or layer.
  */
 
+using Strawberry.Components;
 using Strawberry.Core;
 using Strawberry.Graphics.Layers;
 using Strawberry.Math;
@@ -28,11 +29,6 @@ public class TextRendererComponent : BaseComponent
     public Font Font { get; set; }
 
     /// <summary>
-    /// Gets or sets the position of the rendered text.
-    /// </summary>
-    public Vector2 Position { get; set; }
-
-    /// <summary>
     /// Gets or sets the text string to render.
     /// </summary>
     public string Text { get; set; }
@@ -48,24 +44,40 @@ public class TextRendererComponent : BaseComponent
     public float Size { get; set; } = 12.0f;
 
     /// <summary>
-    /// Gets or sets the alignment of the text.
+    /// Gets or sets the alignment of the text. Default is left.
     /// </summary>
-    public TextAlign TextAlign { get; set; } = TextAlign.Right;
+    public TextAlign TextAlign { get; set; } = TextAlign.Left;
 
     /// <summary>
-    /// Gets or sets the direction in which text is rendered. Default is right-to-left.
+    /// Gets or sets the direction in which text is rendered. Default is left-to-right.
     /// </summary>
-    public TextDirection TextDirection { get; set; } = TextDirection.RightToLeft;
+    public TextDirection TextDirection { get; set; } = TextDirection.LeftToRight;
 
     /// <summary>
-    /// Called when the component should render its content.
+    /// Whether the numbers should be forced to rendered as persian, Default is false
     /// </summary>
+    public bool ForcePersianDigits { get; set; } = false;
+
+    /// <summary>
+    /// Whether the text should be visible or not. Default is true
+    /// </summary>
+    public bool Visible { get; set; } = true;
+
+    TransformComponent transform;
+
+    public override void OnComponentAdded(BaseComponent component)
+    {
+        base.OnComponentAdded(component);
+        if (component is TransformComponent && transform == null)
+            transform = component as TransformComponent;
+    }
+
     public override void OnRender()
     {
         base.OnRender();
-        if (Font != null && !string.IsNullOrEmpty(Text) && Layer != null)
+        if (Visible && Font != null && !string.IsNullOrEmpty(Text) && Layer != null)
         {
-            TextRenderer.Draw(Layer, Font, Text, Position, Color, TextAlign, TextDirection, false, Size);
+            TextRenderer.Draw(Layer, Font, Text, transform.Position, Color, TextAlign, TextDirection, ForcePersianDigits, Size);
         }
     }
 }

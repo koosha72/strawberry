@@ -31,96 +31,59 @@ public class TextRenderer
         public ushort index;
     }
 
-    string text = "";
-    string formattedText = "";
-    bool forcePersianDigits = false;
-    Font font;
     static Dictionary<ushort, CharacterFormat> chars = new Dictionary<ushort, CharacterFormat>();
 
     static Dictionary<string, ushort> ligatures = new Dictionary<string, ushort>();
 
-    public string Text
-    {
-        get { return text; }
-        set
-        {
-            text = value;
-            formattedText = Format(text, forcePersianDigits);
-        }
-    }
-
-    public Font Font
-    {
-        get { return font; }
-        set
-        { font = value; }
-    }
-
-    public bool ForcePersianDigits
-    {
-        get
-        {
-            return forcePersianDigits;
-        }
-        set
-        {
-            forcePersianDigits = value;
-        }
-    }
-
-    public TextRenderer(Font font, string text, bool forcePersianDigits)
-    {
-        this.font = font;
-        this.forcePersianDigits = forcePersianDigits;
-        this.Text = text;
-    }
-
     static TextRenderer()
     {
-        Stream jStream = typeof(TextRenderer).Assembly.GetManifestResourceStream("Strawberry.Graphics.Text.Joinings.txt");
-        StreamReader jReader = new StreamReader(jStream);
-        while (!jReader.EndOfStream)
+        using (var jStream = typeof(TextRenderer).Assembly.GetManifestResourceStream("Strawberry.Graphics.Text.Joinings.txt"))
         {
-            string str = jReader.ReadLine();
-            string[] data = str.Split(';');
-            ushort index = ushort.Parse(data[0], System.Globalization.NumberStyles.HexNumber);
-            CharacterFormat format = new CharacterFormat();
+            using (var jReader = new StreamReader(jStream))
+            {
+                while (!jReader.EndOfStream)
+                {
+                    string str = jReader.ReadLine();
+                    string[] data = str.Split(';');
+                    ushort index = ushort.Parse(data[0], System.Globalization.NumberStyles.HexNumber);
+                    CharacterFormat format = new CharacterFormat();
 
-            format.direction = TextDirection.None;
-            format.joining = JoiningForm.None;
-            format.joiningGroup = "";
-            format.formCodes = new ushort[] { };
-            format.index = index;
-            data[2] = data[2].Replace(" ", "");
-            data[3] = data[3].Replace("No_Joining_Group", "");
-            data[3] = data[3].Replace(" ", "");
-            if (data[2] == "R")
-            {
-                format.joining = JoiningForm.RightJoin;
-                format.formCodes = new ushort[2] { 0, 0 };
-                format.joiningGroup = data[3];
+                    format.direction = TextDirection.None;
+                    format.joining = JoiningForm.None;
+                    format.joiningGroup = "";
+                    format.formCodes = new ushort[] { };
+                    format.index = index;
+                    data[2] = data[2].Replace(" ", "");
+                    data[3] = data[3].Replace("No_Joining_Group", "");
+                    data[3] = data[3].Replace(" ", "");
+                    if (data[2] == "R")
+                    {
+                        format.joining = JoiningForm.RightJoin;
+                        format.formCodes = new ushort[2] { 0, 0 };
+                        format.joiningGroup = data[3];
+                    }
+                    if (data[2] == "L")
+                    {
+                        format.joining = JoiningForm.LeftJoin;
+                        format.formCodes = new ushort[2] { 0, 0 };
+                        format.joiningGroup = data[3];
+                    }
+                    if (data[2] == "D")
+                    {
+                        format.joining = JoiningForm.DualJoin;
+                        format.formCodes = new ushort[4] { 0, 0, 0, 0 };
+                        format.joiningGroup = data[3];
+                    }
+                    if (data[2] == "T")
+                    {
+                        format.joining = JoiningForm.Transparent;
+                        format.formCodes = new ushort[1] { index };
+                        format.joiningGroup = data[3];
+                    }
+                    chars.Add(index, format);
+                }
             }
-            if (data[2] == "L")
-            {
-                format.joining = JoiningForm.LeftJoin;
-                format.formCodes = new ushort[2] { 0, 0 };
-                format.joiningGroup = data[3];
-            }
-            if (data[2] == "D")
-            {
-                format.joining = JoiningForm.DualJoin;
-                format.formCodes = new ushort[4] { 0, 0, 0, 0 };
-                format.joiningGroup = data[3];
-            }
-            if (data[2] == "T")
-            {
-                format.joining = JoiningForm.Transparent;
-                format.formCodes = new ushort[1] { index };
-                format.joiningGroup = data[3];
-            }
-            chars.Add(index, format);
         }
-        jReader.Close();
 
         using (var unicodeData = typeof(TextRenderer).Assembly.GetManifestResourceStream("Strawberry.Graphics.Text.UnicodeDatabase.txt"))
         {
@@ -340,12 +303,35 @@ public class TextRenderer
         return str;
     }
 
+    /// <summary>
+    /// Draws a string on the specified sprite layer using the default font size.
+    /// </summary>
+    /// <param name="layer">The sprite layer to draw on</param>
+    /// <param name="font">The font to use</param>
+    /// <param name="text">The text to draw</param>
+    /// <param name="position">The position to draw the text at</param>
+    /// <param name="color">The color of the text</param>
+    /// <param name="align">The alignment of the text</param>
+    /// <param name="direction">The direction of the text</param>
+    /// <param name="forcePersianDigits">Whether to force Persian digits</param>
     public static void Draw(SpriteLayer layer, Font font, string text, Vector2 position,
         Color color, TextAlign align, TextDirection direction, bool forcePersianDigits)
     {
         Draw(layer, font, text, position, color, align, direction, forcePersianDigits, font.Size);
     }
 
+    /// <summary>
+    /// Draws a string on the specified sprite layer using the specified font size.
+    /// </summary>
+    /// <param name="layer">The sprite layer to draw on</param>
+    /// <param name="font">The font to use</param>
+    /// <param name="text">The text to draw</param>
+    /// <param name="position">The position to draw the text at</param>
+    /// <param name="color">The color of the text</param>
+    /// <param name="align">The alignment of the text</param>
+    /// <param name="direction">The direction of the text</param>
+    /// <param name="forcePersianDigits">Whether to force Persian digits</param>
+    /// <param name="size">The size used to draw the text</param>
     public static void Draw(SpriteLayer layer, Font font, string text, Vector2 position,
         Color color, TextAlign align, TextDirection direction, bool forcePersianDigits, float size)
     {
@@ -409,6 +395,14 @@ public class TextRenderer
         }
     }
 
+    /// <summary>
+    /// Calculates the width of the string using the provided font and size.
+    /// </summary>
+    /// <param name="text">The text to calculate the width of.</param>
+    /// <param name="font">The font to use for the calculation.</param>
+    /// <param name="forcePersianDigits">Whether to force Persian digits or not.</param>
+    /// <param name="size">The size of the font used to calculate the width.</param>
+    /// <returns>The width of the string in pixels.</returns>
     public static float GetStringWidth(string text, Font font, bool forcePersianDigits, float size)
     {
         if (text.Length == 0)
