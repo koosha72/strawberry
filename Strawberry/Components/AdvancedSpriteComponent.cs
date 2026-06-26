@@ -73,7 +73,7 @@ namespace Strawberry.Components
         public Color Color { get; set; } = Color.White;
 
         [DoNotSerialize]
-        public Vector2 CustomPosition { get; set; } = Vector2.Zero;
+        public Vector2? CustomPosition { get; set; } = null;
 
         /// <summary>
         /// Gets a list of viewports on which the sprite will not be visible. If empty, it will be visible on all viewports.
@@ -163,7 +163,7 @@ namespace Strawberry.Components
 
             if (Layer != null && !DisabledViewports.Contains(GameContext.GraphicsContext.ActiveViewport.Name))
             {
-                Vector2 position = CustomPosition != Vector2.Zero ? CustomPosition : Transform.Position;
+                Vector2 position = CustomPosition.HasValue ? CustomPosition.Value : Transform.Position;
                 Layer.Push(
                     CurrentSprite,
                     position,

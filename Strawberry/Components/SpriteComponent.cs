@@ -92,7 +92,7 @@ namespace Strawberry.Components
         public Color Color { get; set; } = Color.White;
 
         [DoNotSerialize]
-        public Vector2 CustomPosition { get; set; } = new Vector2();
+        public Vector2? CustomPosition { get; set; } = null;
         /// <summary>
         /// Gets a list of viewports on which the sprite will not be visible. If empty, it will be visible on all viewports.
         /// </summary>
@@ -100,15 +100,6 @@ namespace Strawberry.Components
 
         public SpriteComponent()
         {
-        }
-
-        public void Setup(Sprite sprite, float imageSpeed, Vector2 origin, Color color, SpriteLayer layer)
-        {
-            this.Sprite = sprite;
-            this.ImageSpeed = imageSpeed;
-            Transform.Origin = origin;
-            this.Color = color;
-            this.Layer = layer;
         }
 
         public override void OnBegin()
@@ -162,14 +153,14 @@ namespace Strawberry.Components
                 {
                     if (!DisabledViewports.Contains(GameContext.GraphicsContext.ActiveViewport.Name))
                     {
-                        if (CustomPosition.X == 0 && CustomPosition.Y == 0)
+                        if (!CustomPosition.HasValue)
                         {
                             Layer.Push(Sprite, Transform.Position, Origin,
                                 Transform.Scale, Color, realImageIndex, Transform.Angle);
                         }
                         else
                         {
-                            Layer.Push(Sprite, CustomPosition, Origin,
+                            Layer.Push(Sprite, CustomPosition.Value, Origin,
                                 Transform.Scale, Color, realImageIndex, Transform.Angle);
                         }
                     }
