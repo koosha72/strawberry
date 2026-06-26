@@ -24,10 +24,13 @@ namespace Strawberry.Input
         IKeyboard Keyboard { get; }
 
         /// <summary>
-        /// Initializes the input manager setting up the keyboard and pointing device.
+        /// Initializes the input manager setting up the keyboard and pointing device. (Used by Game class do not call it manually)
         /// </summary>
         void Initialize();
-
+        
+        /// <summary>
+        /// Updates the states of the input devices (like key presses on a keyboard or mouse clicks). (Used by Game class do not call it manually)
+        /// </summary>
         void Update();
     }
 }
