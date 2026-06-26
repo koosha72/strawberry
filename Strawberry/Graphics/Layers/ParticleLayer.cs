@@ -365,7 +365,7 @@ namespace Strawberry.Graphics.Layers
 
             Vector2 origin = new Vector2(0f, 0f);
             Vector2 scale = new Vector2(particle.Scale, particle.Scale);
-            float angle = (float)MathHelper.RadToDeg(particle.Rotation);
+            float angle = MathHelper.ToDegrees(particle.Rotation);
 
             float x = (float)System.Math.Round(particle.Position.X);
             float y = (float)System.Math.Round(particle.Position.Y);

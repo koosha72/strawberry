@@ -15,10 +15,9 @@ namespace Strawberry.Math
         public const float E = (float)System.Math.E;
         public const float Log10E = 0.4342945f;
         public const float Log2E = 1.442695f;
-        public const float Pi = (float)System.Math.PI;
-        public const float PiOver2 = (float)(System.Math.PI / 2.0);
-        public const float PiOver4 = (float)(System.Math.PI / 4.0);
-        public const float TwoPi = (float)(System.Math.PI * 2.0);
+        public const float PiOver2 = System.MathF.PI / 2.0f;
+        public const float PiOver4 = System.MathF.PI / 4.0f;
+        public const float TwoPi = System.MathF.PI * 2.0f;
 
         public static float Barycentric(float value1, float value2, float value3, float amount1, float amount2)
         {

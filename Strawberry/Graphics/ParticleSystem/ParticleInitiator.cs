@@ -174,7 +174,7 @@ namespace Strawberry.Graphics.ParticleSystem
 
             // Velocity from direction range
             float speed = RandomHelper.Range(SpeedMin, SpeedMax);
-            float direction = (float)MathHelper.DegToRad(RandomHelper.Range(DirectionMin, DirectionMax));
+            float direction = MathHelper.ToRadians(RandomHelper.Range(DirectionMin, DirectionMax));
             particle.Velocity = new Vector2(
                 (float)System.Math.Cos(direction) * speed,
                 (float)System.Math.Sin(direction) * speed);
@@ -189,8 +189,8 @@ namespace Strawberry.Graphics.ParticleSystem
             // Visuals
             particle.Color = ColorStart;
             particle.Scale = RandomHelper.Range(ScaleMin, ScaleMax);
-            particle.Rotation = (float)MathHelper.DegToRad(RandomHelper.Range(RotationMin, RotationMax));
-            particle.AngularVelocity = (float)MathHelper.DegToRad(RandomHelper.Range(AngularVelocityMin, AngularVelocityMax));
+            particle.Rotation = MathHelper.ToRadians(RandomHelper.Range(RotationMin, RotationMax));
+            particle.AngularVelocity = MathHelper.ToRadians(RandomHelper.Range(AngularVelocityMin, AngularVelocityMax));
 
             // Alive
             particle.Alive = true;
