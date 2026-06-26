@@ -47,6 +47,11 @@ namespace Strawberry.Core
         /// </summary>
         public IPointingDevice PointingDevice { get { return GameContext?.InputManager?.PointingDevice; } }
 
+        /// <summary>
+        /// Gets whether or not this component is currently enabled.
+        /// </summary>
+        public bool Enabled { get; private set; } = true;
+
 
         /// <summary>
         /// Called when the component is initialized. Override this method to set up the component's initial state.
@@ -71,7 +76,7 @@ namespace Strawberry.Core
         }
 
         /// <summary>
-        /// Called when a new component is added to the owning entity.
+        /// Called when a new component is added to the owning entity. This is also called on the new component for every existing component in the entity.
         /// </summary>
         /// <param name="component">The newly added component.</param>
         public virtual void OnComponentAdded(BaseComponent component)
@@ -146,6 +151,24 @@ namespace Strawberry.Core
         public virtual void Removed()
         {
             Owner = null;
+        }
+
+        /// <summary>
+        /// Disables the component.
+        /// </summary>
+        public void Enable()
+        {
+            Enabled = true;
+            OnEnabled();
+        }
+
+        /// <summary>
+        /// Enables the component.
+        /// </summary>
+        public void Disable()
+        {
+            Enabled = false;
+            OnDisabled();
         }
     }
 }

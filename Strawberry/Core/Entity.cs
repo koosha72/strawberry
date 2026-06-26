@@ -243,6 +243,7 @@ namespace Strawberry.Core
             foreach (var cmp in Components)
             {
                 cmp.OnComponentAdded(component);
+                component.OnComponentAdded(cmp);
             }
 
 
@@ -273,6 +274,19 @@ namespace Strawberry.Core
             T c = (T)(from cmp in Components where cmp.GetType() == t select cmp).FirstOrDefault();
 
             return c;
+        }
+
+        /// <summary>
+        /// Tries to get the first component of type <typeparamref name="T"/> attached to the entity.
+        /// </summary>
+        /// <typeparam name="T">The type of component</typeparam>
+        /// <param name="component">The first component of type <typeparamref name="T"/> or null if not found</param>
+        /// <returns>True if a component of type exists</returns>
+        public bool TryGetComponent<T>(out T component) where T : BaseComponent
+        {
+            Type t = typeof(T);
+            component = (T)(from cmp in Components where cmp.GetType() == t select cmp).FirstOrDefault();
+            return component != null;
         }
 
         /// <summary>
@@ -478,6 +492,8 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
+                    if (!Components[i].Enabled)
+                        continue;
                     Components[i].OnBeginUpdate();
                 }
                 UpdateBegan = true;
@@ -506,6 +522,8 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
+                    if (!Components[i].Enabled)
+                        continue;
                     Components[i].OnEndUpdate();
                 }
                 UpdateEnded = true;
@@ -535,6 +553,8 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
+                    if (!Components[i].Enabled)
+                        continue;
                     Components[i].OnUpdate();
                     if (Destroyed)
                         return;
@@ -569,6 +589,8 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
+                    if (!Components[i].Enabled)
+                        continue;
                     Components[i].OnFixedUpdate();
                 }
                 foreach (Entity child in Children.Values)
@@ -589,6 +611,8 @@ namespace Strawberry.Core
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
+                    if (!Components[i].Enabled)
+                        continue;
                     Components[i].OnRender();
                 }
                 foreach (Entity child in Children.Values)
