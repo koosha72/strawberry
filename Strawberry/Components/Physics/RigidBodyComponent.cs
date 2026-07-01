@@ -82,14 +82,33 @@ public class RigidBodyComponent : BaseComponent
         }
     }
 
+    private bool ignoreGravity = false;
+
+    /// <summary>
+    /// Gets or sets whether gravity should be ignored (Default is false)
+    /// </summary>
+    public bool IgnoreGravity
+    {
+        get => Body?.IgnoreGravity ?? ignoreGravity;
+        set
+        {
+            ignoreGravity = value;
+            if (Body != null)
+                Body.IgnoreGravity = value;
+        }
+    }
+
+
     public override void OnComponentAdded(BaseComponent component)
     {
         base.OnComponentAdded(component);
         if (component is TransformComponent transform && Transform == null)
         {
             Transform = transform;
-            if (Body == null)
+            if (Body == null) {
                 Body = Scene.PhysicsWorld.CreateBody(Transform.Position / Scene.PixelPerMeter, -MathHelper.ToRadians(Transform.Angle), Type);
+                Body.IgnoreGravity = ignoreGravity;
+            }
         }
     }
 
