@@ -53,12 +53,16 @@ namespace Strawberry.OpenAL
 
         public override Strawberry.Sound.Voice Play(bool loop = false, int priority = 0)
         {
-            return soundManager.Play(this, 1.0f, loop);
+            var v = soundManager.Play(this, 1.0f, loop);
+            v.Volume = 1f;
+            return v;
         }
 
         public override Strawberry.Sound.Voice Play(float frequencyRatio = 1.0f, bool loop = false, int priority = 0)
         {
-            return soundManager.Play(this, frequencyRatio, loop);
+            var v = soundManager.Play(this, frequencyRatio, loop);
+            v.Volume = 1f;
+            return v;
         }
 
         public override void Stop()
