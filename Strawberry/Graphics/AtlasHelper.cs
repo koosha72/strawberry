@@ -6,46 +6,25 @@ using Strawberry.Platform;
 
 namespace Strawberry.Graphics;
 
-public class AtlasHelper
+public static class AtlasHelper
 {
-    static ushort texVersion = 1;
-
-    private Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
-
-    public Texture Texture
+    /// <summary>
+    /// Loads sprites from a texture and a sprite map.
+    /// </summary>
+    /// <param name="gameContext">The current game context</param>
+    /// <param name="texturePath">path to the texture file</param>
+    /// <param name="spriteMap">path to the sprite map file</param>
+    /// <param name="textureAssetName">Texture name in the asset manager</param>
+    /// <param name="spriteAssetsPrefix">The prefix of loaded sprites in the asset manager</param>
+    /// <param name="assets">The asset manager object, if null the gameContext.Assets will be used.</param>
+    public static void LoadSprites(IGameContext gameContext, string texturePath, string spriteMap, string textureAssetName, string spriteAssetsPrefix, AssetManager assets = null)
     {
-        get;
-        private set;
-    }
-
-    public Sprite this[string key]
-    {
-        get => sprites[key];
-    }
-
-    public bool Has(string key)
-    {
-        return sprites.ContainsKey(key);
-    }
-
-    public void LoadSprites(IGameContext gameContext, string texture, string spriteMap)
-    {
+        var assetManager = assets == null ? gameContext.Assets : assets;
         var storage = PlatformServices.GetService<IStorage>();
 
-        MemoryStream mem = new MemoryStream(storage.ReadAllBytes(texture));
-        BinaryReader reader = new BinaryReader(mem);
+        var texture = TextureLoader.Load(gameContext, texturePath);
+        assetManager.Register<Texture>(textureAssetName, texture);
 
-        ushort ver = reader.ReadUInt16();
-        if (ver > texVersion)
-            throw new IOException("The version of texture file is newer than this loader.");
-        int width = reader.ReadInt32();
-        int height = reader.ReadInt32();
-        byte[] colors = reader.ReadBytes(width * height * 4);
-
-        reader.Close();
-        mem.Dispose();
-
-        Texture = gameContext.GraphicsContext.CreateTexture(width, height, colors);
         using (MemoryStream mem2 = new MemoryStream(storage.ReadAllBytes(spriteMap)))
         {
             XDocument doc = XDocument.Load(mem2);
@@ -66,8 +45,8 @@ public class AtlasHelper
                     frameMap[i] = new Vector2(x, y);
                 }
 
-                var spr = new Sprite(Texture, frameMap, size, size);
-                this.sprites.Add(name, spr);
+                var spr = new Sprite(texture, frameMap, size, size);
+                assetManager.Register<Sprite>(spriteAssetsPrefix + name, spr);
             }
         }
     }
