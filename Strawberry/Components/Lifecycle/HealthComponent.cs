@@ -57,6 +57,11 @@ public class HealthComponent : BaseComponent
     /// </summary>
     public float Health { get; set; } = 100.0f;
 
+    /// <summary>
+    /// Gets or sets a boolean that indicates whether the entity is invincible or not. If it's true, then the Damage method will do nothing. (Default value is false)
+    /// </summary>
+    public bool Invincible { get; set; } = false;
+
     float maxHealth = 100f;
     /// <summary>
     /// Gets or sets the maximum health the entity can have. (Default value is 100). If the Health is greater than MaxHealth, then it will be set to MaxHealth.
@@ -105,7 +110,7 @@ public class HealthComponent : BaseComponent
     /// <param name="amount">The amount to damage the entity by.</param>
     public void Damage(float amount)
     {
-        if (amount <= 0 || IsDead)
+        if (amount <= 0 || IsDead || Invincible)
             return;
         Health -= amount;
         EventManager.Invoke(this, new DamagedEvent() { Amount = amount, HealthComponent = this });
