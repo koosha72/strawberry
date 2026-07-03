@@ -43,6 +43,11 @@ namespace Strawberry.Core
         /// Gets the sound manager for handling audio playback.
         /// </summary>
         ISoundManager SoundManager { get; }
+        
+        /// <summary>
+        /// Gets the asset manager of this game context. Used as a Global Asset Manager.
+        /// </summary>
+        AssetManager Assets { get; }
 
         /// <summary>
         /// Called during the initialization phase of the game.

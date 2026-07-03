@@ -128,6 +128,12 @@ namespace Strawberry.Core
         }
 
         /// <summary>
+        /// Local asset manager of this scene. Used to store scene specific assets.
+        /// The parent of this manager is GameContext.Assets.
+        /// </summary>
+        public AssetManager Assets { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Scene"/> class.
         /// </summary>
         /// <param name="name">The name of the scene.</param>
@@ -135,17 +141,15 @@ namespace Strawberry.Core
         /// <param name="height">The height of the scene in pixels.</param>
         public Scene(string name, int width, int height)
         {
-            this.Width = width;
-            this.Height = height;
-            this.Name = name;
+            Width = width;
+            Height = height;
+            Name = name;
             Viewports = new ViewportCollection();
             Entities = new EntityCollection();
             MousePosition = new Vector2[10];
             destroyList = new List<string>();
-            //ParticleSystems = new Dictionary<string, ParticleSystem>();
-            this.ClearColor = Color.Transparent;
+            ClearColor = Color.Transparent;
             DestroyCount = 0;
-            //PhysicalWorld = new World(new Vector2());
         }
 
         /// <summary>
@@ -154,12 +158,13 @@ namespace Strawberry.Core
         /// <param name="context">The game context to associate with this scene.</param>
         public virtual void Initialize(IGameContext context)
         {
-            this.GameContext = context;
+            GameContext = context;
             if (Viewports.Count == 0)
             {
                 Viewports.Add(new Viewport("Default", new Vector2(0f, 0f), new Vector2((float)context.Width, (float)context.Height),
                     new Vector2(0f, 0f), new Vector2((float)Width, (float)Height)));
             }
+            Assets = new AssetManager(context.Assets);
         }
 
         /// <summary>
@@ -374,6 +379,14 @@ namespace Strawberry.Core
             {
                 foreach (Viewport vp in Viewports)
                 {
+                    if (vp.ScenePos.X < 0)
+                        vp.ScenePos = new Vector2(0, vp.ScenePos.Y);
+                    if (vp.ScenePos.X + vp.SceneSize.X > Width)
+                        vp.ScenePos = new Vector2(Width - vp.SceneSize.X, vp.ScenePos.Y);
+                    if (vp.ScenePos.Y < 0)
+                        vp.ScenePos = new Vector2(vp.ScenePos.X, 0);
+                    if (vp.ScenePos.Y + vp.SceneSize.Y > Height)
+                        vp.ScenePos = new Vector2(vp.ScenePos.X, Height - vp.SceneSize.Y);
                     GameContext.GraphicsContext.SetViewport(vp);
 
                     for (int i = 0; i < Entities.Count; i++)

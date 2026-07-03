@@ -75,6 +75,9 @@ namespace Strawberry.Core
         /// </summary>
         public ISoundManager SoundManager { get { return launcher.SoundManager; } }
 
+        AssetManager assets;
+        public AssetManager Assets { get { return assets; } }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StdGameContext"/> class with the specified width and height.
         /// </summary>
@@ -84,6 +87,7 @@ namespace Strawberry.Core
         {
             Width = width;
             Height = height;
+            assets = new AssetManager(null);
             Scenes = new SceneCollection();
         }
 
