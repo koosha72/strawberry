@@ -164,7 +164,8 @@ public abstract class ColliderComponent : BaseComponent
         {
             if (collisionEnabled)
                 Fixture.OnCollision -= Collision;
-            RigidBody.Body.Remove(Fixture);
+            if (!Owner.Destroyed)
+                RigidBody.Body.Remove(Fixture);
         }
         base.OnFinished();
     }
