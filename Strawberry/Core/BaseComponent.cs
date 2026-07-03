@@ -52,6 +52,12 @@ namespace Strawberry.Core
         /// </summary>
         public bool Enabled { get; private set; } = true;
 
+        /// <summary>
+        /// Gets the asset manager object of the current scene.
+        /// Returns <c>null</c> if the entity is not part of any scene.
+        /// </summary>
+        public AssetManager AssetManager { get => Scene?.Assets; }
+
 
         /// <summary>
         /// Called when the component is initialized. Override this method to set up the component's initial state.
