@@ -21,7 +21,7 @@ namespace Strawberry.Components
         /// The position is relative to the parent entity's transform.
         /// </summary>
         RelativeToParent,
-        
+
         /// <summary>
         /// The position is in global (world) coordinates.
         /// </summary>
@@ -87,6 +87,19 @@ namespace Strawberry.Components
             set
             {
                 localPosition = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the heading of the entity.
+        /// </summary>
+        public Vector2 LookAt
+        {
+            get
+            {
+                var v = Vector2.Right();
+                v.Direction = Direction;
+                return v;
             }
         }
 
