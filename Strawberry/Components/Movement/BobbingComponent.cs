@@ -47,6 +47,9 @@ public class BobbingComponent : BaseComponent
     {
         base.OnUpdate();
 
+        if (Transform == null)
+            return;
+
         elapsed += FrameInfo.Information.DeltaTime;
         float offset = Amplitude *
                MathF.Sin((2f * MathF.PI * Frequency * elapsed) + Phase);
