@@ -212,6 +212,7 @@ namespace Strawberry.OpenAL
             AL.SourcePlay(source);
 
             activeVoices.Add(v);
+            v.Volume = 1.0f;
             return v;
         }
 
@@ -240,6 +241,7 @@ namespace Strawberry.OpenAL
             AL.SourcePlay(source);
 
             activeVoices.Add(v);
+            v.Volume = 1.0f;
             return v;
         }
 
