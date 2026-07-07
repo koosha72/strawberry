@@ -31,6 +31,7 @@ public class TimerComponent : BaseComponent
     /// Gets or sets the initial value of the timer. (Seconds)
     /// If Loop is true the timer will reset to this value when it ends.
     /// Sets the time of the timer to this value when you change the value of StartTime.
+    /// Changing start time will restart the timer. Set this parameter to start the timer. if StartTime is 0 the timer won't start.
     /// </summary>
     private float startTime;
     public float StartTime
@@ -51,7 +52,7 @@ public class TimerComponent : BaseComponent
     public override void OnUpdate()
     {
         base.OnUpdate();
-        if (finished) return;
+        if (finished || startTime == 0) return;
         if (time > 0f)
             time -= FrameInfo.Information.DeltaTime;
         else

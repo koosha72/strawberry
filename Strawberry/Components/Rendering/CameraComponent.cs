@@ -40,6 +40,8 @@ public class CameraComponent : BaseComponent
     public override void OnUpdate()
     {
         base.OnUpdate();
+        if (transform == null)
+            return;
         var vp = Scene.Viewports.Where(x => x.Name == ViewportName).FirstOrDefault();
         if (vp != null)
         {
@@ -57,7 +59,7 @@ public class CameraComponent : BaseComponent
                     }
                     else
                     {
-                        vp.ScenePos += Vector2.Right() * Speed * FrameInfo.Information.DeltaTime;
+                        vp.ScenePos += Vector2.Right() * Speed.X * FrameInfo.Information.DeltaTime;
                     }
                 }
                 if (transform.Position.X < vp.ScenePos.X + Border.X)
@@ -68,7 +70,7 @@ public class CameraComponent : BaseComponent
                     }
                     else
                     {
-                        vp.ScenePos += Vector2.Left() * Speed * FrameInfo.Information.DeltaTime;
+                        vp.ScenePos += Vector2.Left() * Speed.X * FrameInfo.Information.DeltaTime;
                     }
                 }
 
@@ -80,7 +82,7 @@ public class CameraComponent : BaseComponent
                     }
                     else
                     {
-                        vp.ScenePos += Vector2.Down() * Speed * FrameInfo.Information.DeltaTime;
+                        vp.ScenePos += Vector2.Down() * Speed.Y * FrameInfo.Information.DeltaTime;
                     }
                 }
                 if (transform.Position.Y < vp.ScenePos.Y + Border.Y)
@@ -91,7 +93,7 @@ public class CameraComponent : BaseComponent
                     }
                     else
                     {
-                        vp.ScenePos += Vector2.Up() * Speed * FrameInfo.Information.DeltaTime;
+                        vp.ScenePos += Vector2.Up() * Speed.Y * FrameInfo.Information.DeltaTime;
                     }
                 }
             }

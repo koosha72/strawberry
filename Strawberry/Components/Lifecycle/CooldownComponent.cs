@@ -58,12 +58,12 @@ public class CooldownComponent : BaseComponent
     }
 
     /// <summary>
-    /// Cancels a given action, making it ready to be used again. The CooldownFinishedEvent will be raised in the next OnUpdate iteration.
+    /// Cancels a given action, making it ready to be used again.
     /// </summary>
     /// <param name="key">The key of the action</param>
     public void Cancel(string key)
     {
-        cooldowns[key] = 0f;
+        cooldowns.Remove(key);
     }
 
     public override void OnUpdate()

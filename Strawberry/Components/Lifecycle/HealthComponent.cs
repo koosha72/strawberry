@@ -117,11 +117,11 @@ public class HealthComponent : BaseComponent
 
         if (Health <= 0.0f)
         {
-            EventManager.Invoke(this, new KilledEvent() { HealthComponent = this });
-            if (DestroyOnKill)
-                Owner.Destroy();
             Health = 0;
             IsDead = true;
+            EventManager.Invoke(this, new KilledEvent() { HealthComponent = this });
+            if (DestroyOnKill)
+                Owner?.Destroy();
         }
     }
 }
