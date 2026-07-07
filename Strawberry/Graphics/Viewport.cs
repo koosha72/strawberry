@@ -6,6 +6,7 @@
  * Represents a rendering viewport including scene/world coordinates and screen mapping.
  */
 
+using Strawberry.Common;
 using Strawberry.Math;
 
 
@@ -55,6 +56,17 @@ namespace Strawberry.Graphics
         /// Gets or sets the size percentage when using percent-based coordinates (0-100% of the screen).
         /// </summary>
         public Vector2 PercentSize { get; set; } = new Vector2(100);
+
+        /// <summary>
+        /// Get the scene bounds of the viewport.
+        /// </summary>
+        public Rectangle Bounds
+        {
+            get
+            {
+                return new Rectangle(ScenePos, SceneSize);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the unique identifier name for this viewport.
