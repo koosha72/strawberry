@@ -37,66 +37,56 @@ public class CameraComponent : BaseComponent
         }
     }
 
-    public override void OnUpdate()
+    public override void OnRender()
     {
         base.OnUpdate();
-        if (transform == null)
-            return;
-        var vp = Scene.Viewports.Where(x => x.Name == ViewportName).FirstOrDefault();
-        if (vp != null)
-        {
-            if (Center)
-            {
-                vp.ScenePos = transform.Position - (vp.SceneSize / 2);
-            }
-            else
-            {
-                if (transform.Position.X > vp.ScenePos.X + vp.SceneSize.X - Border.X)
-                {
-                    if (Speed.X == -1)
-                    {
-                        vp.ScenePos = new Vector2(transform.Position.X - vp.SceneSize.X + Border.X, vp.ScenePos.Y);
-                    }
-                    else
-                    {
-                        vp.ScenePos += Vector2.Right() * Speed.X * FrameInfo.Information.DeltaTime;
-                    }
-                }
-                if (transform.Position.X < vp.ScenePos.X + Border.X)
-                {
-                    if (Speed.X == -1)
-                    {
-                        vp.ScenePos = new Vector2(transform.Position.X - Border.X, vp.ScenePos.Y);
-                    }
-                    else
-                    {
-                        vp.ScenePos += Vector2.Left() * Speed.X * FrameInfo.Information.DeltaTime;
-                    }
-                }
+        if (transform == null) return;
 
-                if (transform.Position.Y > vp.ScenePos.Y + vp.SceneSize.Y - Border.Y)
-                {
-                    if (Speed.Y == -1)
-                    {
-                        vp.ScenePos = new Vector2(vp.ScenePos.X, transform.Position.Y - vp.SceneSize.Y + Border.Y);
-                    }
-                    else
-                    {
-                        vp.ScenePos += Vector2.Down() * Speed.Y * FrameInfo.Information.DeltaTime;
-                    }
-                }
-                if (transform.Position.Y < vp.ScenePos.Y + Border.Y)
-                {
-                    if (Speed.Y == -1)
-                    {
-                        vp.ScenePos = new Vector2(vp.ScenePos.X, transform.Position.Y - Border.Y);
-                    }
-                    else
-                    {
-                        vp.ScenePos += Vector2.Up() * Speed.Y * FrameInfo.Information.DeltaTime;
-                    }
-                }
+        var vp = Scene.Viewports.FirstOrDefault(x => x.Name == ViewportName);
+        if (vp == null) return;
+
+        Vector2 targetPos = vp.ScenePos;
+
+        if (Center)
+        {
+            targetPos = transform.Position - (vp.SceneSize / 2);
+        }
+        else
+        {
+            if (transform.Position.X > vp.ScenePos.X + vp.SceneSize.X - Border.X)
+            {
+                targetPos.X = transform.Position.X - vp.SceneSize.X + Border.X;
             }
+            else if (transform.Position.X < vp.ScenePos.X + Border.X)
+            {
+                targetPos.X = transform.Position.X - Border.X;
+            }
+
+            if (transform.Position.Y > vp.ScenePos.Y + vp.SceneSize.Y - Border.Y)
+            {
+                targetPos.Y = transform.Position.Y - vp.SceneSize.Y + Border.Y;
+            }
+            else if (transform.Position.Y < vp.ScenePos.Y + Border.Y)
+            {
+                targetPos.Y = transform.Position.Y - Border.Y;
+            }
+        }
+
+        if (Speed.X == -1 && Speed.Y == -1)
+        {
+            vp.ScenePos = targetPos;
+        }
+        else
+        {
+            Vector2 diff = targetPos - vp.ScenePos;
+
+            float moveX = System.MathF.Sign(diff.X) * Speed.X * FrameInfo.Information.DeltaTime;
+            float moveY = System.MathF.Sign(diff.Y) * Speed.Y * FrameInfo.Information.DeltaTime;
+
+            if (System.MathF.Abs(moveX) > System.MathF.Abs(diff.X)) moveX = diff.X;
+            if (System.MathF.Abs(moveY) > System.MathF.Abs(diff.Y)) moveY = diff.Y;
+
+            vp.ScenePos += new Vector2(moveX, moveY);
         }
     }
 }
