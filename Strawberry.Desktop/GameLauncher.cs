@@ -75,7 +75,7 @@ namespace Strawberry.Desktop
             wnd.Load += Wnd_Load1;
             wnd.UpdateFrame += Wnd_UpdateFrame;
             GraphicsContext = new GraphicsContext();
-            GraphicsContext.Initialize(wnd, width, height, true);
+            GraphicsContext.Initialize(wnd, width, height);
 
             InputManager = new Input.InputManager();
             SoundManager = new OpenAL.SoundManager();

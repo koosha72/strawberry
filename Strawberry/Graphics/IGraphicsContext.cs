@@ -35,8 +35,7 @@ namespace Strawberry.Graphics
         /// <param name="source">The source to render on (It can be a window handle or a GameWindow object for OpenTK)</param>
         /// <param name="width">The width of the rendering area</param>
         /// <param name="height">The height of the rendering area</param>
-        /// <param name="fullscreen">If true the resolution of the screen will be changed.</param>
-        void Initialize(object source, int width, int height, bool fullscreen);
+        void Initialize(object source, int width, int height);
 
         /// <summary>
         /// Starts the rendering process

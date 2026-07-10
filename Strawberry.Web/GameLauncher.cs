@@ -93,7 +93,7 @@ public class GameLauncher : IGameLauncher
             throw new Exception("MakeCurrent() failed");
 
         GraphicsContext = new GraphicsContext();
-        GraphicsContext.Initialize(new EGLDisplayHolder(display, surface), width, height, true);
+        GraphicsContext.Initialize(new EGLDisplayHolder(display, surface), width, height);
 
         SoundManager = new OpenAL.SoundManager();
         InputManager = new InputManager();

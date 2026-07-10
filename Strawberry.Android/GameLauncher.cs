@@ -167,7 +167,7 @@ public class GameLauncher : Activity, IGameLauncher
                         // Context survived — textures are still in GPU memory!
                         // Just reinitialize the graphics context (viewport etc.)
                         eglHelper.MakeCurrent();
-                        GraphicsContext.Initialize(eglHelper, w, h, true);
+                        GraphicsContext.Initialize(eglHelper, w, h);
                         eglReady = true;
                         continue;
                     }
@@ -185,7 +185,7 @@ public class GameLauncher : Activity, IGameLauncher
                 if (firstStart)
                 {
                     GraphicsContext = new GraphicsContext();
-                    GraphicsContext.Initialize(eglHelper, w, h, true);
+                    GraphicsContext.Initialize(eglHelper, w, h);
                     InputManager = new InputManager();
                     SoundManager = new OpenAL.SoundManager();
                     PlatformServices.RegisterService<IStorage>(new StorageManager());
@@ -194,7 +194,7 @@ public class GameLauncher : Activity, IGameLauncher
                 }
                 else
                 {
-                    GraphicsContext.Initialize(eglHelper, w, h, true);
+                    GraphicsContext.Initialize(eglHelper, w, h);
                     (GraphicsContext as GraphicsContext).RestoreContext();
                 }
 

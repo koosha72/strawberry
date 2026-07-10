@@ -28,7 +28,7 @@ namespace Strawberry.Desktop.Graphics
 
         Dictionary<string, BlendState> blendStates;
 
-        public void Initialize(object wnd, int width, int height, bool fullscreen)
+        public void Initialize(object wnd, int width, int height)
         {
             blendStates = new Dictionary<string, BlendState>();
 

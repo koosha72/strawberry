@@ -24,7 +24,7 @@ public class GraphicsContext : Base, IGraphicsContext
 
     Dictionary<string, BlendState> blendStates;
 
-    public void Initialize(object source, int width, int height, bool fullscreen)
+    public void Initialize(object source, int width, int height)
     {
         blendStates = new Dictionary<string, BlendState>();
 
