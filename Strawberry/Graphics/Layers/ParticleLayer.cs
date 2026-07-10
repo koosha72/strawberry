@@ -294,10 +294,10 @@ namespace Strawberry.Graphics.Layers
                     temp = spr;
                     temp.Shader.Activate();
                     temp.Shader.Projection = Matrix4.CreateOrthographic(
-                        (int)GraphicsContext.ActiveViewport.ScenePos.X,
-                        (int)GraphicsContext.ActiveViewport.SceneSize.X + (int)GraphicsContext.ActiveViewport.ScenePos.X,
-                        (int)GraphicsContext.ActiveViewport.SceneSize.Y + (int)GraphicsContext.ActiveViewport.ScenePos.Y,
-                        (int)GraphicsContext.ActiveViewport.ScenePos.Y, 0, 1);
+                        GraphicsContext.ActiveViewport.ScenePos.X,
+                        GraphicsContext.ActiveViewport.SceneSize.X + GraphicsContext.ActiveViewport.ScenePos.X,
+                        GraphicsContext.ActiveViewport.SceneSize.Y + GraphicsContext.ActiveViewport.ScenePos.Y,
+                        GraphicsContext.ActiveViewport.ScenePos.Y, 0, 1);
                     temp.Shader.SetTexture(spr.Texture);
                     GraphicsContext.ActivateBlendMode(spr.BlendName);
                 }

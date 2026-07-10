@@ -219,10 +219,10 @@ namespace Strawberry.Graphics.Layers
             var vp = GraphicsContext.ActiveViewport;
             // Note: Casting to int as in original code
             return Matrix4.CreateOrthographic(
-                (int)vp.ScenePos.X,
-                (int)vp.SceneSize.X + (int)vp.ScenePos.X,
-                (int)vp.SceneSize.Y + (int)vp.ScenePos.Y,
-                (int)vp.ScenePos.Y, 0, 1);
+                vp.ScenePos.X,
+                vp.SceneSize.X + vp.ScenePos.X,
+                vp.SceneSize.Y + vp.ScenePos.Y,
+                vp.ScenePos.Y, 0, 1);
         }
 
         private void FlushBatch(ref int quadCount, ref int vertexIndex)
@@ -301,70 +301,40 @@ namespace Strawberry.Graphics.Layers
 
         private int CalculateHorizontalTiling(ref Vector2 pos)
         {
+            float tileWidth = Size.X * Scale.X;
             float viewportX = GraphicsContext.ActiveViewport.ScenePos.X * ParallaxFactor.X;
 
-            int tileH = ((int)GraphicsContext.ActiveViewport.SceneSize.X / (int)(Size.X * Scale.X)) + 1;
-            int dx = (int)pos.X % (int)System.Math.Round(Size.X * Scale.X);
+            int tileH = (int)(GraphicsContext.ActiveViewport.SceneSize.X / tileWidth) + 2;
+            pos.X = pos.X % tileWidth;
 
-            if (dx > 0)
-            {
-                pos.X = dx - (Size.X * Scale.X);
-                tileH++;
-            }
-            else if (dx < 0)
-            {
-                pos.X = dx;
-                tileH++;
-            }
-            else
-            {
-                pos.X = 0;
-            }
+            float dx = viewportX % tileWidth;
 
-            dx = (int)System.Math.Round(viewportX) % (int)System.Math.Round(Size.X * Scale.X);
-            pos.X -= dx;
-
-            if (dx != 0)
-                tileH++;
             if (dx < 0)
-                pos.X -= (float)System.Math.Round(Size.X * Scale.X);
+            {
+                dx += tileWidth;
+            }
 
-            pos.X += (float)System.Math.Round(viewportX);
+            pos.X += GraphicsContext.ActiveViewport.ScenePos.X - dx - tileWidth;
 
             return tileH;
         }
 
         private int CalculateVerticalTiling(ref Vector2 pos)
         {
+            float tileHeight = Size.Y * Scale.Y;
             float viewportY = GraphicsContext.ActiveViewport.ScenePos.Y * ParallaxFactor.Y;
 
-            int tileV = ((int)GraphicsContext.ActiveViewport.SceneSize.Y / (int)(Size.Y * Scale.Y)) + 1;
-            int dy = (int)pos.Y % (int)System.Math.Round(Size.Y * Scale.Y);
+            int tileV = (int)(GraphicsContext.ActiveViewport.SceneSize.Y / tileHeight) + 3;
+            pos.Y = pos.Y % tileHeight;
 
-            if (dy > 0)
-            {
-                pos.Y = dy - (float)System.Math.Round(Size.Y * Scale.Y);
-                tileV++;
-            }
-            else if (dy < 0)
-            {
-                pos.Y = dy;
-                tileV++;
-            }
-            else
-            {
-                pos.Y = 0;
-            }
+            float dy = viewportY % tileHeight;
 
-            dy = (int)System.Math.Round(viewportY) % (int)System.Math.Round(Size.Y * Scale.Y);
-            pos.Y -= dy;
-
-            if (dy != 0)
-                tileV++;
             if (dy < 0)
-                pos.Y -= (Size.Y * Scale.Y);
+            {
+                dy += tileHeight;
+            }
 
-            pos.Y += viewportY;
+            pos.Y += GraphicsContext.ActiveViewport.ScenePos.Y - dy - tileHeight;
 
             return tileV;
         }
