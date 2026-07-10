@@ -25,26 +25,50 @@ namespace Strawberry.Desktop
         public event Action GameLoop;
         OpenTK.Windowing.Desktop.GameWindow wnd;
 
-        bool fullscreen;
+        DisplayMode displayMode;
 
-        public GameLauncher(bool fullscreen)
+        string windowTitle = "Strawberry";
+
+        public GameLauncher(DisplayMode displayMode, string windowTitle = "Strawberry")
         {
-            this.fullscreen = fullscreen;
+            this.displayMode = displayMode;
+            this.windowTitle = windowTitle;
         }
 
         public void Initialize(int width, int height)
         {
             NativeWindowSettings s = new NativeWindowSettings();
-            s.WindowState = fullscreen ? OpenTK.Windowing.Common.WindowState.Fullscreen : OpenTK.Windowing.Common.WindowState.Normal;
-            s.ClientSize = new OpenTK.Mathematics.Vector2i(width, height);
-            s.Title = "Strawberry";
+            var monitor = Monitors.GetPrimaryMonitor();
+            switch (displayMode)
+            {
+                case DisplayMode.Windowed:
+                    s.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Fixed;
+                    s.ClientSize = new OpenTK.Mathematics.Vector2i(width, height);
+                    s.WindowState = OpenTK.Windowing.Common.WindowState.Normal;
+                    s.Location = monitor.ClientArea.HalfSize - new OpenTK.Mathematics.Vector2i(width / 2, height / 2);
+                    break;
+                case DisplayMode.Borderless:
+                    s.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Hidden;
+                    s.ClientSize = monitor.ClientArea.Size + new OpenTK.Mathematics.Vector2i(1);
+                    s.WindowState = OpenTK.Windowing.Common.WindowState.Normal;
+                    s.Location = monitor.ClientArea.Min;
+                    break;
+                case DisplayMode.Fullscreen:
+                    s.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Hidden;
+                    s.WindowState = OpenTK.Windowing.Common.WindowState.Fullscreen;
+                    s.ClientSize = new OpenTK.Mathematics.Vector2i(width, height);
+                    break;
+            }
+            s.Title = windowTitle;
             s.APIVersion = Version.Parse("4.1.0");
+            s.Profile = OpenTK.Windowing.Common.ContextProfile.Any;
+            var displayConfig = new DisplayConfig(width, height, displayMode, this);
+            PlatformServices.RegisterService<IDisplayConfig>(displayConfig);
+
             GameWindowSettings g = new GameWindowSettings();
             g.UpdateFrequency = 500;
 
-            s.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Fixed;
-            s.Profile = OpenTK.Windowing.Common.ContextProfile.Any;
-            wnd = new OpenTK.Windowing.Desktop.GameWindow(g, s);
+            wnd = new GameWindow(g, s);
 
             wnd.VSync = OpenTK.Windowing.Common.VSyncMode.Off;
 
@@ -56,7 +80,6 @@ namespace Strawberry.Desktop
             InputManager = new Input.InputManager();
             SoundManager = new OpenAL.SoundManager();
             PlatformServices.RegisterService<IStorage>(new StorageManager());
-
         }
 
         private void Wnd_Load1()
@@ -87,6 +110,41 @@ namespace Strawberry.Desktop
         {
             wnd.UpdateFrame -= Wnd_UpdateFrame;
             wnd.Close();
+        }
+
+        public void ChangeDisplayMode(DisplayMode displayMode)
+        {
+            var displayConfig = PlatformServices.GetService<IDisplayConfig>();
+            int width = displayConfig.Width;
+            int height = displayConfig.Height;
+            var monitor = Monitors.GetPrimaryMonitor();
+            switch (displayMode)
+            {
+                case DisplayMode.Windowed:
+                    wnd.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Fixed;
+                    wnd.ClientSize = new OpenTK.Mathematics.Vector2i(width, height);
+                    wnd.WindowState = OpenTK.Windowing.Common.WindowState.Normal;
+                    wnd.Location = monitor.ClientArea.HalfSize - new OpenTK.Mathematics.Vector2i(width / 2, height / 2);
+                    break;
+                case DisplayMode.Borderless:
+                    wnd.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Hidden;
+                    wnd.ClientSize = monitor.ClientArea.Size + new OpenTK.Mathematics.Vector2i(1);
+                    wnd.WindowState = OpenTK.Windowing.Common.WindowState.Normal;
+                    wnd.Location = monitor.ClientArea.Min;
+                    break;
+                case DisplayMode.Fullscreen:
+                    wnd.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Hidden;
+                    wnd.WindowState = OpenTK.Windowing.Common.WindowState.Fullscreen;
+                    wnd.ClientSize = new OpenTK.Mathematics.Vector2i(width, height);
+                    break;
+            }
+        }
+
+        public void SetSize(int width, int height)
+        {
+            var displayConfig = PlatformServices.GetService<IDisplayConfig>();
+            if (displayConfig.DisplayMode == DisplayMode.Windowed || displayConfig.DisplayMode == DisplayMode.Fullscreen)
+                wnd.ClientSize = new OpenTK.Mathematics.Vector2i(width, height);
         }
     }
 }
