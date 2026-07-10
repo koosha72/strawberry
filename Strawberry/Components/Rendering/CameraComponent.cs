@@ -37,7 +37,7 @@ public class CameraComponent : BaseComponent
         }
     }
 
-    public override void OnRender()
+    public override void OnUpdate()
     {
         base.OnUpdate();
         if (transform == null) return;
