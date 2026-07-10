@@ -80,6 +80,7 @@ namespace Strawberry.Desktop
             InputManager = new Input.InputManager();
             SoundManager = new OpenAL.SoundManager();
             PlatformServices.RegisterService<IStorage>(new StorageManager());
+            PlatformServices.RegisterService<ICursor>(new Cursor(wnd));
         }
 
         private void Wnd_Load1()
