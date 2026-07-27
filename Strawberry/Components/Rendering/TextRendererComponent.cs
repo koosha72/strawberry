@@ -6,12 +6,12 @@
  * Component that integrates text rendering into a scene or layer.
  */
 
-using Strawberry.Components;
 using Strawberry.Core;
+using Strawberry.Graphics;
 using Strawberry.Graphics.Layers;
-using Strawberry.Math;
+using Strawberry.Graphics.Text;
 
-namespace Strawberry.Graphics.Text;
+namespace Strawberry.Components.Rendering;
 
 /// <summary>
 /// A component that renders text through a <see cref="SpriteLayer"/>.
