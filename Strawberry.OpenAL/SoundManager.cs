@@ -258,6 +258,8 @@ namespace Strawberry.OpenAL
                     availableStreamingSources.Push(voice.SourceInd);
                 else
                     availableEffectSources.Push(voice.SourceInd);
+
+                voice.SourceInd = -1;
             }
 
             activeVoices.Remove(voice);

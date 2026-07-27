@@ -69,7 +69,7 @@ namespace Strawberry.OpenAL
                 cachedFrequencyRatio = value;
                 if (!IsVirtual && AL.IsSource(SourceInd))
                 {
-                    AL.Sourcef(SourceInd, ALSourcef.Gain, value);
+                    AL.Sourcef(SourceInd, ALSourcef.Pitch, value);
                 }
             }
         }
