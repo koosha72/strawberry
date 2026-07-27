@@ -67,11 +67,6 @@ namespace Strawberry.Core
 
         //public QuadTree<Collider> CollisionTree { get; private set; }
 
-        /// <summary>
-        /// A list of entity IDs pending destruction.
-        /// </summary>
-        List<string> destroyList;
-
         //public Background ClearBackground { get; set; }
 
         /// <summary>
@@ -147,7 +142,6 @@ namespace Strawberry.Core
             Viewports = new ViewportCollection();
             Entities = new EntityCollection();
             MousePosition = new Vector2[10];
-            destroyList = new List<string>();
             ClearColor = Color.Transparent;
             DestroyCount = 0;
         }
@@ -201,10 +195,9 @@ namespace Strawberry.Core
                 if (!en.Destroyed && !en.UpdateEnded && en.Parent == null)
                     Entities.Values[i].OnEndUpdate();
                 if (en.Destroyed)
-                    destroyList.Add(en.ID);
+                    Entities.Remove(en.ID);
             }
             Entities.Flush();
-            destroyList.Clear();
         }
 
         /// <summary>
