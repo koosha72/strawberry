@@ -20,18 +20,18 @@ internal interface IWeakAction
 
 internal class WeakAction<TTarget, T> : IWeakAction
 {
-    private readonly WeakReference<object?> _weakTarget;
+    private readonly WeakReference<object> _weakTarget;
     private readonly Action<T> _invokeAction;
 
-    private readonly MethodInfo? _method;
-    private readonly object?[]? _argBuffer;
+    private readonly MethodInfo _method;
+    private readonly object[] _argBuffer;
 
     public WeakAction(Action<T> originalAction)
     {
         if (originalAction == null)
             throw new ArgumentNullException(nameof(originalAction));
 
-        _weakTarget = new WeakReference<object?>(originalAction.Target);
+        _weakTarget = new WeakReference<object>(originalAction.Target);
 
         if (originalAction.Target == null)
         {
@@ -64,7 +64,7 @@ internal class WeakAction<TTarget, T> : IWeakAction
             {
                 // Fallback to reflection
                 _method = method;
-                _argBuffer = new object?[1];
+                _argBuffer = new object[1];
 
                 _invokeAction = arg =>
                 {

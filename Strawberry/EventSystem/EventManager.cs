@@ -22,6 +22,17 @@ public static class EventManager
     private static Dictionary<EventCallTime, PriorityQueue<IQueuedEvent, int>> callbackQueue = new();
     private static readonly ConcurrentDictionary<(Type target, Type arg), ConstructorInfo> _weakActionCtors = new();
 
+    /// <summary>
+    /// If false the event manager will throw exceptions when an exception occurs in a handler. If true, the exception will be swallowed and logged.
+    /// Also you can use OnHandlerException to handle exceptions yourself (if OnHandlerException is set no log will be written). (Default is true)
+    /// </summary>
+    public static bool SwallowExceptions { get; set; } = true;
+
+    /// <summary>
+    /// If an exception occurs in a callback, this will be called with the unhandled Exception object as the parameter.
+    /// </summary>
+    public static Action<Exception> OnHandlerException { get; set; }
+
     private static readonly object _lock = new();
 
     /// <summary>
@@ -273,10 +284,26 @@ public static class EventManager
             }
         }
 
-        // Execute outside the lock!
         foreach (var queuedEvent in eventsToExecute)
         {
-            queuedEvent.Invoke();
+            try
+            {
+                queuedEvent.Invoke();
+            }
+            catch (Exception ex)
+            {
+                if (SwallowExceptions)
+                {
+                    var handler = OnHandlerException;
+                    if (handler != null)
+                        handler(ex);
+                    else
+                        Console.Error.WriteLine($"[EventManager] Handler threw: {ex}");
+                }
+
+                if (!SwallowExceptions)
+                    throw;
+            }
         }
     }
 
