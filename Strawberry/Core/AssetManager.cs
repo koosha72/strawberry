@@ -276,7 +276,7 @@ namespace Strawberry.Core
         }
 
 
-        protected override void CleanManaged()
+        protected override void CleanUnmanaged()
         {
             foreach (object asset in ownedAssets)
             {
@@ -287,7 +287,7 @@ namespace Strawberry.Core
             assets.Clear();
             assetsByRef.Clear();
 
-            base.CleanManaged();
+            base.CleanUnmanaged();
         }
     }
 

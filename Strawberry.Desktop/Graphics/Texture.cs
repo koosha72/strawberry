@@ -215,9 +215,10 @@ namespace Strawberry.Desktop.Graphics
         }
 
 
-        protected override void CleanManaged()
+        protected override void CleanUnmanaged()
         {
             GL.DeleteTexture(texture);
+            base.CleanUnmanaged();
         }
 
 

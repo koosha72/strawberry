@@ -146,8 +146,10 @@ namespace Strawberry
             FixedUpdate();
             VariableUpdate();
             Render();
-
             GameContext?.SoundManager?.Update();
+            
+            DisposableReferenceObject.ProcessCleanupQueue();
+
             frameInfoProvider.EndUpdate();
         }
 

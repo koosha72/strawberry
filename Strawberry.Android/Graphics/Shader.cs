@@ -87,12 +87,14 @@ public class Shader : Strawberry.Graphics.Shader
             mat.Array, 0);
     }
 
-    protected override void CleanManaged()
+    protected override void CleanUnmanaged()
     {
         GLES30.GlUseProgram(0);
         if (program > 0)
             GLES30.GlDeleteProgram(program);
 
         program = 0;
+
+        base.CleanUnmanaged();
     }
 }

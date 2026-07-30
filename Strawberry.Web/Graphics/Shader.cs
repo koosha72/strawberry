@@ -84,12 +84,14 @@ public class Shader : Strawberry.Graphics.Shader
             mat.Array);
     }
 
-    protected override void CleanManaged()
+    protected override void CleanUnmanaged()
     {
         GL.UseProgram(0);
         if (program > 0)
             GL.DeleteProgram(program);
 
         program = 0;
+
+        base.CleanUnmanaged();
     }
 }

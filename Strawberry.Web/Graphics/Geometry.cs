@@ -85,9 +85,10 @@ public class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
         ((Shader)graphicsContext.ActiveShader).DeActivateLayout();
     }
 
-    protected override void CleanManaged()
+    protected override void CleanUnmanaged()
     {
         GL.DeleteBuffers(2, new int[] { ibo, vbo });
+        base.CleanUnmanaged();
     }
 
 

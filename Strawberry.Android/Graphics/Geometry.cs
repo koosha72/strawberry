@@ -73,9 +73,10 @@ public class Geometry<T> : Strawberry.Graphics.Geometry<T> where T : struct
         ((Shader)graphicsContext.ActiveShader).DeActivateLayout();
     }
 
-    protected override void CleanManaged()
+    protected override void CleanUnmanaged()
     {
         GLES30.GlDeleteBuffers(2, new int[] { ibo, vbo }, 0);
+        base.CleanUnmanaged();
     }
 
 

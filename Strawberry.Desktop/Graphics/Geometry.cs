@@ -58,10 +58,11 @@ namespace Strawberry.Desktop.Graphics
             ((Shader)graphicsContext.ActiveShader).DeActivateLayout();
         }
 
-        protected override void CleanManaged()
+        protected override void CleanUnmanaged()
         {
             GL.DeleteBuffer(ibo);
             GL.DeleteBuffer(vbo);
+            base.CleanUnmanaged();
         }
 
 

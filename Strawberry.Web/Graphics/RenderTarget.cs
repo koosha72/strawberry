@@ -64,13 +64,13 @@ public class RenderTarget : Strawberry.Graphics.RenderTarget
         Texture.SetFilter(minFilter, magFilter);
     }
 
-    protected override void CleanManaged()
+    protected override void CleanUnmanaged()
     {
         GL.DeleteRenderbuffers(1, new int[] { depthBuffer });
         depthBuffer = 0;
         Texture.Dispose();
         GL.DeleteFramebuffers(1, new int[] { frameBuffer });
         frameBuffer = 0;
-        base.CleanManaged();
+        base.CleanUnmanaged();
     }
 }

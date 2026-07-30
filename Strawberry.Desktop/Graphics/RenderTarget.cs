@@ -61,14 +61,14 @@ namespace Strawberry.Desktop.Graphics
             Texture.SetFilter(minFilter, magFilter);
         }
 
-        protected override void CleanManaged()
+        protected override void CleanUnmanaged()
         {
             GL.DeleteRenderbuffer(depthBuffer);
             depthBuffer = 0;
             Texture.Dispose();
             GL.DeleteFramebuffer(frameBuffer);
             frameBuffer = 0;
-            base.CleanManaged();
+            base.CleanUnmanaged();
         }
     }
 }

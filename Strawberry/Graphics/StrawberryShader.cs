@@ -81,7 +81,7 @@ namespace Strawberry.Graphics
             BaseShader.Activate();
         }
 
-        protected override void CleanManaged()
+        protected override void CleanUnmanaged()
         {
             BaseShader.Dispose();
         }

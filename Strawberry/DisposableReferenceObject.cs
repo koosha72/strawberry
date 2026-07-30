@@ -7,12 +7,15 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 
 namespace Strawberry;
 
 public class DisposableReferenceObject : ReferenceObject
 {
     public bool IsDisposed { get; protected set; }
+
+    private static readonly ConcurrentQueue<DisposableReferenceObject> cleanupQueue = new();
 
     protected virtual void CleanUnmanaged()
     {
@@ -32,19 +35,26 @@ public class DisposableReferenceObject : ReferenceObject
 
     public virtual void Dispose(bool disposing)
     {
-        if (!IsDisposed)
+        if (IsDisposed) return;
+        IsDisposed = true;
+        if (disposing)
         {
-            if (disposing)
-            {
-                CleanManaged();
-            }
-            CleanUnmanaged();
-            IsDisposed = true;
+            CleanManaged();
+            GC.SuppressFinalize(this);
         }
+        cleanupQueue.Enqueue(this);
     }
 
     ~DisposableReferenceObject()
     {
         Dispose(false);
+    }
+
+    public static void ProcessCleanupQueue()
+    {
+        while (cleanupQueue.TryDequeue(out var obj))
+        {
+            obj.CleanUnmanaged();
+        }
     }
 }

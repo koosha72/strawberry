@@ -183,9 +183,10 @@ public class Texture : Strawberry.Graphics.Texture
     }
 
 
-    protected override void CleanManaged()
+    protected override void CleanUnmanaged()
     {
         GL.DeleteTextures(1, new int[] { texture });
+        base.CleanUnmanaged();
     }
 
 

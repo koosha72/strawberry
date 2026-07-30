@@ -233,9 +233,11 @@ public class Texture : Strawberry.Graphics.Texture
     }
 
 
-    protected override void CleanManaged()
+    protected override void CleanUnmanaged()
     {
         GLES30.GlDeleteTextures(1, new int[] { texture }, 0);
+
+        base.CleanUnmanaged();
     }
 
 
