@@ -206,6 +206,9 @@ namespace Strawberry.OpenAL
 
             AL.SourceUnqueueBuffers(SourceInd, processedCount, tempBuffers);
 
+            int bytesPerSample = Channels * (BitsPerSample / 8);
+            totalSamplesPlayed += processedCount * (buffer.Length / bytesPerSample);
+
             int buffersCount = 0;
             for (int j = 0; j < tempBuffers.Length; j++)
             {
