@@ -358,5 +358,16 @@ namespace Strawberry.OpenAL
 
             return -1;
         }
+
+        internal void ReturnStreamingSource(int source)
+        {
+            if (availableStreamingSources.Contains(source)) return; // guard against double-return
+            availableStreamingSources.Push(source);
+        }
+
+        internal void RemoveStream(SoundStream stream)
+        {
+            streams.Remove(stream);
+        }
     }
 }

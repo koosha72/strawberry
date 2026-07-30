@@ -282,6 +282,11 @@ namespace Strawberry.OpenAL
 
         protected override void CleanUnmanaged()
         {
+            if (SourceInd != -1)
+            {
+                (SoundManager as SoundManager)?.ReturnStreamingSource(SourceInd);
+                (SoundManager as SoundManager)?.RemoveStream(this);
+            }
             SourceInd = -1;
             AL.DeleteBuffers(buffers.Length, buffers);
             reader.Dispose();
