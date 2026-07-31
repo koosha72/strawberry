@@ -563,7 +563,6 @@ namespace Strawberry.Core
                 UpdateBegan = false;
                 if (!Destroyed)
                 {
-                    var tempVal = new List<Entity>(Children.Values);
                     foreach (Entity child in Children.Values)
                     {
                         if (child.Destroyed)
