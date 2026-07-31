@@ -71,8 +71,10 @@ namespace Strawberry.Graphics
             for (i = 1; i < effects.Count; i++)
             {
                 effects[i].Activate();
+                GraphicsContext.Clear(Color.Transparent);
                 effects[i - 1].Shader.Activate();
                 effects[i - 1].RenderTarget.Texture.Activate(effects[i - 1].Shader, effects[i - 1].TextureParameterName);
+                geometry.Render();
             }
 
             GraphicsContext.ActivateRenderTarget(null);
