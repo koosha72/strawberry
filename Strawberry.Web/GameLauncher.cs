@@ -34,8 +34,15 @@ public class GameLauncher : IGameLauncher
     [UnmanagedCallersOnly]
     public static int JSGameLoop(double time, nint userData)
     {
-        if (instance.GraphicsContext != null && !instance.paused)
-            instance.GameLoop?.Invoke();
+        try
+        {
+            if (instance.GraphicsContext != null && !instance.paused)
+                instance.GameLoop?.Invoke();
+        }
+        catch (Exception x)
+        {
+            Console.Error.WriteLine(x);
+        }
         return 1;
     }
     public GameLauncher(string gameName = null)

@@ -257,6 +257,11 @@ namespace Strawberry.Core
         /// </summary>
         public virtual void OnFixedUpdate()
         {
+            if (PhysicsEnabled)
+            {
+                PhysicsWorld?.Step(FrameInfo.Information.FixedDeltaTime);
+            }
+
             for (int i = 0; i < Entities.Count; i++)
             {
                 if (i < 0)
@@ -265,11 +270,6 @@ namespace Strawberry.Core
                     Entities.Values[i].OnFixedUpdate();
                 //if (Entities.Values[i].Destroyed)
                 //i--;
-            }
-
-            if (PhysicsEnabled)
-            {
-                PhysicsWorld?.Step(FrameInfo.Information.FixedDeltaTime);
             }
         }
 

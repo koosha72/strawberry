@@ -16,7 +16,7 @@ public readonly record struct SubscriptionToken
     internal readonly Guid Id;
     internal readonly Type EventType;
     internal readonly bool IsGlobal;
-    internal readonly WeakReference? Target;
+    internal readonly WeakReference Target;
 
     internal SubscriptionToken(Type eventType, bool isGlobal, object? target = null)
     {
