@@ -6,6 +6,7 @@ using Strawberry.Desktop.Input;
 using Strawberry.Sound;
 using Strawberry.OpenAL;
 using Strawberry.Platform;
+using System.Reflection;
 
 
 namespace Strawberry.Desktop
@@ -28,11 +29,18 @@ namespace Strawberry.Desktop
         DisplayMode displayMode;
 
         string windowTitle = "Strawberry";
+        string gameName = "";
 
-        public GameLauncher(DisplayMode displayMode, string windowTitle = "Strawberry")
+        public GameLauncher(DisplayMode displayMode, string windowTitle = "Strawberry", string gameName = null)
         {
             this.displayMode = displayMode;
             this.windowTitle = windowTitle;
+            if(gameName != null)
+            this.gameName = gameName;
+            else
+            {
+                this.gameName = Assembly.GetEntryAssembly().GetName().Name ?? "StrawberryGame";
+            }
         }
 
         public void Initialize(int width, int height)
@@ -80,6 +88,7 @@ namespace Strawberry.Desktop
             InputManager = new Input.InputManager();
             SoundManager = new OpenAL.SoundManager();
             PlatformServices.RegisterService<IAssetStorage>(new AssetStorageManager());
+            PlatformServices.RegisterService<IUserDataStorage>(new UserDataStorage(gameName));
             PlatformServices.RegisterService<ICursor>(new Cursor(wnd));
         }
 

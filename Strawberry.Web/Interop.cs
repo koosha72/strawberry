@@ -10,7 +10,7 @@ namespace Strawberry.Web;
 public static partial class Interop
 {
     [JSImport("initialize", "main.js")]
-    public static partial void Initialize();
+    public static partial Task Initialize();
 
     [JSImport("request_root_url", "main.js")]
     public static partial string RequestRootURL();
@@ -103,4 +103,9 @@ public static partial class Interop
         Resumed?.Invoke();
     }
 
+    [JSExport]
+    public static void SetUserDataCache(string json)
+    {
+        UserDataStorage.InitializeFromJson(json);
+    }
 }

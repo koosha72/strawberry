@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Strawberry.Graphics;
 using Strawberry.Input;
@@ -37,17 +38,26 @@ public class GameLauncher : IGameLauncher
             instance.GameLoop?.Invoke();
         return 1;
     }
-    public GameLauncher()
+    public GameLauncher(string gameName = null)
     {
         instance = this;
         var storage = new AssetStorageManager();
         PlatformServices.RegisterService<IAssetStorage>(storage);
         PlatformServices.RegisterService<IAOTDownloader>(storage);
+
+        if (gameName == null)
+            gameName = Assembly.GetEntryAssembly()?.GetName().Name ?? "StrawberryGame";
+
         SetRootUrl(Interop.RequestRootURL());
+        JSStorage.SetGameName(gameName);
+
+        var userDataStorage = new UserDataStorage();
+        PlatformServices.RegisterService<IUserDataStorage>(userDataStorage);
+
         Console.WriteLine("Root URL: " + rootUrl);
     }
 
-    public void Initialize(int width, int height)
+    public async void Initialize(int width, int height)
     {
         var display = EGL.GetDisplay(IntPtr.Zero);
         if (display == IntPtr.Zero)
@@ -97,7 +107,7 @@ public class GameLauncher : IGameLauncher
 
         SoundManager = new OpenAL.SoundManager();
         InputManager = new InputManager();
-
+        await Interop.Initialize();
         Initialized?.Invoke();
     }
 
@@ -133,7 +143,6 @@ public class GameLauncher : IGameLauncher
 
     public void Run()
     {
-        Interop.Initialize();
         Interop.Paused += OnPause;
         Interop.Resumed += OnResume;
         unsafe
@@ -156,6 +165,6 @@ public class GameLauncher : IGameLauncher
 
     public void Exit()
     {
-        
+
     }
 }

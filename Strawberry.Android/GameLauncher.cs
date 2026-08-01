@@ -189,6 +189,7 @@ public class GameLauncher : Activity, IGameLauncher
                     InputManager = new InputManager();
                     SoundManager = new OpenAL.SoundManager();
                     PlatformServices.RegisterService<IAssetStorage>(new AssetStorageManager());
+                    PlatformServices.RegisterService<IUserDataStorage>(new UserDataStorage());
                     Initialized?.Invoke();
                     firstStart = false;
                 }
