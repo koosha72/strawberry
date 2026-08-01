@@ -8,9 +8,9 @@
 
 namespace Strawberry.Platform;
 /// <summary>
-/// The storage service that handles file storage on different platforms and allows you to read data from a file system.
+/// The storage service that reads game asset files.
 /// </summary>
-public interface IStorage : IPlatformService
+public interface IAssetStorage : IPlatformService
 {
     /// <summary>
     /// Opens a stream to the specified file.

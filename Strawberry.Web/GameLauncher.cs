@@ -40,8 +40,8 @@ public class GameLauncher : IGameLauncher
     public GameLauncher()
     {
         instance = this;
-        var storage = new StorageManager();
-        PlatformServices.RegisterService<IStorage>(storage);
+        var storage = new AssetStorageManager();
+        PlatformServices.RegisterService<IAssetStorage>(storage);
         PlatformServices.RegisterService<IAOTDownloader>(storage);
         SetRootUrl(Interop.RequestRootURL());
         Console.WriteLine("Root URL: " + rootUrl);
@@ -107,7 +107,7 @@ public class GameLauncher : IGameLauncher
     /// <param name="rootUrl">The root url</param>
     public void SetRootUrl(string rootUrl)
     {
-        var storage = PlatformServices.GetService<IStorage>() as StorageManager;
+        var storage = PlatformServices.GetService<IAssetStorage>() as AssetStorageManager;
         if (storage != null)
             storage.RootUrl = rootUrl;
 
@@ -124,7 +124,7 @@ public class GameLauncher : IGameLauncher
         if (rootUrl == null)
             return;
 
-        var storage = PlatformServices.GetService<IStorage>() as StorageManager;
+        var storage = PlatformServices.GetService<IAssetStorage>() as AssetStorageManager;
         if (storage != null)
             storage.RootUrl = rootUrl;
 

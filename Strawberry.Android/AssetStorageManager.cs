@@ -7,10 +7,10 @@ namespace Strawberry.Android;
 /// <summary>
 /// The storage manager for android platform.
 /// </summary>
-public class StorageManager : IStorage
+public class AssetStorageManager : IAssetStorage
 {
     AssetManager assetManager;
-    public StorageManager()
+    public AssetStorageManager()
     {
         assetManager = App.Application.Context.Assets;
     }

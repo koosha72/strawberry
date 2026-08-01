@@ -10,7 +10,7 @@ public static class TextureLoader
 
     public static Texture Load(IGameContext gameContext, string path)
     {
-        var storage = PlatformServices.GetService<IStorage>();
+        var storage = PlatformServices.GetService<IAssetStorage>();
 
         MemoryStream mem = new MemoryStream(storage.ReadAllBytes(path));
         BinaryReader reader = new BinaryReader(mem);

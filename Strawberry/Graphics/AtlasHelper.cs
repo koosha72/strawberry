@@ -20,7 +20,7 @@ public static class AtlasHelper
     public static void LoadSprites(IGameContext gameContext, string texturePath, string spriteMap, string textureAssetName, string spriteAssetsPrefix, AssetManager assets = null)
     {
         var assetManager = assets == null ? gameContext.Assets : assets;
-        var storage = PlatformServices.GetService<IStorage>();
+        var storage = PlatformServices.GetService<IAssetStorage>();
 
         var texture = TextureLoader.Load(gameContext, texturePath);
         assetManager.Register<Texture>(textureAssetName, texture);

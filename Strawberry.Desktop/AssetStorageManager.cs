@@ -3,7 +3,7 @@ using Strawberry.Platform;
 
 namespace Strawberry.Desktop;
 
-public class StorageManager : IStorage
+public class AssetStorageManager : IAssetStorage
 {
     public string[] List(string path)
     {
