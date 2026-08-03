@@ -70,7 +70,7 @@ namespace Strawberry.Web.Graphics
 
         public void EndRender()
         {
-            //EGL.SwapBuffers(wnd.Display, wnd.Surface);
+            EGL.SwapBuffers(wnd.Display, wnd.Surface);
         }
 
         public bool IsApplicationIdle()
