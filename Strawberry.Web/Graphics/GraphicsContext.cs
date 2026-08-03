@@ -196,6 +196,15 @@ namespace Strawberry.Web.Graphics
             return wnd.GetCanvasSize();
         }
 
+        public void RestoreContext()
+        {
+            if (!PixelTexture.IsDisposed)
+            {
+                PixelTexture.Dispose();
+                PixelTexture = CreateTexture(1, 1, [Color.White]);
+            }
+        }
+
         #region private methods
         int ToSourcFactor(BlendFactor factor)
         {

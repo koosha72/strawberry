@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices.JavaScript;
 using Strawberry.Input;
+using Strawberry.Web.Graphics;
 
 namespace Strawberry.Web;
 #pragma warning disable CA1416
@@ -23,6 +24,9 @@ public static partial class Interop
 
     public static event Action Paused;
     public static event Action Resumed;
+
+    public static event Action GraphicsContextLost;
+    public static event Action GraphicsContextRestored;
 
     public static string RootUrl = "";
 
@@ -89,23 +93,25 @@ public static partial class Interop
     {
     }
 
-
     [JSExport]
-    public static void OnPause()
-    {
-        Paused?.Invoke();
-    }
+    public static void OnPause() => Paused?.Invoke();
 
 
     [JSExport]
-    public static void OnResume()
-    {
-        Resumed?.Invoke();
-    }
+    public static void OnResume() => Resumed?.Invoke();
 
     [JSExport]
-    public static void SetUserDataCache(string json)
-    {
-        UserDataStorage.InitializeFromJson(json);
-    }
+    public static void SetUserDataCache(string json) => UserDataStorage.InitializeFromJson(json);
+
+    [JSExport]
+    public static void OnFocusLost() => Game.Instance?.GameContext?.OnFocusLost();
+
+    [JSExport]
+    public static void OnFocusGained() => Game.Instance?.GameContext?.OnFocusGained();
+
+    [JSExport]
+    public static void OnGraphicsContextLost() => GraphicsContextLost?.Invoke();
+
+    [JSExport]
+    public static void OnGraphicsContextRestored() => GraphicsContextRestored?.Invoke();
 }

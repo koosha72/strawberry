@@ -35,8 +35,8 @@ namespace Strawberry.Desktop
         {
             this.displayMode = displayMode;
             this.windowTitle = windowTitle;
-            if(gameName != null)
-            this.gameName = gameName;
+            if (gameName != null)
+                this.gameName = gameName;
             else
             {
                 this.gameName = Assembly.GetEntryAssembly().GetName().Name ?? "StrawberryGame";
@@ -90,6 +90,16 @@ namespace Strawberry.Desktop
             PlatformServices.RegisterService<IAssetStorage>(new AssetStorageManager());
             PlatformServices.RegisterService<IUserDataStorage>(new UserDataStorage(gameName));
             PlatformServices.RegisterService<ICursor>(new Cursor(wnd));
+
+            wnd.FocusedChanged += FocusChanged;
+        }
+
+        private void FocusChanged(OpenTK.Windowing.Common.FocusedChangedEventArgs args)
+        {
+            if (args.IsFocused)
+                Game.Instance?.GameContext?.OnFocusGained();
+            else
+                Game.Instance?.GameContext?.OnFocusLost();
         }
 
         private void Wnd_Load1()

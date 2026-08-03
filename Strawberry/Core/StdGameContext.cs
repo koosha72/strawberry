@@ -205,5 +205,29 @@ namespace Strawberry.Core
         {
             GraphicsContext.EndRender();
         }
+
+        public virtual void OnResized(int width, int height)
+        {
+        }
+
+        public virtual void OnFocusLost()
+        {
+        }
+
+        public virtual void OnFocusGained()
+        {
+        }
+
+        public virtual void OnClosing()
+        {
+        }
+
+        public virtual void OnGraphicsContextLost()
+        {
+        }
+
+        public virtual void OnGraphicsContextRestored()
+        {
+        }
     }
 }

@@ -155,6 +155,7 @@ namespace Strawberry
 
         public void Exit()
         {
+            GameContext?.OnClosing();
             launcher.Exit();
         }
     }

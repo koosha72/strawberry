@@ -11,6 +11,7 @@ using Strawberry.Sound;
 using Strawberry.OpenAL;
 using Activity = Android.App.Activity;
 using Strawberry.Platform;
+using System.Collections.Concurrent;
 
 namespace Strawberry.Android;
 
@@ -40,6 +41,8 @@ public class GameLauncher : Activity, IGameLauncher
     bool firstStart = true;
     bool isFinishing = false;
     int w, h;
+
+    private readonly ConcurrentQueue<bool> pendingFocusEvents = new();
 
     protected override void OnCreate(Bundle savedInstanceState)
     {
@@ -78,6 +81,12 @@ public class GameLauncher : Activity, IGameLauncher
             (SoundManager as SoundManager).RestoreState();
         }
         base.OnResume();
+    }
+
+    public override void OnWindowFocusChanged(bool hasFocus)
+    {
+        pendingFocusEvents.Enqueue(hasFocus);
+        base.OnWindowFocusChanged(hasFocus);
     }
 
     public override void Finish()
@@ -124,6 +133,14 @@ public class GameLauncher : Activity, IGameLauncher
 
         while (running)
         {
+            // Call focus callbacks for the latest focus changes on the game loop thread
+            while (pendingFocusEvents.TryDequeue(out bool hasFocus))
+            {
+                if (hasFocus)
+                    Game.Instance?.GameContext?.OnFocusGained();
+                else
+                    Game.Instance?.GameContext?.OnFocusLost();
+            }
             // ── Surface is gone — release EGL and wait ──
             if (!surfaceAvailable)
             {
@@ -137,7 +154,6 @@ public class GameLauncher : Activity, IGameLauncher
                 Thread.Sleep(16);
                 continue;
             }
-
             if (needsEGLSetup)
             {
                 needsEGLSetup = false;
@@ -156,7 +172,7 @@ public class GameLauncher : Activity, IGameLauncher
                     }
                     else
                     {
-                        // Context was lost — full rebuild needed
+                        Game.Instance?.GameContext?.OnGraphicsContextLost();
                         eglHelper.CleanUp();
                     }
                 }
@@ -180,6 +196,7 @@ public class GameLauncher : Activity, IGameLauncher
                 {
                     GraphicsContext.Initialize(eglHelper, w, h);
                     (GraphicsContext as GraphicsContext).RestoreContext();
+                    Game.Instance?.GameContext?.OnGraphicsContextRestored();
                 }
 
                 eglReady = true;

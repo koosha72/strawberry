@@ -152,6 +152,8 @@ public class GameLauncher : IGameLauncher
     {
         Interop.Paused += OnPause;
         Interop.Resumed += OnResume;
+        Interop.GraphicsContextLost += OnGraphicsContextLost;
+        Interop.GraphicsContextRestored += OnGraphicsContextRestored;
         unsafe
         {
             Emscripten.RequestAnimationFrameLoop((delegate* unmanaged<double, nint, int>)&JSGameLoop, nint.Zero);
@@ -168,6 +170,21 @@ public class GameLauncher : IGameLauncher
     {
         (SoundManager as SoundManager).RestoreState();
         paused = false;
+    }
+
+    void OnGraphicsContextLost()
+    {
+        (SoundManager as SoundManager).Suspend();
+        paused = true;
+        Game.Instance?.GameContext?.OnGraphicsContextLost();
+    }
+
+    void OnGraphicsContextRestored()
+    {
+        (SoundManager as SoundManager).RestoreState();
+        paused = false;
+        (Game.Instance?.GameContext?.GraphicsContext as GraphicsContext)?.RestoreContext();
+        Game.Instance?.GameContext?.OnGraphicsContextRestored();
     }
 
     public void Exit()

@@ -43,7 +43,7 @@ namespace Strawberry.Core
         /// Gets the sound manager for handling audio playback.
         /// </summary>
         ISoundManager SoundManager { get; }
-        
+
         /// <summary>
         /// Gets the asset manager of this game context. Used as a Global Asset Manager.
         /// </summary>
@@ -91,5 +91,33 @@ namespace Strawberry.Core
         /// Called at the end of the render phase.
         /// </summary>
         void OnEndRender();
+
+        void OnResized(int width, int height);
+
+        /// <summary>
+        /// Called when the game has lost the focus (e.g. on windows the game window is minimized).
+        /// </summary>
+        void OnFocusLost();
+
+        /// <summary>
+        /// Called when the game has gained the focus (e.g. on windows the game window focused).
+        /// </summary>
+        void OnFocusGained();
+
+        /// <summary>
+        /// Called when the game is exiting, just before the application is shutdown.
+        /// </summary>
+        void OnClosing();
+
+        /// <summary>
+        /// Called when the graphics context is lost (never called on desktop platforms).
+        /// </summary>
+        void OnGraphicsContextLost();
+
+        /// <summary>
+        /// Called when the graphics context is restored (never called on desktop platforms).
+        /// Can be used to restore assets (like textures) on android and web platforms.
+        /// </summary>
+        void OnGraphicsContextRestored();
     }
 }
