@@ -40,7 +40,6 @@ public class GameLauncher : Activity, IGameLauncher
     bool firstStart = true;
     bool isFinishing = false;
     int w, h;
-    object mutex = new object();
 
     protected override void OnCreate(Bundle savedInstanceState)
     {
@@ -59,7 +58,6 @@ public class GameLauncher : Activity, IGameLauncher
         surfaceView.OnSurfaceDestroyed += surfaceView_SurfaceDestroyed;
         SetContentView(surfaceView);
 
-        // Start the game loop thread ONCE — it lives for the lifetime of the activity
         gameLoopThread = new Thread(GameLoopThread);
         gameLoopThread.Start();
     }
@@ -106,29 +104,15 @@ public class GameLauncher : Activity, IGameLauncher
 
     private void surfaceView_SurfaceCreated(ISurfaceHolder holder)
     {
-        // Store the new surface for the game loop thread to consume
         eglHelper.NotifySurfaceCreated(holder.Surface);
-        lock (mutex)
-        {
-            surfaceAvailable = true;
-            needsEGLSetup = true;
-        }
+        surfaceAvailable = true;
+        needsEGLSetup = true;
     }
 
     private void surfaceView_SurfaceDestroyed(ISurfaceHolder holder)
     {
-        lock (mutex)
-        {
-            // Signal that the surface is gone
-            surfaceAvailable = false;
-
-            // Tell the EGL helper (doesn't touch EGL, just clears flag)
-            eglHelper.NotifySurfaceDestroyed();
-        }
-
-        // Give the game loop thread time to stop rendering
-        // so Android can safely destroy the surface
-        // Thread.Sleep(100);
+        surfaceAvailable = false;
+        eglHelper.NotifySurfaceDestroyed();
     }
 
     // ── Game Loop Thread ─────────────────────────────────────────
@@ -154,7 +138,6 @@ public class GameLauncher : Activity, IGameLauncher
                 continue;
             }
 
-            // ── Surface is available but EGL not set up yet ──
             if (needsEGLSetup)
             {
                 needsEGLSetup = false;
@@ -202,13 +185,10 @@ public class GameLauncher : Activity, IGameLauncher
                 eglReady = true;
             }
 
-            // ── Normal frame ──
-            lock (mutex)
+
+            if (eglReady && GraphicsContext != null && surfaceAvailable)
             {
-                if (eglReady && GraphicsContext != null && surfaceAvailable)
-                {
-                    GameLoop?.Invoke();
-                }
+                GameLoop?.Invoke();
             }
         }
 
@@ -222,7 +202,8 @@ public class GameLauncher : Activity, IGameLauncher
 
     public override bool OnTouchEvent(MotionEvent e)
     {
-        (this.InputManager.PointingDevice as PointingDevice).OnTouch(surfaceView, e);
+        if (InputManager?.PointingDevice is PointingDevice pd)
+            pd.OnTouch(surfaceView, e);
         return base.OnTouchEvent(e);
     }
 

@@ -173,7 +173,16 @@ public class GraphicsContext : Base, IGraphicsContext
     public void EndRender()
     {
         if (wnd != null)
-            wnd.SwapBuffers();
+        {
+            try
+            {
+                wnd.SwapBuffers();
+            }
+            catch (Exception x)
+            {
+                Console.Error.WriteLine(x);
+            }
+        }
     }
 
     public bool IsApplicationIdle()
