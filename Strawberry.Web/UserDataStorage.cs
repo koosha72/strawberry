@@ -133,12 +133,12 @@ public class UserDataStorage : IUserDataStorage
 internal static partial class JSStorage
 {
 
-    [JSImport("storage.write_file", "main.js")]
+    [JSImport("storage.write_file", "strawberry.js")]
     public static partial Task WriteFile(string path, string base64Data);
 
-    [JSImport("storage.delete_file", "main.js")]
+    [JSImport("storage.delete_file", "strawberry.js")]
     public static partial Task DeleteFile(string path);
 
-    [JSImport("set_game_name", "main.js")]
+    [JSImport("set_game_name", "strawberry.js")]
     public static partial void SetGameName(string name);
 }

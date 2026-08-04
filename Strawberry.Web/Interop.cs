@@ -6,20 +6,20 @@ using Strawberry.Web.Graphics;
 namespace Strawberry.Web;
 #pragma warning disable CA1416
 /// <summary>
-/// The interop class for web assembly. The main.js file of the game calls callbacks from this class.
+/// The interop class for web assembly. The strawberry.js file of the game calls callbacks from this class.
 /// </summary>
 public static partial class Interop
 {
-    [JSImport("initialize", "main.js")]
+    [JSImport("initialize", "strawberry.js")]
     public static partial Task Initialize();
 
-    [JSImport("request_root_url", "main.js")]
+    [JSImport("request_root_url", "strawberry.js")]
     public static partial string RequestRootURL();
 
-    [JSImport("get_canvas_width", "main.js")]
+    [JSImport("get_canvas_width", "strawberry.js")]
     public static partial int GetCanvasWidth();
 
-    [JSImport("get_canvas_height", "main.js")]
+    [JSImport("get_canvas_height", "strawberry.js")]
     public static partial int GetCanvasHeight();
 
 

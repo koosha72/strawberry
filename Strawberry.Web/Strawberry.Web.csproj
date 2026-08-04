@@ -32,6 +32,8 @@
     <None Include="buildTransitive\Strawberry.Web.targets"
       Pack="true"
       PackagePath="buildTransitive/" />
+
+    <Content Include="wwwroot\**\*" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="contentFiles/any/any/wwwroot/" />
   </ItemGroup>
 
   <PropertyGroup>

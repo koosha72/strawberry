@@ -4,12 +4,15 @@
             <NativeFileReference Include="$(MSBuildThisFileDirectory)..\native\libopenal.c"
                 ScanForPInvokes="true" />
             <NativeFileReference
-            Include="$(MSBuildThisFileDirectory)..\native\emscripten.c"
+                Include="$(MSBuildThisFileDirectory)..\native\emscripten.c"
                 ScanForPInvokes="true" />
             <NativeFileReference Include="$(MSBuildThisFileDirectory)..\native\libEGL.c"
                 ScanForPInvokes="true" />
             <NativeFileReference Include="$(MSBuildThisFileDirectory)..\native\libGLESv3.c"
                 ScanForPInvokes="true" />
+        </ItemGroup>
+        <ItemGroup>
+            <WasmExtraFilesToDeploy Include="$(MSBuildThisFileDirectory)..\wwwroot\strawberry.js" />
         </ItemGroup>
     </Target>
 </Project>
