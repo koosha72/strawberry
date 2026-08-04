@@ -202,7 +202,6 @@ public class GraphicsContext : Base, IGraphicsContext
 
     public void Resize(int width, int height)
     {
-        throw new NotImplementedException();
     }
 
     public void SetViewport(Viewport viewport)

@@ -14,12 +14,19 @@ public class EGLDisplayHolder
     {
         Display = display;
         Surface = surface;
+        Interop.CanvasResized += OnCanvasResized;
 
-        canvasSize = new Vector2(1280, 720);
+        canvasSize = new Vector2(Interop.GetCanvasWidth(), Interop.GetCanvasHeight());
     }
 
     public Vector2 GetCanvasSize()
     {
         return canvasSize;
+    }
+
+    public void OnCanvasResized(float w, float h, float dpr)
+    {
+        canvasSize = new Vector2(w, h);
+        Game.Instance?.GameContext?.OnResized((int)w, (int)h);
     }
 }

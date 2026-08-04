@@ -92,6 +92,7 @@ namespace Strawberry.Desktop
             PlatformServices.RegisterService<ICursor>(new Cursor(wnd));
 
             wnd.FocusedChanged += FocusChanged;
+            wnd.Resize += Wnd_Resize;
         }
 
         private void FocusChanged(OpenTK.Windowing.Common.FocusedChangedEventArgs args)
@@ -101,6 +102,12 @@ namespace Strawberry.Desktop
             else
                 Game.Instance?.GameContext?.OnFocusLost();
         }
+
+        private void Wnd_Resize(OpenTK.Windowing.Common.ResizeEventArgs e)
+        {
+            Game.Instance?.GameContext?.OnResized(e.Width, e.Height);
+        }
+
 
         private void Wnd_Load1()
         {

@@ -188,7 +188,6 @@ namespace Strawberry.Desktop.Graphics
 
         public void Resize(int width, int height)
         {
-            throw new NotImplementedException();
         }
 
         protected override void CleanUnmanaged()

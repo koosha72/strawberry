@@ -16,6 +16,13 @@ public static partial class Interop
     [JSImport("request_root_url", "main.js")]
     public static partial string RequestRootURL();
 
+    [JSImport("get_canvas_width", "main.js")]
+    public static partial int GetCanvasWidth();
+
+    [JSImport("get_canvas_height", "main.js")]
+    public static partial int GetCanvasHeight();
+
+
     public static event Action<Keys, bool, bool, bool, bool> KeyDown;
     public static event Action<Keys, bool, bool, bool> KeyUp;
     public static event Action<PointerButtons, int, bool, bool, bool> PointerDown;
@@ -27,6 +34,8 @@ public static partial class Interop
 
     public static event Action GraphicsContextLost;
     public static event Action GraphicsContextRestored;
+
+    public static event Action<float, float, float> CanvasResized;
 
     public static string RootUrl = "";
 
@@ -89,9 +98,7 @@ public static partial class Interop
     }
 
     [JSExport]
-    public static void OnCanvasResize(float width, float height, float devicePixelRatio)
-    {
-    }
+    public static void OnCanvasResize(float width, float height, float devicePixelRatio) => CanvasResized?.Invoke(width, height, devicePixelRatio);
 
     [JSExport]
     public static void OnPause() => Paused?.Invoke();

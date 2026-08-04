@@ -208,6 +208,7 @@ namespace Strawberry.Core
 
         public virtual void OnResized(int width, int height)
         {
+            GraphicsContext.Resize(width, height);
         }
 
         public virtual void OnFocusLost()

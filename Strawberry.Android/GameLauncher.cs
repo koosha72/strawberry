@@ -12,6 +12,8 @@ using Strawberry.OpenAL;
 using Activity = Android.App.Activity;
 using Strawberry.Platform;
 using System.Collections.Concurrent;
+using Android.Runtime;
+using Android.Graphics;
 
 namespace Strawberry.Android;
 
@@ -43,6 +45,7 @@ public class GameLauncher : Activity, IGameLauncher
     int w, h;
 
     private readonly ConcurrentQueue<bool> pendingFocusEvents = new();
+    private readonly ConcurrentQueue<(int w, int h)> pendingResizeEvents = new();
 
     protected override void OnCreate(Bundle savedInstanceState)
     {
@@ -59,6 +62,7 @@ public class GameLauncher : Activity, IGameLauncher
         surfaceView = new StrawberrySurfaceView(this);
         surfaceView.OnSurfaceCreated += surfaceView_SurfaceCreated;
         surfaceView.OnSurfaceDestroyed += surfaceView_SurfaceDestroyed;
+        surfaceView.OnSurfaceChanged += surfaceView_SurfaceChanged;
         SetContentView(surfaceView);
 
         gameLoopThread = new Thread(GameLoopThread);
@@ -124,6 +128,11 @@ public class GameLauncher : Activity, IGameLauncher
         eglHelper.NotifySurfaceDestroyed();
     }
 
+    private void surfaceView_SurfaceChanged(ISurfaceHolder holder, [GeneratedEnum] Format format, int width, int height)
+    {
+        pendingResizeEvents.Enqueue((width, height));
+    }
+
     // ── Game Loop Thread ─────────────────────────────────────────
     // ALL EGL operations happen here. Never on the UI thread.
 
@@ -141,6 +150,15 @@ public class GameLauncher : Activity, IGameLauncher
                 else
                     Game.Instance?.GameContext?.OnFocusLost();
             }
+
+            // Call resize callbacks for the latest focus changes on the game loop thread
+            while (pendingResizeEvents.TryDequeue(out var r))
+            {
+                w = r.w;
+                h = r.h;
+                Game.Instance?.GameContext?.OnResized(r.w, r.h);
+            }
+
             // ── Surface is gone — release EGL and wait ──
             if (!surfaceAvailable)
             {
