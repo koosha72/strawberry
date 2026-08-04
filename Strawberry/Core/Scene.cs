@@ -129,6 +129,14 @@ namespace Strawberry.Core
         public AssetManager Assets { get; private set; }
 
         /// <summary>
+        /// Gets or sets the pause state flags for this scene.
+        /// </summary>
+        public PauseStateFlags PauseState { get; set; }
+
+        bool updateBegan = false;
+
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Scene"/> class.
         /// </summary>
         /// <param name="name">The name of the scene.</param>
@@ -188,6 +196,9 @@ namespace Strawberry.Core
         /// </summary>
         public virtual void OnEndUpdate()
         {
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update && !updateBegan)
+                return;
+            updateBegan = false;
             for (int i = 0; i < Entities.Count; i++)
             {
                 Entity en = Entities.Values[i];
@@ -219,6 +230,9 @@ namespace Strawberry.Core
         /// </summary>
         public virtual void OnBeginUpdate()
         {
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update)
+                return;
+            updateBegan = true;
             for (int i = 0; i < Entities.Count; i++)
             {
                 if (i < 0)
@@ -233,6 +247,8 @@ namespace Strawberry.Core
         /// </summary>
         public virtual void OnUpdate()
         {
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update && !updateBegan)
+                return;
             if (Update != null)
             {
                 Update(this, new EventArgs());
@@ -257,6 +273,8 @@ namespace Strawberry.Core
         /// </summary>
         public virtual void OnFixedUpdate()
         {
+            if ((PauseStateFlags.FixedUpdate & PauseState) == PauseStateFlags.FixedUpdate)
+                return;
             if (PhysicsEnabled)
             {
                 PhysicsWorld?.Step(FrameInfo.Information.FixedDeltaTime);
@@ -368,6 +386,8 @@ namespace Strawberry.Core
         /// </summary>
         public virtual void OnRender()
         {
+            if ((PauseStateFlags.Render & PauseState) == PauseStateFlags.Render)
+                return;
             if (IsInitialized)
             {
                 foreach (Viewport vp in Viewports)

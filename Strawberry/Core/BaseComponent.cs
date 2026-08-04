@@ -58,6 +58,13 @@ namespace Strawberry.Core
         /// </summary>
         public AssetManager AssetManager { get => Scene?.Assets; }
 
+        /// <summary>
+        /// Gets or sets the pause state flags for this component.
+        /// </summary>
+        public PauseStateFlags PauseState { get; set; } = PauseStateFlags.None;
+
+        bool updateBegan = false;
+
 
         /// <summary>
         /// Called when the component is initialized. Override this method to set up the component's initial state.
@@ -106,12 +113,31 @@ namespace Strawberry.Core
 
         }
 
+        internal void BeginUpdate()
+        {
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update)
+                return;
+            if (!Enabled)
+                return;
+            updateBegan = true;
+            OnBeginUpdate();
+        }
+
         /// <summary>
         /// Called at the beginning of the update cycle, before <see cref="OnUpdate"/>.
         /// </summary>
         public virtual void OnBeginUpdate()
         {
 
+        }
+
+        internal void Update()
+        {
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update && !updateBegan)
+                return;
+            if (!Enabled && !updateBegan)
+                return;
+            OnUpdate();
         }
 
         /// <summary>
@@ -123,12 +149,29 @@ namespace Strawberry.Core
 
         }
 
+        internal void EndUpdate()
+        {
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update && !updateBegan)
+                return;
+            if (!Enabled && !updateBegan)
+                return;
+            updateBegan = false;
+            OnEndUpdate();
+        }
+
         /// <summary>
         /// Called at the end of the update cycle, after <see cref="OnUpdate"/>.
         /// </summary>
         public virtual void OnEndUpdate()
         {
 
+        }
+
+        internal void FixedUpdate()
+        {
+            if ((PauseStateFlags.FixedUpdate & PauseState) == PauseStateFlags.FixedUpdate || !Enabled)
+                return;
+            OnFixedUpdate();
         }
 
         /// <summary>
@@ -138,6 +181,13 @@ namespace Strawberry.Core
         public virtual void OnFixedUpdate()
         {
 
+        }
+
+        internal void Render()
+        {
+            if ((PauseStateFlags.Render & PauseState) == PauseStateFlags.Render || !Enabled)
+                return;
+            OnRender();
         }
 
         /// <summary>

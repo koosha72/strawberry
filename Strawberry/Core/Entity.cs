@@ -488,13 +488,13 @@ namespace Strawberry.Core
         /// </summary>
         public void OnBeginUpdate()
         {
-            if (!Destroyed && (PauseStateFlags.Update & this.PauseState) != PauseStateFlags.Update)
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update)
+                return;
+            if (!Destroyed)
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (!Components[i].Enabled)
-                        continue;
-                    Components[i].OnBeginUpdate();
+                    Components[i].BeginUpdate();
                 }
                 UpdateBegan = true;
                 UpdateEnded = false;
@@ -518,13 +518,13 @@ namespace Strawberry.Core
         /// </summary>
         public void OnEndUpdate()
         {
-            if (!Destroyed && (PauseStateFlags.Update & this.PauseState) != PauseStateFlags.Update)
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update && !UpdateBegan)
+                return;
+            if (!Destroyed)
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (!Components[i].Enabled)
-                        continue;
-                    Components[i].OnEndUpdate();
+                    Components[i].EndUpdate();
                 }
                 UpdateEnded = true;
                 Updated = false;
@@ -549,13 +549,13 @@ namespace Strawberry.Core
         /// </summary>
         public void OnUpdate()
         {
-            if (!Destroyed && (PauseStateFlags.Update & this.PauseState) != PauseStateFlags.Update)
+            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update && !UpdateBegan)
+                return;
+            if (!Destroyed)
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (!Components[i].Enabled)
-                        continue;
-                    Components[i].OnUpdate();
+                    Components[i].Update();
                     if (Destroyed)
                         return;
                 }
@@ -584,13 +584,13 @@ namespace Strawberry.Core
         /// </summary>
         public void OnFixedUpdate()
         {
-            if (!Destroyed && (PauseStateFlags.Update & this.PauseState) != PauseStateFlags.Update)
+            if ((PauseStateFlags.FixedUpdate & PauseState) == PauseStateFlags.FixedUpdate)
+                return;
+            if (!Destroyed)
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (!Components[i].Enabled)
-                        continue;
-                    Components[i].OnFixedUpdate();
+                    Components[i].FixedUpdate();
                 }
                 foreach (Entity child in Children.Values)
                 {
@@ -606,13 +606,13 @@ namespace Strawberry.Core
         /// </summary>
         public void OnRender()
         {
-            if (!Destroyed && (PauseStateFlags.Render & this.PauseState) != PauseStateFlags.Render)
+            if ((PauseStateFlags.Render & PauseState) == PauseStateFlags.Render)
+                return;
+            if (!Destroyed)
             {
                 for (int i = 0; i < Components.Count; i++)
                 {
-                    if (!Components[i].Enabled)
-                        continue;
-                    Components[i].OnRender();
+                    Components[i].Render();
                 }
                 foreach (Entity child in Children.Values)
                 {
