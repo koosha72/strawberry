@@ -105,7 +105,7 @@ namespace Strawberry.Desktop
 
         private void Wnd_Resize(OpenTK.Windowing.Common.ResizeEventArgs e)
         {
-            Game.Instance?.GameContext?.OnResized(e.Width, e.Height);
+            Game.Instance?.GameContext?.OnResized(new Math.Vector2(e.Width, e.Height));
         }
 
 

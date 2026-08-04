@@ -27,6 +27,6 @@ public class EGLDisplayHolder
     public void OnCanvasResized(float w, float h, float dpr)
     {
         canvasSize = new Vector2(w, h);
-        Game.Instance?.GameContext?.OnResized((int)w, (int)h);
+        Game.Instance?.GameContext?.OnResized(new Vector2(w, h));
     }
 }

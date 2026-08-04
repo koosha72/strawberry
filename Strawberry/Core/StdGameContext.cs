@@ -8,6 +8,7 @@
 
 using Strawberry.Graphics;
 using Strawberry.Input;
+using Strawberry.Math;
 using Strawberry.Sound;
 
 namespace Strawberry.Core
@@ -206,9 +207,9 @@ namespace Strawberry.Core
             GraphicsContext.EndRender();
         }
 
-        public virtual void OnResized(int width, int height)
+        public virtual void OnResized(Vector2 size)
         {
-            GraphicsContext.Resize(width, height);
+            GraphicsContext.Resize((int)size.X, (int)size.Y);
         }
 
         public virtual void OnFocusLost()

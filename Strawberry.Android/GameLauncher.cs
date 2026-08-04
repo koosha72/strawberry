@@ -156,7 +156,7 @@ public class GameLauncher : Activity, IGameLauncher
             {
                 w = r.w;
                 h = r.h;
-                Game.Instance?.GameContext?.OnResized(r.w, r.h);
+                Game.Instance?.GameContext?.OnResized(new Math.Vector2(r.w, r.h));
             }
 
             // ── Surface is gone — release EGL and wait ──

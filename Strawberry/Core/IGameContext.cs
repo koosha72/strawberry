@@ -8,6 +8,7 @@
 
 using Strawberry.Graphics;
 using Strawberry.Input;
+using Strawberry.Math;
 using Strawberry.Sound;
 
 namespace Strawberry.Core
@@ -92,7 +93,11 @@ namespace Strawberry.Core
         /// </summary>
         void OnEndRender();
 
-        void OnResized(int width, int height);
+        /// <summary>
+        /// Called when the game rendering area (window, surface or canvas) has been resized.
+        /// </summary>
+        /// <param name="size">The new size of the rendering area</param>
+        void OnResized(Vector2 size);
 
         /// <summary>
         /// Called when the game has lost the focus (e.g. on windows the game window is minimized).
