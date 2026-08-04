@@ -196,17 +196,19 @@ namespace Strawberry.Core
         /// </summary>
         public virtual void OnEndUpdate()
         {
-            if ((PauseStateFlags.Update & PauseState) == PauseStateFlags.Update && !updateBegan)
-                return;
-            updateBegan = false;
-            for (int i = 0; i < Entities.Count; i++)
+            var paused = (PauseStateFlags.Update & PauseState) == PauseStateFlags.Update && !updateBegan;
+            if (!paused)
             {
-                Entity en = Entities.Values[i];
+                updateBegan = false;
+                for (int i = 0; i < Entities.Count; i++)
+                {
+                    Entity en = Entities.Values[i];
 
-                if (!en.Destroyed && !en.UpdateEnded && en.Parent == null)
-                    Entities.Values[i].OnEndUpdate();
-                if (en.Destroyed)
-                    Entities.Remove(en.ID);
+                    if (!en.Destroyed && !en.UpdateEnded && en.Parent == null)
+                        Entities.Values[i].OnEndUpdate();
+                    if (en.Destroyed)
+                        Entities.Remove(en.ID);
+                }
             }
             Entities.Flush();
         }

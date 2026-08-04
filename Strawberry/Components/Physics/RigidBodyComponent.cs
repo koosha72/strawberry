@@ -132,6 +132,101 @@ public class RigidBodyComponent : BaseComponent
     }
 
     /// <summary>
+    /// Gets or sets the linear velocity of the body in scene units per second.
+    /// Setting this directly overrides any velocity from forces or impulses.
+    /// </summary>
+    public Vector2 LinearVelocity
+    {
+        get => Body?.LinearVelocity * Scene.PixelPerMeter ?? Vector2.Zero;
+        set
+        {
+            if (Body != null)
+                Body.LinearVelocity = value / Scene.PixelPerMeter;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the angular velocity of the body in radians per second.
+    /// </summary>
+    public float AngularVelocity
+    {
+        get => Body?.AngularVelocity ?? 0f;
+        set
+        {
+            if (Body != null)
+                Body.AngularVelocity = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the linear damping coefficient. Higher values cause the body
+    /// to slow down more quickly (simulates air resistance). Default is 0.
+    /// </summary>
+    public float LinearDamping
+    {
+        get => Body?.LinearDamping ?? 0f;
+        set
+        {
+            if (Body != null)
+                Body.LinearDamping = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the angular damping coefficient. Higher values cause the body
+    /// to stop rotating more quickly. Default is 0.
+    /// </summary>
+    public float AngularDamping
+    {
+        get => Body?.AngularDamping ?? 0f;
+        set
+        {
+            if (Body != null)
+                Body.AngularDamping = value;
+        }
+    }
+
+
+    /// <summary>
+    /// Gets the body's mass in kilograms.
+    /// </summary>
+    public float Mass => Body?.Mass ?? 0f;
+
+    /// <summary>
+    /// Gets the body's rotational inertia (resistance to angular acceleration).
+    /// </summary>
+    public float Inertia => Body?.Inertia ?? 0f;
+
+    /// <summary>
+    /// Gets whether the body is awake and simulating. Sleeping bodies are not
+    /// processed by the physics engine to save CPU. Touching a sleeping body wakes it.
+    /// </summary>
+    public bool Awake
+    {
+        get => Body?.Awake ?? false;
+        set
+        {
+            if (Body != null)
+                Body.Awake = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets whether the body's rotation is locked. When true, the body
+    /// can still move but won't rotate from forces or collisions. Useful for
+    /// top-down characters that shouldn't tip over.
+    /// </summary>
+    public bool FixedRotation
+    {
+        get => Body?.FixedRotation ?? false;
+        set
+        {
+            if (Body != null)
+                Body.FixedRotation = value;
+        }
+    }
+
+    /// <summary>
     /// Checks if this body is currently colliding with the specified fixture
     /// </summary>
     /// <param name="fixture">The fixture to check against</param>
@@ -184,6 +279,77 @@ public class RigidBodyComponent : BaseComponent
         Body.OnCollision += OnCollision;
         Body.OnSeparation += OnSeparation;
         collisionEnabled = true;
+    }
+
+    /// <summary>
+    /// Applies a force to the body's center of mass. Affects velocity gradually
+    /// based on the body's mass. Use this for continuous pushes (thrusters, wind).
+    /// </summary>
+    /// <param name="force">The force vector in scene units per second squared.</param>
+    public void ApplyForce(Vector2 force)
+    {
+        Body?.ApplyForce(force / Scene.PixelPerMeter);
+    }
+
+    /// <summary>
+    /// Applies a force to a specific world-space point on the body. May generate torque
+    /// if the point is not the center of mass (causing rotation).
+    /// </summary>
+    /// <param name="force">The force vector in scene units per second squared.</param>
+    /// <param name="point">The world-space point where the force is applied, in scene units.</param>
+    public void ApplyForce(Vector2 force, Vector2 point)
+    {
+        Body?.ApplyForce(force / Scene.PixelPerMeter, point / Scene.PixelPerMeter);
+    }
+
+    /// <summary>
+    /// Applies an instantaneous change in momentum (impulse) to the body's center of mass.
+    /// Immediately modifies velocity. Use this for jumps, hits, explosions.
+    /// </summary>
+    /// <param name="impulse">The impulse vector in scene units per second.</param>
+    public void ApplyLinearImpulse(Vector2 impulse)
+    {
+        Body?.ApplyLinearImpulse(impulse / Scene.PixelPerMeter);
+    }
+
+    /// <summary>
+    /// Applies an instantaneous impulse to a specific world-space point. May generate
+    /// angular impulse if the point is not the center of mass (causing rotation).
+    /// </summary>
+    /// <param name="impulse">The impulse vector in scene units per second.</param>
+    /// <param name="point">The world-space point where the impulse is applied, in scene units.</param>
+    public void ApplyLinearImpulse(Vector2 impulse, Vector2 point)
+    {
+        Body?.ApplyLinearImpulse(impulse / Scene.PixelPerMeter, point / Scene.PixelPerMeter);
+    }
+
+    /// <summary>
+    /// Applies an instantaneous angular impulse, immediately changing the body's
+    /// angular velocity. Positive values rotate counter-clockwise.
+    /// </summary>
+    /// <param name="impulse">The angular impulse in radians per second.</param>
+    public void ApplyAngularImpulse(float impulse)
+    {
+        Body?.ApplyAngularImpulse(impulse);
+    }
+
+    /// <summary>
+    /// Applies a torque to the body, causing angular acceleration.
+    /// </summary>
+    /// <param name="torque">The torque in Newton-meters.</param>
+    public void ApplyTorque(float torque)
+    {
+        Body?.ApplyTorque(torque);
+    }
+
+    /// <summary>
+    /// Wakes the body if it was sleeping. Equivalent to <c>Awake = true</c>,
+    /// but more readable in code like <c>rigidBody.Wake()</c> after applying an impulse.
+    /// </summary>
+    public void Wake()
+    {
+        if (Body != null)
+            Body.Awake = true;
     }
 
     bool OnCollision(Fixture self, Fixture other, Contact contact)
