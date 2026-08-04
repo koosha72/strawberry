@@ -13,6 +13,7 @@ let onReadyCallback = null;
 let DB_NAME = "strawberry_user_data";
 const STORE_NAME = "files";
 let db = null;
+let dpr = 1;
 
 // ── IndexedDB helpers (internal) ─────────────────────────────
 
@@ -79,14 +80,14 @@ async function loadAll() {
 
 function setupResizeHandler() {
     function resizeCanvas() {
-        const dpr = window.devicePixelRatio || 1;
+        dpr = window.devicePixelRatio || 1;
         const w = Math.floor(canvas.clientWidth * dpr);
         const h = Math.floor(canvas.clientHeight * dpr);
 
         if (canvas.width !== w || canvas.height !== h) {
             canvas.width = w;
             canvas.height = h;
-            interop.OnCanvasResize(canvas.clientWidth, canvas.clientHeight, dpr);
+            interop.OnCanvasResize(canvas.clientWidth * dpr, canvas.clientHeight * dpr, dpr);
         }
     }
 
@@ -131,7 +132,7 @@ function setupInputHandlers() {
     }, false);
 
     canvas.addEventListener("mousemove", (e) => {
-        interop.OnMouseMove(0, e.offsetX, e.offsetY);
+        interop.OnMouseMove(0, e.offsetX * dpr, e.offsetY * dpr);
     }, false);
 
     canvas.addEventListener("mousedown", (e) => {
@@ -151,7 +152,7 @@ function setupInputHandlers() {
     const getTouchPos = (e) => {
         const touch = e.changedTouches[0];
         const bcr = e.target.getBoundingClientRect();
-        return { x: touch.clientX - bcr.x, y: touch.clientY - bcr.y };
+        return { x: (touch.clientX - bcr.x) * dpr, y: (touch.clientY - bcr.y) * dpr };
     };
 
     canvas.addEventListener("touchstart", (e) => {
