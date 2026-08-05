@@ -33,7 +33,7 @@
       Pack="true"
       PackagePath="buildTransitive/" />
 
-    <Content Include="wwwroot\**\*" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="contentFiles/any/any/wwwroot/" />
+    <Content Include="wwwroot\**\*" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="wwwroot/" />
   </ItemGroup>
 
   <PropertyGroup>
