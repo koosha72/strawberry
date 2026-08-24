@@ -1,0 +1,19 @@
+<Project>
+    <ItemGroup>
+        <NativeFileReference Condition="'$(RuntimeIdentifier)' == 'browser-wasm'"
+            Include="$(MSBuildThisFileDirectory)..\native\tsf.c"
+            ScanForPInvokes="true" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\android\arm64-v8a\libtsf.so">
+            <Abi>arm64-v8a</Abi>
+        </AndroidNativeLibrary>
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\android\armeabi-v7a\libtsf.so">
+            <Abi>armeabi-v7a</Abi>
+        </AndroidNativeLibrary>
+        <AndroidNativeLibrary Include="$(MSBuildThisFileDirectory)..\android\x86_64\libtsf.so">
+            <Abi>x86_64</Abi>
+        </AndroidNativeLibrary>
+    </ItemGroup>
+</Project>

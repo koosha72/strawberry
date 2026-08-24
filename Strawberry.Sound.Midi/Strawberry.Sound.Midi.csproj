@@ -10,4 +10,33 @@
     <ProjectReference Include="..\Strawberry\Strawberry.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="native\runtimes\win-x64\tsf.dll"
+      Pack="true"
+      PackagePath="runtimes\win-x64\native\" />
+    <Content Include="native\runtimes\linux-x64\libtsf.so"
+      Pack="true"
+      PackagePath="runtimes\linux-x64\native\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="native\prebuilt\android\**\*.so"
+      Pack="true"
+      PackagePath="/android" />
+
+    <None Include="native\tsf.c"
+      Pack="true"
+      PackagePath="native/" />
+
+    <None Include="native\tsf.h"
+      Pack="true"
+      PackagePath="native/" />
+
+    <None Include="buildTransitive\Strawberry.Sound.Midi.targets"
+      Pack="true"
+      PackagePath="buildTransitive/" />
+  </ItemGroup>
+
+
 </Project>
