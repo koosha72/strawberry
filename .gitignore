@@ -16,4 +16,3 @@
 
 **/*.so
 **/*.dll
-**/Strawberry.Web/native/*.*
