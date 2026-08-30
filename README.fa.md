@@ -37,7 +37,7 @@ namespace MyGame.Desktop
         {
             MyGameContext gameContext = new MyGameContext();
             Strawberry.Game game = new Strawberry.Game();
-            game.Run(gameContext, new Strawberry.Desktop.GameLauncher(true));
+            game.Run(gameContext, new Strawberry.Desktop.GameLauncher(Platform.DisplayMode.Windowed));
         }
     }
 }
@@ -45,19 +45,19 @@ namespace MyGame.Desktop
 در کد بالا MyGameContext زمینه اصلی بازی است که از پروژه چند سکویی فراخوانی شده است. بازی با استفاده از یک GameLauncher مخصوص سکوی رومیزی (Desktop) اجرا می شود.
 راه اندازی و اجرا در سایر سکو ها کمی متفاوت است که می توانید در راهنمای توت فرنگی مشاهده نمایید.
 
-[راه اندازی و اجرای بازی](https://docs.sb-engine.ir/docs/v.2026.1.1/fa/Documentation/Getting-Started)
+[راه اندازی و اجرای بازی](https://docs.sb-engine.ir/docs/latest/fa/Documentation/Getting-Started)
 
 ## راهنما
 راهنمای موتور توت فرنگی دو بخش دارد:
 ### کتابچه راهنما
 این راهنما به صورت آموزشی نگاشته شده و شما را قدم به قدم در انجام کار های مختلف با موتور راهنمایی می نماید.
 
-[کتابچه راهنما](https://docs.sb-engine.ir/docs/v.2026.1.1/fa/Documentation/)
+[کتابچه راهنما](https://docs.sb-engine.ir/docs/latest/fa/Documentation/)
 
 ### فهرست مستندات
 این بخش به طور کامل تمام ساختارها و توابع موتور را لیست نموده و شرح مختصری از کارکرد هر کدام داده است.
 
-[فهرست مستندات](https://docs.sb-engine.ir/docs/v.2026.1.1/fa/API/)
+[فهرست مستندات](https://docs.sb-engine.ir/docs/latest/fa/API/)
 
 ## حمایت
 
