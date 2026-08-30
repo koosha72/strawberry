@@ -58,7 +58,7 @@ This guide is written in an educational style and guides you step by step throug
 ### API Reference
 This section fully lists all structures and functions of the engine and provides a brief description of each one's functionality.
 
-[API Reference](https://docs.sb-engine.ir/docs/v.2026.1.1/en/API/)
+[API Reference](https://docs.sb-engine.ir/docs/latest/en/API/)
 
 ## Support
 
