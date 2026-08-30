@@ -38,7 +38,7 @@ namespace MyGame.Desktop
         {
             MyGameContext gameContext = new MyGameContext();
             Strawberry.Game game = new Strawberry.Game();
-            game.Run(gameContext, new Strawberry.Desktop.GameLauncher(true));
+            game.Run(gameContext, new Strawberry.Desktop.GameLauncher(Platform.DisplayMode.Windowed));
         }
     }
 }
@@ -46,14 +46,14 @@ namespace MyGame.Desktop
 In the code above, `MyGameContext` is the main game context called from the multi-platform project. The game is executed using a `GameLauncher` specific to the desktop platform.
 Launching and running on other platforms is slightly different, which you can refer to in the Strawberry guide.
 
-[Setup and Running the Game](https://docs.sb-engine.ir/docs/v.2026.1.1/en/Documentation/Getting-Started)
+[Setup and Running the Game](https://docs.sb-engine.ir/docs/latest/en/Documentation/Getting-Started)
 
 ## Guide
 The Strawberry Engine guide consists of two parts:
 ### User Manual
 This guide is written in an educational style and guides you step by step through performing various tasks with the engine.
 
-[User Manual](https://docs.sb-engine.ir/docs/v.2026.1.1/en/Documentation/)
+[User Manual](https://docs.sb-engine.ir/docs/latest/en/Documentation/)
 
 ### API Reference
 This section fully lists all structures and functions of the engine and provides a brief description of each one's functionality.
