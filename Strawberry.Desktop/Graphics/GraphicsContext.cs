@@ -28,6 +28,8 @@ namespace Strawberry.Desktop.Graphics
 
         Dictionary<string, BlendState> blendStates;
 
+        public Func<Vector2> OverrideScreenSize { get; set; } = null;
+
         public void Initialize(object wnd, int width, int height)
         {
             blendStates = new Dictionary<string, BlendState>();
@@ -197,6 +199,12 @@ namespace Strawberry.Desktop.Graphics
 
         public Vector2 GetScreenSize()
         {
+            if (wnd == null)
+            {
+                if (OverrideScreenSize != null)
+                    return OverrideScreenSize.Invoke();
+                return Vector2.Zero;
+            }
             var monitor = Monitors.GetPrimaryMonitor();
             if (wnd.IsFullscreen)
                 return new Vector2(monitor.ClientArea.Size.X, monitor.ClientArea.Size.Y);
