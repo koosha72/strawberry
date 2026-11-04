@@ -67,3 +67,5 @@ One of the biggest ways you can help us build this engine is by using it and rep
 
 Help us develop Strawberry better by using the link below:
 [Report Bugs and Suggestions](https://git.sb-engine.ir/koosha_ab/strawberry-main/issues)
+
+[Telegram Channel](https://t.me/strawberry_engine)
