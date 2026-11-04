@@ -115,6 +115,11 @@ namespace Strawberry.Core
         public float PixelPerMeter { get; set; } = 32f;
 
         /// <summary>
+        /// Forces the viewport to be in bounds of the scene when rendering.
+        /// </summary>
+        public bool ForceViewportInBounds { get; set; } = true;
+
+        /// <summary>
         /// Gets the bounding rectangle of the scene, defined by its width and height.
         /// </summary>
         public Rectangle Bounds
@@ -394,14 +399,17 @@ namespace Strawberry.Core
             {
                 foreach (Viewport vp in Viewports)
                 {
-                    if (vp.ScenePos.X < 0)
-                        vp.ScenePos = new Vector2(0, vp.ScenePos.Y);
-                    if (vp.ScenePos.X + vp.SceneSize.X > Width)
-                        vp.ScenePos = new Vector2(Width - vp.SceneSize.X, vp.ScenePos.Y);
-                    if (vp.ScenePos.Y < 0)
-                        vp.ScenePos = new Vector2(vp.ScenePos.X, 0);
-                    if (vp.ScenePos.Y + vp.SceneSize.Y > Height)
-                        vp.ScenePos = new Vector2(vp.ScenePos.X, Height - vp.SceneSize.Y);
+                    if (ForceViewportInBounds)
+                    {
+                        if (vp.ScenePos.X < 0)
+                            vp.ScenePos = new Vector2(0, vp.ScenePos.Y);
+                        if (vp.ScenePos.X + vp.SceneSize.X > Width)
+                            vp.ScenePos = new Vector2(Width - vp.SceneSize.X, vp.ScenePos.Y);
+                        if (vp.ScenePos.Y < 0)
+                            vp.ScenePos = new Vector2(vp.ScenePos.X, 0);
+                        if (vp.ScenePos.Y + vp.SceneSize.Y > Height)
+                            vp.ScenePos = new Vector2(vp.ScenePos.X, Height - vp.SceneSize.Y);
+                    }
                     GameContext.GraphicsContext.SetViewport(vp);
 
                     for (int i = 0; i < Entities.Count; i++)
