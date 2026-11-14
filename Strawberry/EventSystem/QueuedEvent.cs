@@ -12,6 +12,8 @@ internal interface IQueuedEvent
 {
     void Invoke();
     int Priority { get; }
+    IWeakAction Callback { get; }
+    object Arg { get; }
 }
 
 internal class QueuedEvent<T> : IQueuedEvent where T : IStrawberryEvent
@@ -19,6 +21,8 @@ internal class QueuedEvent<T> : IQueuedEvent where T : IStrawberryEvent
     public IWeakAction Callback { get; }
     public T Args { get; }
     public int Priority { get; }
+
+    object IQueuedEvent.Arg => Args;
 
     public QueuedEvent(IWeakAction callback, T args, int priority)
     {

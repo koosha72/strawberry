@@ -9,6 +9,7 @@
 
 using System.Collections.Concurrent;
 using System.Reflection;
+using System.Runtime.Loader;
 
 namespace Strawberry.EventSystem;
 
@@ -307,6 +308,92 @@ public static class EventManager
         }
     }
 
+    /// <summary>
+    /// Removes every subscription, queued event and cached constructor that belongs to the given
+    /// (collectible) load context. Without this, static state keeps strong references to the
+    /// assemblies of an unloadable context and it can never be collected.
+    /// </summary>
+    /// <param name="context">The load context to purge.</param>
+    public static void Purge(AssemblyLoadContext context)
+    {
+        if (context == null)
+            return;
+
+        lock (_lock)
+        {
+            foreach (var key in globalEvents.Keys.ToList())
+            {
+                if (BelongsTo(key, context))
+                {
+                    globalEvents.Remove(key);
+                    continue;
+                }
+
+                var list = globalEvents[key];
+                list.RemoveAll(e => BelongsTo(e.Callback.TargetType, context));
+                if (list.Count == 0)
+                    globalEvents.Remove(key);
+            }
+
+            foreach (var key in instanceEvents.Keys.ToList())
+            {
+                if (BelongsTo(key, context))
+                {
+                    instanceEvents.Remove(key);
+                    continue;
+                }
+
+                var dict = instanceEvents[key];
+                List<WeakReference> removeList = new();
+                foreach (var (reference, callbacks) in dict)
+                {
+                    if (!reference.IsAlive)
+                    {
+                        removeList.Add(reference);
+                        continue;
+                    }
+
+                    callbacks.RemoveAll(e => BelongsTo(e.Callback.TargetType, context));
+                    if (callbacks.Count == 0)
+                        removeList.Add(reference);
+                }
+
+                foreach (var r in removeList)
+                    dict.Remove(r);
+
+                if (dict.Count == 0)
+                    instanceEvents.Remove(key);
+            }
+
+            foreach (var time in callbackQueue.Keys.ToList())
+            {
+                var queue = callbackQueue[time];
+                var kept = new PriorityQueue<IQueuedEvent, int>();
+                while (queue.TryDequeue(out var queuedEvent, out var priority))
+                {
+                    if (BelongsTo(queuedEvent.Callback.TargetType, context))
+                        continue;
+                    if (queuedEvent.Arg != null && BelongsTo(queuedEvent.Arg.GetType(), context))
+                        continue;
+                    kept.Enqueue(queuedEvent, priority);
+                }
+
+                if (kept.Count == 0)
+                    callbackQueue.Remove(time);
+                else
+                    callbackQueue[time] = kept;
+            }
+
+            foreach (var key in _weakActionCtors.Keys.Where(k => BelongsTo(k.target, context)).ToList())
+                _weakActionCtors.TryRemove(key, out _);
+        }
+    }
+
+    static bool BelongsTo(Type type, AssemblyLoadContext context)
+    {
+        return type != null && AssemblyLoadContext.GetLoadContext(type.Assembly) == context;
+    }
+
     private static IWeakAction CreateWeakAction<T>(Action<T> action) where T : IStrawberryEvent
     {
         if (action.Target == null)
@@ -315,14 +402,21 @@ public static class EventManager
         var senderType = action.Target.GetType();
         var key = (senderType, typeof(T));
 
-        var ctor = _weakActionCtors.GetOrAdd(key, static k =>
+        if (senderType.Assembly.IsCollectible)
         {
-            var weakActionType = typeof(WeakAction<,>).MakeGenericType(k.target, k.arg);
-            var actionType = typeof(Action<>).MakeGenericType(k.arg);
-            return weakActionType.GetConstructor(new[] { actionType })
-                ?? throw new InvalidOperationException($"Constructor not found for {weakActionType}");
-        });
+            return (IWeakAction)GetWeakActionConstructor(key).Invoke(new object[] { action })!;
+        }
+
+        var ctor = _weakActionCtors.GetOrAdd(key, GetWeakActionConstructor);
 
         return (IWeakAction)ctor.Invoke(new object[] { action })!;
+    }
+
+    private static ConstructorInfo GetWeakActionConstructor((Type target, Type arg) key)
+    {
+        var weakActionType = typeof(WeakAction<,>).MakeGenericType(key.target, key.arg);
+        var actionType = typeof(Action<>).MakeGenericType(key.arg);
+        return weakActionType.GetConstructor(new[] { actionType })
+            ?? throw new InvalidOperationException($"Constructor not found for {weakActionType}");
     }
 }

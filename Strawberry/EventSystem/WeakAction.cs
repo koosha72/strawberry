@@ -16,6 +16,7 @@ internal interface IWeakAction
 {
     public void Invoke(object arg);
     public bool IsAlive { get; }
+    public Type TargetType { get; }
 }
 
 internal class WeakAction<TTarget, T> : IWeakAction
@@ -80,6 +81,8 @@ internal class WeakAction<TTarget, T> : IWeakAction
     }
 
     public bool IsAlive => _weakTarget.TryGetTarget(out _);
+
+    public Type TargetType => typeof(TTarget);
 
     public void Invoke(object arg)
     {
