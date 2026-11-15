@@ -29,6 +29,6 @@ public class RotateComponent : BaseComponent
     {
         base.OnUpdate();
         if (Transform != null)
-            Transform.Angle = (Transform.Angle + AngularSpeed * FrameInfo.Information.DeltaTime) % (2f * MathF.PI);
+            Transform.Angle = (Transform.Angle + AngularSpeed * FrameInfo.Information.DeltaTime) % 360;
     }
 }
