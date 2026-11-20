@@ -20,6 +20,10 @@ namespace Strawberry.Components.Movement
         /// </summary>
         public TransformComponent Transform { get; private set; }
 
+        public int ViewportIndex { get; set; }
+
+        public int PointerIndex { get; set; }
+
         public override void OnComponentAdded(BaseComponent component)
         {
             base.OnComponentAdded(component);
@@ -31,7 +35,7 @@ namespace Strawberry.Components.Movement
         {
             if (Transform != null)
             {
-                Transform.Position = GameContext.InputManager.PointingDevice.GetPosition(0);
+                Transform.Position = Scene.GetMousePositionOnViewport(ViewportIndex, PointerIndex);
             }
         }
     }
