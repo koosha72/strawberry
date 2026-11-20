@@ -224,9 +224,9 @@ namespace Strawberry.Core
         /// <param name="viewPortIndex">The index of the viewport in the <see cref="Viewports"/> collection.</param>
         /// <param name="pointerIndex">The index of the pointer (e.g., for multi-touch).</param>
         /// <returns>The translated mouse position in scene-space coordinates.</returns>
-        public Vector2 GetMousePositionOnViewport(int viewPortIndex, int pointerIndex)
+        public virtual Vector2 GetMousePositionOnViewport(int viewPortIndex, int pointerIndex)
         {
-            Vector2 mousePosition = new Vector2(GameContext.InputManager.PointingDevice.GetPosition(pointerIndex));
+            Vector2 mousePosition = GameContext.InputManager.PointingDevice.GetPosition(pointerIndex);
             Viewport vp = Viewports[viewPortIndex];
 
             return vp.ScreenToScene(mousePosition);
